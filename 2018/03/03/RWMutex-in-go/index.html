@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="RWMutex使用场景读写锁适用于读多写少的场景。
+
+RLock被reader占用时，Lock(/WLock)会被block。反之依然
+RLock被占用时，其他routine也可以获取到RLock。即允许多个reader同时访问共享资源
+WLock同一时间只能被一个routine/thread获取
+">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="RWMutex in go"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>RWMutex in go - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>RWMutex in go</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2018-03-03
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/RWMutex/">#RWMutex</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="RWMutex"><a href="#RWMutex" class="headerlink" title="RWMutex"></a>RWMutex</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>读写锁适用于读多写少的场景。</p>
+<ul>
+<li>RLock被reader占用时，Lock(/WLock)会被block。反之依然</li>
+<li>RLock被占用时，其他routine也可以获取到RLock。即允许多个reader同时访问共享资源</li>
+<li>WLock同一时间只能被一个routine/thread获取</li>
+<li>如果读写比例相差巨大，WLock是否可能饿死？ 不会，Lock的优先级更高，如果RLock已经被占用，WLock在被阻塞中，此时后续的RLock调用也将被block，直到RLock被释放，WLock被writer获取成功后释放。</li>
+<li>总结：A good way to think about it is RWMutex is a Mutex with a reader counter. RLock increments the counter while RUnlock decrements it. A call to Lock will block as long as that counter is &gt; 0.</li>
+</ul>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>一些大致的实现思路</p>
+<h3 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h3><p>一个写锁保证writer互斥<br>一个读锁和计数器实现读锁。读锁用户维护计数器的准确性。计数器用于多个reader计数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//读锁</span><br><span class="line">RLock()</span><br><span class="line">    r.lock()</span><br><span class="line">    r_cnt++</span><br><span class="line">    if r_cnt==1: // 读写互斥</span><br><span class="line">        w.lock()</span><br><span class="line">    r.unlock()</span><br><span class="line"></span><br><span class="line">RUnlock()</span><br><span class="line">    r.lock()</span><br><span class="line">    r_cnt--</span><br><span class="line">    if r_cnt==0:</span><br><span class="line">        w.unlock()</span><br><span class="line">    r.unlock()</span><br><span class="line"></span><br><span class="line">//写锁</span><br><span class="line">Lock()</span><br><span class="line">    w.lock()</span><br><span class="line"></span><br><span class="line">Unlock()</span><br><span class="line">    w.unlock()</span><br></pre></td></tr></table></figure>
+<h3 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h3><p>使用锁和条件变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">RLock()</span><br><span class="line">    m.lock()</span><br><span class="line">    while w: // wLock使用中，block到被唤醒</span><br><span class="line">        c.wait(m)</span><br><span class="line">    r++</span><br><span class="line">    m.unlock()</span><br><span class="line"></span><br><span class="line">RUnlock()</span><br><span class="line">    m.lock()</span><br><span class="line">    r--</span><br><span class="line">    if r==0:</span><br><span class="line">        c.signal_all() // 唤醒writer</span><br><span class="line">    m.unlock()</span><br><span class="line"></span><br><span class="line">Lock()</span><br><span class="line">    m.lock()</span><br><span class="line">    while w || r &gt; 0 :  // 有reader，block到被唤醒</span><br><span class="line">        c.wait(m)</span><br><span class="line">    w = true</span><br><span class="line">    m.unlock()</span><br><span class="line"></span><br><span class="line">Unlock()</span><br><span class="line">    m.lock()</span><br><span class="line">    w = false</span><br><span class="line">    c.signal_all()  // 唤醒reader或writer</span><br><span class="line">    m.unlock()</span><br></pre></td></tr></table></figure>
+<h3 id="golang的实现"><a href="#golang的实现" class="headerlink" title="golang的实现"></a>golang的实现</h3><p>为避免writer被饿死，RWMutex中至少需要记录三个信息：</p>
+<ul>
+<li>使用中的reader计数器：a</li>
+<li>writer请求中/使用中的标志：b</li>
+<li>挂起在writer之后的reader：c</li>
+</ul>
+<p>golang用两个变量包括了以上三部分信息，具体见golang的实现(忽略race部分)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line">type RWMutex struct &#123;</span><br><span class="line">	w           Mutex  // held if there are pending writers</span><br><span class="line">	writerSem   uint32 // semaphore for writers to wait for completing readers. writer等待reader完成的信号量</span><br><span class="line">	readerSem   uint32 // semaphore for readers to wait for completing writers. reader等待writer完成的信号量</span><br><span class="line"></span><br><span class="line">    // 计数器承担两个作用，一个是用来记录reader的个数，另一个作用用作判断是否有writer挂起或者在占有锁</span><br><span class="line">	readerCount int32  // number of pending readers. 挂起的reader和使用中的reader，如果有writer操作（挂起/占有），计数器会变为负数以示区分</span><br><span class="line">	readerWait  int32  // number of departing readers. 使用中的reader</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (rw *RWMutex) RLock() &#123;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		_ = rw.w.state</span><br><span class="line">		race.Disable()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    // 没有writer时只需执行+1操作. </span><br><span class="line">    // 如果有writer调用，计数器会被置为负数。此时reader被block，等待writer unlock后唤醒 </span><br><span class="line">	if atomic.AddInt32(&amp;rw.readerCount, 1) &lt; 0 &#123;</span><br><span class="line">		// A writer is pending, wait for it.</span><br><span class="line">		runtime_Semacquire(&amp;rw.readerSem)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		race.Enable()</span><br><span class="line">		race.Acquire(unsafe.Pointer(&amp;rw.readerSem))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// RUnlock undoes a single RLock call;</span><br><span class="line">// it does not affect other simultaneous readers.</span><br><span class="line">// It is a run-time error if rw is not locked for reading</span><br><span class="line">// on entry to RUnlock.</span><br><span class="line">func (rw *RWMutex) RUnlock() &#123;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		_ = rw.w.state</span><br><span class="line">		race.ReleaseMerge(unsafe.Pointer(&amp;rw.writerSem))</span><br><span class="line">		race.Disable()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    // 计数器小于0，表示有writer在等待</span><br><span class="line">	if r := atomic.AddInt32(&amp;rw.readerCount, -1); r &lt; 0 &#123;</span><br><span class="line">		if r+1 == 0 || r+1 == -rwmutexMaxReaders &#123;</span><br><span class="line">			race.Enable()</span><br><span class="line">			throw(&quot;sync: RUnlock of unlocked RWMutex&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">		// A writer is pending.</span><br><span class="line">		// 使用中的reader已全部释放，唤醒等待中的writer</span><br><span class="line">		if atomic.AddInt32(&amp;rw.readerWait, -1) == 0 &#123;</span><br><span class="line">			// The last reader unblocks the writer.</span><br><span class="line">			runtime_Semrelease(&amp;rw.writerSem, false)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		race.Enable()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Lock locks rw for writing.</span><br><span class="line">// If the lock is already locked for reading or writing,</span><br><span class="line">// Lock blocks until the lock is available.</span><br><span class="line">func (rw *RWMutex) Lock() &#123;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		_ = rw.w.state</span><br><span class="line">		race.Disable()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// First, resolve competition with other writers.</span><br><span class="line">	rw.w.Lock()</span><br><span class="line"></span><br><span class="line">	// Announce to readers there is a pending writer.</span><br><span class="line">	r := atomic.AddInt32(&amp;rw.readerCount, -rwmutexMaxReaders) + rwmutexMaxReaders</span><br><span class="line">	// Wait for active readers.</span><br><span class="line">	if r != 0 &amp;&amp; atomic.AddInt32(&amp;rw.readerWait, r) != 0 &#123;</span><br><span class="line">		runtime_Semacquire(&amp;rw.writerSem)</span><br><span class="line">	&#125;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		race.Enable()</span><br><span class="line">		race.Acquire(unsafe.Pointer(&amp;rw.readerSem))</span><br><span class="line">		race.Acquire(unsafe.Pointer(&amp;rw.writerSem))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Unlock unlocks rw for writing. It is a run-time error if rw is</span><br><span class="line">// not locked for writing on entry to Unlock.</span><br><span class="line">//</span><br><span class="line">// As with Mutexes, a locked RWMutex is not associated with a particular</span><br><span class="line">// goroutine. One goroutine may RLock (Lock) an RWMutex and then</span><br><span class="line">// arrange for another goroutine to RUnlock (Unlock) it.</span><br><span class="line">func (rw *RWMutex) Unlock() &#123;</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		_ = rw.w.state</span><br><span class="line">		race.Release(unsafe.Pointer(&amp;rw.readerSem))</span><br><span class="line">		race.Release(unsafe.Pointer(&amp;rw.writerSem))</span><br><span class="line">		race.Disable()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// Announce to readers there is no active writer.</span><br><span class="line">	r := atomic.AddInt32(&amp;rw.readerCount, rwmutexMaxReaders)</span><br><span class="line">	if r &gt;= rwmutexMaxReaders &#123;</span><br><span class="line">		race.Enable()</span><br><span class="line">		throw(&quot;sync: Unlock of unlocked RWMutex&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	// Unblock blocked readers, if any.</span><br><span class="line">	for i := 0; i &lt; int(r); i++ &#123;</span><br><span class="line">		runtime_Semrelease(&amp;rw.readerSem, false)</span><br><span class="line">	&#125;</span><br><span class="line">	// Allow other writers to proceed.</span><br><span class="line">	rw.w.Unlock()</span><br><span class="line">	if race.Enabled &#123;</span><br><span class="line">		race.Enable()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2018 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
