@@ -196,7 +196,7 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h1 id="nginx透传"><a href="#nginx透传" class="headerlink" title="nginx透传"></a>nginx透传</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote><p>X-Forwarded-Proto (XFP) 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）。在服务器的访问日志中记录的是负载均衡服务器与服务器之间的连接所使用的传输协议，而非客户端与负载均衡服务器之间所使用的协议。为了确定客户端与负载均衡服务器之间所使用的协议， X-Forwarded-Proto 就派上了用场。</p>
+                <h1 id="nginx透传X-Forwarded-Proto"><a href="#nginx透传X-Forwarded-Proto" class="headerlink" title="nginx透传X-Forwarded-Proto"></a>nginx透传X-Forwarded-Proto</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote><p>X-Forwarded-Proto (XFP) 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）。在服务器的访问日志中记录的是负载均衡服务器与服务器之间的连接所使用的传输协议，而非客户端与负载均衡服务器之间所使用的协议。为了确定客户端与负载均衡服务器之间所使用的协议， X-Forwarded-Proto 就派上了用场。</p>
 </blockquote>
 <p>通常通过设置XFP来指定URI的scheme信息，如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header X-Forwarded-Proto $scheme;</span><br></pre></td></tr></table></figure>
@@ -205,7 +205,53 @@
 <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>修改配置如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">map $http_x_forwarded_proto $thescheme &#123;</span><br><span class="line">    default $scheme;</span><br><span class="line">    https https;</span><br><span class="line">&#125;</span><br><span class="line">proxy_set_header X-Forwarded-Proto $thescheme;</span><br></pre></td></tr></table></figure>
 <p>与之前的解决方案不同，不是将XFP设置为固定的scheme值，而是通过计算得出scheme。<br>map配置的意思是先判断是否已经存在XFP的header信息，如果是https则透传，否则使用连接的scheme</p>
-<h2 id="map-directives"><a href="#map-directives" class="headerlink" title="map directives"></a>map directives</h2><p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Syntax: map string $variable &#123; ... &#125;</span><br><span class="line">Default:    —</span><br><span class="line">Context:    http</span><br></pre></td></tr></table></figure><br>功能：创建一个新的结果变量variable，其值依赖于源变量string。map block内指定了源变量值和结果值的映射关系。</p>
+<h2 id="map-directives"><a href="#map-directives" class="headerlink" title="map directives"></a>map directives</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Syntax: map string $variable &#123; ... &#125;</span><br><span class="line">Default:    —</span><br><span class="line">Context:    http</span><br></pre></td></tr></table></figure>
+<p>功能：创建一个新的结果变量variable，其值依赖于源变量string。map block内指定了源变量值和结果值的映射关系。</p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p><a href="https://xidui.github.io/2016/07/13/nginx%E2%80%94%E2%80%94map%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" target="_blank" rel="noopener">参考连接</a>:</p>
+<table>
+<thead>
+<tr>
+<th>mapping条目</th>
+<th>直接访问(rps)</th>
+<th>map第一条url(rps)</th>
+<th>map最后一条url(rps)</th>
+<th>不存在的url(rps)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100</td>
+<td>2829.44</td>
+<td>1819.63</td>
+<td>1765.25</td>
+<td>9740.53</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>-</td>
+<td>1816.00</td>
+<td>1509.52</td>
+<td>4094.68</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>-</td>
+<td>1813.22</td>
+<td>514.24</td>
+<td>658.32</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>-</td>
+<td>1836.02</td>
+<td>62.40</td>
+<td>65.80</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>跟预想的一样，mapping的条目确实会对请求效率产生影响。而且几万条的映射在较高并发的情况下已经到了勉强能用的临界了。<br>在并发不是很高的时候mapping的条目可以更多。100000个条目大概只会影响整个请求15ms左右，可以忽略不计。如果说150ms的延迟是可以接受的，那么在一个并发不是很高的情况下，mapping最多可以有100w条，还是很多的</p>
+</blockquote>
 
 
                 
