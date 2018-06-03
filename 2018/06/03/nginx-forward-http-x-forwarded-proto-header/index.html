@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Utopian"/>
+        <meta property="og:title" content="nginx-forward-http-x-forwarded-proto-header"/>
     
 
     <!--Open Graph Description-->
@@ -33,7 +33,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>Archivo: 2018/2 - Utopian</title>
+    <title>nginx-forward-http-x-forwarded-proto-header - Utopian</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -146,75 +146,82 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>2018/2</h1>
+                <div class="post-heading">
+                    <h1>nginx-forward-http-x-forwarded-proto-header</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2018-06-03
+                        
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/nginx/">#nginx</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/2018/02/21/git/">
-        <h1 class="post-title archive">
-            常用 Git 命令清单
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2018-02-21
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-                <div class="post-preview">
-    <a href="/2018/02/20/newyear/">
-        <h1 class="post-title archive">
-            newyear
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2018-02-20
-    </p>
-</div>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="nginx透传"><a href="#nginx透传" class="headerlink" title="nginx透传"></a>nginx透传</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote><p>X-Forwarded-Proto (XFP) 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）。在服务器的访问日志中记录的是负载均衡服务器与服务器之间的连接所使用的传输协议，而非客户端与负载均衡服务器之间所使用的协议。为了确定客户端与负载均衡服务器之间所使用的协议， X-Forwarded-Proto 就派上了用场。</p>
+</blockquote>
+<p>通常通过设置XFP来指定URI的scheme信息，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header X-Forwarded-Proto $scheme;</span><br></pre></td></tr></table></figure>
+<p>然后服务端可以通过读取header X-Forwarded-Proto来获得scheme（如需要区分http还是https请求）。</p>
+<p>但是存在多层反向代理时，这种方式就不灵验了。<br>一个比较常见的https请求路径如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user-agent &gt; haproxy &gt; nginx &gt; apache/php</span><br></pre></td></tr></table></figure><br>haproxy收到user-agent的https请求，但内部和nginx的交互协议为http，所以nginx取到的scheme值就是http了，而非https. php也就无法知道user-agent是使用的http还是https了。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>修改配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">map $http_x_forwarded_proto $thescheme &#123;</span><br><span class="line">    default $scheme;</span><br><span class="line">    https https;</span><br><span class="line">&#125;</span><br><span class="line">proxy_set_header X-Forwarded-Proto $thescheme;</span><br></pre></td></tr></table></figure>
+<p>与之前的解决方案不同，不是将XFP设置为固定的scheme值，而是通过计算得出scheme。<br>map配置的意思是先判断是否已经存在XFP的header信息，如果是https则透传，否则使用连接的scheme</p>
+<h2 id="map-directives"><a href="#map-directives" class="headerlink" title="map directives"></a>map directives</h2><p>用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Syntax: map string $variable &#123; ... &#125;</span><br><span class="line">Default:    —</span><br><span class="line">Context:    http</span><br></pre></td></tr></table></figure><br>功能：创建一个新的结果变量variable，其值依赖于源变量string。map block内指定了源变量值和结果值的映射关系。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
             
-                <div class="post-preview">
-    <a href="/2018/02/19/hello-world/">
-        <h1 class="post-title archive">
-            Hello World
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2018-02-19
-    </p>
-</div>
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
             
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
-</ul>
         </div>
     </div>
-</div>
-
+</article>
 
     <!-- Footer -->
     <hr />
