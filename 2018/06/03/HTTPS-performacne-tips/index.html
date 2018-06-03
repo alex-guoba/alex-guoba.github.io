@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="HTTPS performacne tips"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>HTTPS performacne tips - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>HTTPS performacne tips</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2018-06-03
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/HTTPS/">#HTTPS</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="HTTP-vs-HTTPS-performance"><a href="#HTTP-vs-HTTPS-performance" class="headerlink" title="HTTP vs HTTPS performance"></a>HTTP vs HTTPS performance</h1><p>相对HTTP，影响HTTPS性能的因素包括以下几个方面。</p>
+<h2 id="TLS协议开销"><a href="#TLS协议开销" class="headerlink" title="TLS协议开销"></a>TLS协议开销</h2><p>TLS协议采用主从式架构模型，用于在两个应用程序间通过网络创建起安全的连接，防止在交换数据时受到窃听及篡改。<br>TLS协议的优势是与高层的应用层协议（如HTTP、FTP、Telnet等）无耦合。应用层协议能透明地运行在TLS协议之上，由TLS协议进行创建加密通道需要的协商和认证。应用层协议传送的数据在通过TLS协议时都会被加密，从而保证通信的私密性。</p>
+<h3 id="TLS握手"><a href="#TLS握手" class="headerlink" title="TLS握手"></a>TLS握手</h3><p><img src="https://www.ibm.com/support/knowledgecenter/SSFKSJ_7.1.0/com.ibm.mq.doc/sy10660a.gif" alt="握手流程"></p>
+<p>The SSL or TLS handshake enables the SSL or TLS client and server to establish the secret keys with which they communicate.</p>
+<ol>
+<li>TCL client send “<strong>client hello</strong>“ to TLS server. include: <ul>
+<li><strong>cryptographic information</strong> such as the SSL or TLS version</li>
+<li>the CipherSuites supported by the client</li>
+<li>a <strong>random byte string</strong> that is used in subsequent computations</li>
+<li>data compression methods supported by the client</li>
+</ul>
+</li>
+<li>The TLS server responds with a “<strong>server hello</strong>“ message that contains:<ul>
+<li>the CipherSuite chosen by the server from the list provided by the client. </li>
+<li>the session ID. </li>
+<li><strong>another random byte string</strong>. </li>
+<li>The server also sends its digital certificate. </li>
+<li>If the server requires a digital certificate for client authentication, the server sends a <strong>“client certificate request”</strong> that includes a list of the types of certificates supported and the Distinguished Names of acceptable Certification Authorities (CAs).</li>
+</ul>
+</li>
+<li>The TLS client verifies the server’s digital certificate. For more information, see <a href="https://www.ibm.com/support/knowledgecenter/SSFKSJ_7.1.0/com.ibm.mq.doc/sy10670_.htm" target="_blank" rel="noopener">How SSL and TLS provide identification, authentication, confidentiality, and integrity</a>.</li>
+<li>The TLS client sends <strong>the random byte string</strong> (also called <strong>pre-master-secret</strong>) that enables both the client and the server to compute the <strong>secret key</strong> to be used for encrypting subsequent message data. The random byte string itself is encrypted with the server’s public key.</li>
+<li>(<strong>optional</strong>)If the TLS server sent a <strong>“client certificate request”</strong>, the client sends a random byte string encrypted with the client’s private key, together with the client’s digital certificate, or a “no digital certificate alert”. This alert is only a warning, but with some implementations the handshake fails if client authentication is mandatory.</li>
+<li>The SSL or TLS server verifies the client’s certificate. For more information, see How SSL and TLS provide identification, authentication, confidentiality, and integrity.</li>
+<li>The SSL or TLS client sends the server a “finished” message, which is encrypted with the secret key, indicating that the client part of the handshake is complete.  客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。</li>
+<li>The SSL or TLS server sends the client a “finished” message, which is encrypted with the secret key, indicating that the server part of the handshake is complete.</li>
+<li>For the duration of the SSL or TLS session, the server and client can now exchange messages that are symmetrically encrypted with the shared <strong>secret key</strong>.</li>
+</ol>
+<p>可见，相比http，client和server至少增加了2个来回的交互。<img src="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images%5ccc785811.9b1c0823-16f3-43fb-95cd-1f1f4911be67(ws.10" alt="">.gif)<br>对于长连接的使用场景影响还好，因为handshake只影响到了session建立的过程，对于后面的数据交互无影响，但对于端链接的场景冲击会相对较大，每次请求都会多了2个来回的交互。</p>
+<h3 id="交换数据加解密"><a href="#交换数据加解密" class="headerlink" title="交换数据加解密"></a>交换数据加解密</h3><p>TLS连接建立后，CS间采用secret key来加密交换数据。对称加密会对服务端的性能造成一些压力。</p>
+<p>注意secret key的生成依赖上面提到的三个随机数，<a href="!https://blog.csdn.net/dog250/article/details/5717162">原因如下</a></p>
+<blockquote>
+<p>ssl3_send_client_key_exchange是openssl中客户端确定密钥的函数，同时也发送了“一部分”数据给服务器，这一部分数据就是所谓的pre_master，不管是客户端还是服务器都根据对端传过来的pre_master和自己计算出来的另一部分数据来生成最终的对称密钥，生成过程中需要hello消息中的随机数，这样生成的密钥才不会每次都一样。由于ssl协议中dh份额来源于证书，而证书又是静态的，因此十分有必要引入一种随机因素来保证通过静态证书导出的密钥份额协商出来的密钥的随机性。同时这也是pre_master的意义，那就是随机，对于rsa密钥交换算法来说，pre-master-key本身就是一个随机数，再加上hello消息中的随机，三个随机数通过一个密钥导出器最终导出一个对称密钥，但是对于dh，包括ecdh算法(不考虑匿名dh和瞬时dh)，就只有hello消息中的两个随机数因子了。<br>pre master的存在在于ssl协议不信任每个主机都能产生完全随机的随机数，如果随机数不随机，那么pre master secret就有可能被猜出来，那么仅适用pre master secret作为密钥就不合适了，因此必须引入新的随机因素，那么客户端和服务器加上pre master secret三个随机数一同生成的密钥就不容易被猜出了，一个伪随机可能完全不随机，可是是三个伪随机就十分接近随机了，每增加一个自由度，随机性增加的可不是一。</p>
+</blockquote>
+<h2 id="CA验证"><a href="#CA验证" class="headerlink" title="CA验证"></a>CA验证</h2><p>(未完)</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2018 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
