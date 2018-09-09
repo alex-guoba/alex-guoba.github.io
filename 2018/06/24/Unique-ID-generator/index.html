@@ -243,7 +243,7 @@
 <li>需要独立的开发和部署。</li>
 </ul>
 <h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><p>相对snowflake服务本身，其思想更值得借鉴。我们在使用时可以在其设计纸上进一步改造成符合业务的使用场景，比如在其中加入业务id、机房id等信息，这样也便于问题定位。</p>
-<p>snowflake算法中的<strong>机器标识</strong>其实已经包含了路由信息。数据proxy层根据机器标志可以直接定位对应的worker ID，并将ID转发给对应的数据层处理读取请求。<br>底层在根据ID来读取数据时，根据底层存储模型的不同，这里可以有不同的实现。已bitcask模型为例：<br><img src="https://hbimg.b0.upaiyun.com/0ef1d28d2f1cb86f76d885f7a654a0f45bd168e911d3d-pzdtbR_fw658" alt="enter image description here"><br>这里的ID（key）对存储层本身无任何关联，hash表中的value为数据存放的地址。对于存储层来说，只要上层保证ID唯一即可。</p>
+<p>snowflake算法中的<strong>机器标识</strong>其实已经包含了路由信息。数据proxy层根据机器标志可以直接定位对应的worker ID，并将ID转发给对应的数据层处理读取请求。<br>底层在根据ID来读取数据时，根据底层存储模型的不同，这里可以有不同的实现。已bitcask模型为例：<br><img src="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1529857767368&amp;di=098c414e1b21f6963e648c2cdecaa533&amp;imgtype=jpg&amp;src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D3833417777%2C3408093271%26fm%3D214%26gp%3D0.jpg" alt="enter image description here"><br>这里的ID（key）对存储层本身无任何关联，hash表中的value为数据存放的地址。对于存储层来说，只要上层保证ID唯一即可。</p>
 <p>之前还见过另外一种存储模型，ID的产生跟底层数据存储强耦合，ID由数据存储层来生成，里面包含了机器、磁盘、存储偏移等信息。这种存储模型有几个好处：</p>
 <ul>
 <li><strong>ID自带路由信息，不用再额外维护ID跟数据存储的映射</strong>。</li>

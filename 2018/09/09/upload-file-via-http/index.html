@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="newdraft"/>
+        <meta property="og:title" content="upload file via http"/>
     
 
     <!--Open Graph Description-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>newdraft - Utopian</title>
+    <title>upload file via http - Utopian</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -154,13 +154,13 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>newdraft</h1>
+                    <h1>upload file via http</h1>
                     
                     <span class="meta">
                         <!-- Date and Author -->
                         
                         
-                            2018-02-20
+                            2018-09-09
                         
                     </span>
                 </div>
@@ -182,7 +182,26 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>两台外网服务器之间需要传输一个较大的文件，目标服务器有webserver。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>初步想了下，有几种思路：</p>
+<ul>
+<li>ftp：目标服务器搭建ftp。通过ftp client上传。部署成本太高（主要是懒），放弃</li>
+<li>nginx-upload-module: 较为理想的方案，使用nginx插件支持，成本小。但在编译module时卡住了，忘了之前的编译选项，加入upload module之后编译又报错，不想太折腾，放弃了。</li>
+<li>在webserver上自己实现file upload server：此方案看似成本高，翻了一下，其实还挺简单。那就动手吧</li>
+</ul>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h3 id="http-upload-server搭建"><a href="#http-upload-server搭建" class="headerlink" title="http upload server搭建"></a>http upload server搭建</h3><p>方法有很多，搭建webserver第一个想到的就是node了。于是找到了express-fileupload。npm库上代码都是现成的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">const express = require(&apos;express&apos;);</span><br><span class="line">const fileUpload = require(&apos;express-fileupload&apos;);</span><br><span class="line">const app = express();</span><br><span class="line"> </span><br><span class="line">// default options</span><br><span class="line">app.use(fileUpload());</span><br><span class="line"> </span><br><span class="line">app.post(&apos;/upload&apos;, function(req, res) &#123;</span><br><span class="line">  if (!req.files)</span><br><span class="line">    return res.status(400).send(&apos;No files were uploaded.&apos;);</span><br><span class="line"> </span><br><span class="line">  // The name of the input field (i.e. &quot;sampleFile&quot;) is used to retrieve the uploaded file</span><br><span class="line">  let sampleFile = req.files.sampleFile;</span><br><span class="line"> </span><br><span class="line">  // Use the mv() method to place the file somewhere on your server</span><br><span class="line">  sampleFile.mv(&apos;/somewhere/on/your/server/filename.jpg&apos;, function(err) &#123;</span><br><span class="line">    if (err)</span><br><span class="line">      return res.status(500).send(err);</span><br><span class="line"> </span><br><span class="line">    res.send(&apos;File uploaded!&apos;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// app.listen(8080);</span><br></pre></td></tr></table></figure>
+<h3 id="nginx路由"><a href="#nginx路由" class="headerlink" title="nginx路由"></a>nginx路由</h3><p>反向代理增加路由配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /upload &#123;</span><br><span class="line">    proxy_pass http://127.0.0.1:5000;</span><br><span class="line">    proxy_set_header   Host             $host;</span><br><span class="line">    proxy_set_header   X-Real-IP        $remote_addr;</span><br><span class="line">    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">    proxy_set_header   X-Forwarded-Proto $scheme;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并设置最大包大小，否则文件过大会被ng拒绝<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size" target="_blank" rel="noopener">413 (Request Entity Too Large)</a>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client_max_body_size       200m;</span><br></pre></td></tr></table></figure></p>
+<h3 id="上传"><a href="#上传" class="headerlink" title="上传"></a>上传</h3><p>使用curl模拟表单上传:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -F &apos;sampleFile=@path/to/local/file&apos; UPLOAD_ADDRESS</span><br></pre></td></tr></table></figure>
+<p>curl支持一次上传多个，不过upload server实现得修改支持命名。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>线上上传时发现上传还是失败了，因为文件太大，导致node进程OOM kill了。。<br>不想在折腾了，直接用split把文件切成几个小文件后上传，然后再到目标机器使用cat合并。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># binary拆分成多个20m的文件，输出文件名类似outputSerial_aa, outputSerial_ab, outputSerial_ac....</span><br><span class="line">split -b 20m uploadfile outputSerial_</span><br></pre></td></tr></table></figure></p>
+<p>在目标机器执行合并操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat outputSerial_* &gt; uploadfile</span><br></pre></td></tr></table></figure>
+<p>总结起来，对比重编ng貌似也不简单:P)。。</p>
+
 
                 
             </div>
