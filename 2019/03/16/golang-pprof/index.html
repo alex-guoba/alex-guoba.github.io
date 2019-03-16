@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="golang pprof"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>golang pprof - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>golang pprof</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2019-03-16
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="golang-pprof"><a href="#golang-pprof" class="headerlink" title="golang pprof"></a>golang pprof</h1><p>以常见的one-gouroutine-per-connection模式来介绍pprof的用法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"># server.go</span><br><span class="line">func main() &#123;</span><br><span class="line">    ln, err := net.Listen(&quot;tcp&quot;, &quot;:8972&quot;)</span><br><span class="line">    if err != nil &#123;</span><br><span class="line">        panic(err)</span><br><span class="line">    &#125;</span><br><span class="line">    go func() &#123;</span><br><span class="line">        if err := http.ListenAndServe(&quot;:6060&quot;, nil); err != nil &#123;</span><br><span class="line">            log.Fatalf(&quot;pprof failed: %v&quot;, err)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    var connections []net.Conn</span><br><span class="line">    defer func() &#123;</span><br><span class="line">        for _, conn := range connections &#123;</span><br><span class="line">            conn.Close()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    for &#123;</span><br><span class="line">        conn, e := ln.Accept()</span><br><span class="line">        if e != nil &#123;</span><br><span class="line">            if ne, ok := e.(net.Error); ok &amp;&amp; ne.Temporary() &#123;</span><br><span class="line">                log.Printf(&quot;accept temp err: %v&quot;, ne)</span><br><span class="line">                continue</span><br><span class="line">            &#125;</span><br><span class="line">            log.Printf(&quot;accept err: %v&quot;, e)</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        go handleConn(conn)</span><br><span class="line">        connections = append(connections, conn)</span><br><span class="line">        if len(connections)%100 == 0 &#123;</span><br><span class="line">            log.Printf(&quot;total number of connections: %v&quot;, len(connections))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">func handleConn(conn net.Conn) &#123;</span><br><span class="line">    io.Copy(ioutil.Discard, conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># client.go</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">	ip          = flag.String(&quot;ip&quot;, &quot;127.0.0.1&quot;, &quot;server IP&quot;)</span><br><span class="line">	connections = flag.Int(&quot;conn&quot;, 1, &quot;number of tcp connections&quot;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    flag.Parse()</span><br><span class="line">    rand.Seed(time.Now().UnixNano())</span><br><span class="line"></span><br><span class="line">    addr := *ip + &quot;:8972&quot;</span><br><span class="line">    var conns []net.Conn</span><br><span class="line">    for i := 0; i &lt; *connections; i++ &#123;</span><br><span class="line">        c, err := net.DialTimeout(&quot;tcp&quot;, addr, 10*time.Second)</span><br><span class="line">        if err != nil &#123;</span><br><span class="line">            fmt.Println(&quot;failed to connect&quot;, i, err)</span><br><span class="line">            i--</span><br><span class="line">            continue</span><br><span class="line">        &#125;</span><br><span class="line">        conns = append(conns, c)</span><br><span class="line">        time.Sleep(time.Millisecond)</span><br><span class="line">    &#125;</span><br><span class="line">    defer func() &#123;</span><br><span class="line">        for _, c := range conns &#123;</span><br><span class="line">            c.Close()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    log.Printf(&quot;完成初始化 %d 连接&quot;, len(conns))</span><br><span class="line">    wg := sync.WaitGroup&#123;&#125;</span><br><span class="line">    for i := 0; i &lt; len(conns); i++ &#123;</span><br><span class="line">        wg.Add(1)</span><br><span class="line">        go func(conn net.Conn) &#123;</span><br><span class="line">            defer wg.Done()</span><br><span class="line">            for &#123;</span><br><span class="line">                time.Sleep(time.Duration(rand.Int31n(1000)) * time.Millisecond)</span><br><span class="line">                conn.Write([]byte(&quot;hello world\r\n&quot;))</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;(conns[i])</span><br><span class="line">    &#125;</span><br><span class="line">    wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><h3 id="CPU-Profiling"><a href="#CPU-Profiling" class="headerlink" title="CPU Profiling"></a>CPU Profiling</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof http://localhost:6060/debug/pprof/profile?seconds=60</span><br><span class="line">``` </span><br><span class="line">- flat：给定函数上运行耗时</span><br><span class="line">- flat%：同上的 CPU 运行耗时总比例</span><br><span class="line">- sum%：给定函数累积使用 CPU 总比例</span><br><span class="line">- cum：当前函数加上它之上的调用运行总耗时</span><br><span class="line">- cum%：同上的 CPU 运行耗时总比例</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">10000个connection时测试数据</span><br><span class="line">``` </span><br><span class="line">(pprof) top</span><br><span class="line">Showing nodes accounting for 2350ms, 70.57% of 3330ms total</span><br><span class="line">Dropped 34 nodes (cum &lt;= 16.65ms)</span><br><span class="line">Showing top 10 nodes out of 79</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">     560ms 16.82% 16.82%      560ms 16.82%  runtime.epollwait /usr/local/go/src/runtime/sys_linux_amd64.s</span><br><span class="line">     560ms 16.82% 33.63%      790ms 23.72%  syscall.Syscall /usr/local/go/src/syscall/asm_linux_amd64.s</span><br><span class="line">     310ms  9.31% 42.94%      310ms  9.31%  runtime.futex /usr/local/go/src/runtime/sys_linux_amd64.s</span><br><span class="line">     210ms  6.31% 49.25%      210ms  6.31%  runtime.usleep /usr/local/go/src/runtime/sys_linux_amd64.s</span><br><span class="line">     170ms  5.11% 54.35%     1490ms 44.74%  io/ioutil.devNull.ReadFrom /usr/local/go/src/io/ioutil/ioutil.go</span><br><span class="line">     120ms  3.60% 57.96%     1210ms 36.34%  internal/poll.(*FD).Read /usr/local/go/src/internal/poll/fd_unix.go</span><br><span class="line">     110ms  3.30% 61.26%      110ms  3.30%  runtime.deferreturn /usr/local/go/src/runtime/panic.go</span><br><span class="line">     110ms  3.30% 64.56%      220ms  6.61%  runtime.netpollready /usr/local/go/src/runtime/netpoll.go</span><br><span class="line">     110ms  3.30% 67.87%      110ms  3.30%  runtime.netpollunblock /usr/local/go/src/runtime/netpoll.go</span><br><span class="line">      90ms  2.70% 70.57%      870ms 26.13%  runtime.netpoll /usr/local/go/src/runtime/netpoll_epoll.go</span><br></pre></td></tr></table></figure>
+<h3 id="Heap-profiling"><a href="#Heap-profiling" class="headerlink" title="Heap profiling"></a>Heap profiling</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof http://localhost:6060/debug/pprof/heap</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-inuse_space：分析应用程序的常驻内存占用情况(default)</li>
+<li>-alloc_objects：分析应用程序的内存临时分配情况</li>
+</ul>
+<p>10000个connection的测试数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(pprof) top</span><br><span class="line">Showing nodes accounting for 19080.60kB, 100% of 19080.60kB total</span><br><span class="line">Showing top 10 nodes out of 22</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">17544.35kB 91.95% 91.95% 17544.35kB 91.95%  io/ioutil.glob..func1 /usr/local/go/src/io/ioutil/ioutil.go</span><br><span class="line"> 1024.06kB  5.37% 97.32%  1024.06kB  5.37%  syscall.anyToSockaddr /usr/local/go/src/syscall/syscall_linux.go</span><br><span class="line">  512.19kB  2.68%   100%   512.19kB  2.68%  runtime.malg /usr/local/go/src/runtime/proc.go</span><br><span class="line">         0     0%   100%   512.03kB  2.68%  internal/poll.(*FD).Accept /usr/local/go/src/internal/poll/fd_unix.go</span><br><span class="line">         0     0%   100%   512.03kB  2.68%  internal/poll.accept /usr/local/go/src/internal/poll/sock_cloexec.go</span><br><span class="line">         0     0%   100% 17544.35kB 91.95%  io.Copy /usr/local/go/src/io/io.go</span><br><span class="line">         0     0%   100% 17544.35kB 91.95%  io.copyBuffer /usr/local/go/src/io/io.go</span><br><span class="line">         0     0%   100% 17544.35kB 91.95%  io/ioutil.(*devNull).ReadFrom &lt;autogenerated&gt;</span><br><span class="line">         0     0%   100% 17544.35kB 91.95%  io/ioutil.devNull.ReadFrom /usr/local/go/src/io/ioutil/ioutil.go</span><br><span class="line">         0     0%   100% 17544.35kB 91.95%  main.handleConn /home/gelco/code/go/src/gelco/1m-go-tcp-connection/goroutine-per-conn/server.go</span><br></pre></td></tr></table></figure>
+<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#Block profiling</span><br><span class="line">go tool pprof http://localhost:6060/debug/pprof/block</span><br><span class="line"></span><br><span class="line">#Mutex profiling</span><br><span class="line">go tool pprof http://localhost:6060/debug/pprof/mutex</span><br></pre></td></tr></table></figure>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
