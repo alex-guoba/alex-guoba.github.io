@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="groupcache"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>groupcache - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>groupcache</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2019-08-21
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/groupcache/">#groupcache</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="groupcache简介"><a href="#groupcache简介" class="headerlink" title="groupcache简介"></a>groupcache简介</h2><p>周末阅读<a href="https://github.com/golang/groupcache" target="_blank" rel="noopener">groupcache</a>的源码，比较简单，也总结一下。</p>
+<h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>groupcache虽然跟memcache是出自同一作者之手，但是定位相差挺大。memcached（简称mc）是一个独立的nosql存储服务，后台服务必须按照mc协议与之通信来实现数据缓存功能。而groupcache只是一个简单的缓存lib，定位类似于leveldb，后台服务必须继承到代码中来实现缓存的能力。</p>
+<h3 id="代码及功能简介"><a href="#代码及功能简介" class="headerlink" title="代码及功能简介"></a>代码及功能简介</h3><ul>
+<li>LRU<br>支持LRU的cache实现，与传统的LRU实现没有大的差别。核心数据结构：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">type  Cache  struct  &#123;</span><br><span class="line">  // MaxEntries is the maximum number of cache entries before</span><br><span class="line">  // an item is evicted. Zero means no limit.</span><br><span class="line">  MaxEntries int</span><br><span class="line"></span><br><span class="line">  // OnEvicted optionally specifies a callback function to be</span><br><span class="line">  // executed when an entry is purged from the cache.</span><br><span class="line">  OnEvicted func(key Key, value interface&#123;&#125;)</span><br><span class="line"></span><br><span class="line">  ll *list.List</span><br><span class="line">  cache map[interface&#123;&#125;]*list.Element</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// A Key may be any value that is comparable. See http://golang.org/ref/spec#Comparison_operators</span><br><span class="line">type  Key  interface&#123;&#125;</span><br><span class="line"></span><br><span class="line">type  entry  struct  &#123;</span><br><span class="line">  key Key</span><br><span class="line">  value interface&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>为保证Add/Get/Remove性能，底层使用map结构来存储。可以通过key快速定位。<br>注意map中的value并不是实际数据，而是list.Element指针，list.Element封装了key、value。引入list的目的是为了实现Least recently used，跟memcached等实现在struct中加入双链表的结构，目的是一样的。</p>
+<ul>
+<li><p>Consistent hash<br>一致性hash实现，用作HTTPPool中的peers管理。注意有使用副本replicas参数控制虚拟节点数大小。</p>
+</li>
+<li><p>Single flight<br>用于控制key的并发访问个数。使用memcache等缓存的毛病就是当cache中的key过期后，逻辑层短时间内可能有大量的cache miss，并发访问导致底层出现毛刺、雪崩。Single Fligth的目的就是为了避免这种场景，同一时间只允许一个到peers的访问，其他请求被block。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">// Group represents a class of work and forms a namespace in which</span><br><span class="line">// units of work can be executed with duplicate suppression.</span><br><span class="line">type Group struct &#123;</span><br><span class="line">    mu sync.Mutex       // protects m</span><br><span class="line">    m  map[string]*call // lazily initialized</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Do executes and returns the results of the given function, making</span><br><span class="line">// sure that only one execution is in-flight for a given key at a</span><br><span class="line">// time. If a duplicate comes in, the duplicate caller waits for the</span><br><span class="line">// original to complete and receives the same results.</span><br><span class="line">func (g *Group) Do(key string, fn func() (interface&#123;&#125;, error)) (interface&#123;&#125;, error) &#123;</span><br><span class="line">    g.mu.Lock()</span><br><span class="line">    if g.m == nil &#123;</span><br><span class="line">        g.m = make(map[string]*call)</span><br><span class="line">    &#125;</span><br><span class="line">    // 对应key已有请求flight中，等待返回</span><br><span class="line">    if c, ok := g.m[key]; ok &#123;</span><br><span class="line">        g.mu.Unlock()</span><br><span class="line">        c.wg.Wait()</span><br><span class="line">        return c.val, c.err</span><br><span class="line">    &#125;</span><br><span class="line">    c := new(call)</span><br><span class="line">    c.wg.Add(1)</span><br><span class="line">    g.m[key] = c</span><br><span class="line">    g.mu.Unlock()</span><br><span class="line"></span><br><span class="line">    c.val, c.err = fn()</span><br><span class="line">    c.wg.Done()</span><br><span class="line"></span><br><span class="line">    g.mu.Lock()</span><br><span class="line">    delete(g.m, key)</span><br><span class="line">    g.mu.Unlock()</span><br><span class="line"></span><br><span class="line">    return c.val, c.err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Peer</li>
+</ul>
+<p>管理peers节点，groupcache从远程load数据时，需要通过PickPeer方法获取一个peer对象。</p>
+<ul>
+<li>Http poll</li>
+<li>Hot Cache</li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
