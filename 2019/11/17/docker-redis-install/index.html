@@ -196,7 +196,7 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ol>
+                <h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ul>
 <li><p>下载镜像<br>docker pull redis</p>
 </li>
 <li><p>静态文件目录、log目录<br>mkdir ./redis/conf<br>mdkir ./redis/data</p>
@@ -204,23 +204,21 @@
 <li><p>配置文件<br>从官方下载一份最新的redis.conf<br>cd ./redis/conf<br>wget <a href="http://download.redis.io/redis-stable/redis.conf" target="_blank" rel="noopener">http://download.redis.io/redis-stable/redis.conf</a></p>
 </li>
 <li><p>创建容器&amp;启动</p>
+</li>
+</ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">-p 6379:6379 \</span><br><span class="line">-v $PWD/data:/data \</span><br><span class="line">-v $PWD/conf/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">--name myredis \</span><br><span class="line">-d redis redis-server /etc/redis/redis.conf \</span><br><span class="line">--appendonly yes</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>appendonly为落地方案，可选。</p>
-<p>启动之后redis应该为正常状态了，可以使用docker上的redis-cli查看。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it myredis redis-cli</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>宿主主机访问<br>查看端口映射状态<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker port myredis</span><br><span class="line">6379/tcp -&gt; 0.0.0.0:6379</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+<p>appendonly为落地方案，可选。<br>启动之后redis应该为正常状态了，可以使用docker上的redis-cli查看。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it myredis redis-cli</span><br></pre></td></tr></table></figure>
+<ul>
+<li>宿主主机访问</li>
+</ul>
+<p>查看端口映射状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker port myredis</span><br><span class="line">6379/tcp -&gt; 0.0.0.0:6379</span><br></pre></td></tr></table></figure>
 <p>表示本机端口状态映射正常，使用telnet可以连接本地6379，但是连接成功之后会立即被redis server断开.<br>需要关闭bind、protected-mode。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># ~~~ WARNING ~~~ If the computer running Redis is directly exposed to the</span><br><span class="line"># internet, binding to all the interfaces is dangerous and will expose the</span><br><span class="line"># instance to everybody on the internet. So by default we uncomment the</span><br><span class="line"># following bind directive, that will force Redis to listen only into</span><br><span class="line"># the IPv4 lookback interface address (this means Redis will be able to</span><br><span class="line"># accept connections only from clients running into the same computer it</span><br><span class="line"># is running).</span><br><span class="line">#</span><br><span class="line"># IF YOU ARE SURE YOU WANT YOUR INSTANCE TO LISTEN TO ALL THE INTERFACES</span><br><span class="line"># JUST COMMENT THE FOLLOWING LINE.</span><br><span class="line"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line"># bind 127.0.0.1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Protected mode is a layer of security protection, in order to avoid that</span><br><span class="line"># Redis instances left open on the internet are accessed and exploited.</span><br><span class="line">#</span><br><span class="line"># When protected mode is on and if:</span><br><span class="line">#</span><br><span class="line"># 1) The server is not binding explicitly to a set of addresses using the</span><br><span class="line">#    &quot;bind&quot; directive.</span><br><span class="line"># 2) No password is configured.</span><br><span class="line">#</span><br><span class="line"># The server only accepts connections from clients connecting from the</span><br><span class="line"># IPv4 and IPv6 loopback addresses 127.0.0.1 and ::1, and from Unix domain</span><br><span class="line"># sockets.</span><br><span class="line">#</span><br><span class="line"># By default protected mode is enabled. You should disable it only if</span><br><span class="line"># you are sure you want clients from other hosts to connect to Redis</span><br><span class="line"># even if no authentication is configured, nor a specific set of interfaces</span><br><span class="line"># are explicitly listed using the &quot;bind&quot; directive.</span><br><span class="line"># protected-mode yes</span><br></pre></td></tr></table></figure>
-<p>protected-mode应该是redis增加的一个双重保护，避免更改ip后直接面向外网。只改bind ip外部也是无法访问的.<br>更改完毕后重启container即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container restart myredis</span><br></pre></td></tr></table></figure></p>
-<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul>
-<li>官方blog<a href="https://blog.docker.com/2015/04/tips-for-deploying-nginx-official-image-with-docker/" target="_blank" rel="noopener">https://blog.docker.com/2015/04/tips-for-deploying-nginx-official-image-with-docker/</a></li>
-<li>中文教程 <a href="https://www.runoob.com/docker/docker-install-nginx.html" target="_blank" rel="noopener">https://www.runoob.com/docker/docker-install-nginx.html</a></li>
-</ul>
-
+<p>protected-mode应该是redis增加的一个双重保护，避免更改ip后直接面向外网。只改bind ip外部也是无法访问的.<br>更改完毕后重启container即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container restart myredis</span><br></pre></td></tr></table></figure>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2>
 
                 
             </div>
