@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="golang viper tips"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>golang viper tips - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>golang viper tips</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2019-12-15
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Configuration/">#Configuration</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="viper-tips"><a href="#viper-tips" class="headerlink" title="viper tips"></a>viper tips</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><a href="https://github.com/spf13/viper" target="_blank" rel="noopener">vipper</a>是golang下一个配置文件的解决方案，功能强大，也被很多开源项目所引用。主要特性包括：</p>
+<ul>
+<li>setting defaults</li>
+<li>reading from JSON, TOML, YAML, HCL, envfile and Java properties config files</li>
+<li>live watching and re-reading of config files (optional)</li>
+<li>reading from environment variables</li>
+<li>reading from remote config systems (etcd or Consul), and watching changes</li>
+<li>reading from command line flags</li>
+<li>reading from buffer</li>
+<li>setting explicit values</li>
+</ul>
+<p>具体使用方法就不copy了，主要记录下使用过程中遇到的一些小问题，避免后续再次踩坑。</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>配置文件的解析、使用方法有多种，简单的方法在业务代码中直接调用viper相关的API：</p>
+<ul>
+<li>Get(key string) : interface{}</li>
+<li>GetBool(key string) : bool</li>
+<li>GetFloat64(key string) : float64</li>
+<li>GetInt(key string) : int</li>
+<li>GetIntSlice(key string) : []int</li>
+<li>GetString(key string) : string</li>
+<li>GetStringMap(key string) : map[string]interface{}</li>
+<li>GetStringMapString(key string) : map[string]string</li>
+<li>GetStringSlice(key string) : []string</li>
+<li>GetTime(key string) : time.Time</li>
+<li>GetDuration(key string) : time.Duration</li>
+</ul>
+<p>这种方案简单，各个go文件中引入viper object，需要时读取。个人不太喜欢这种方式，一是太多地方引入了viper，业务跟配置解决方案耦合太高。二是个人喜欢统一对配置做些前置检查，避免无效配置。将配置相关解析的代码放在一起而非散落各地的维护性也更高。所以一般使用struct来承担解析后的结果。典型代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">type Pos struct &#123;</span><br><span class="line">    Country string</span><br><span class="line">    Cent    int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type CompanyInfomation struct &#123;</span><br><span class="line">    Name                 string</span><br><span class="line">    MarketCapitalization int64</span><br><span class="line">    EmployeeNum          int64</span><br><span class="line">    Department           map[int]Pos</span><br><span class="line">    IsOpen               bool   `mapstructure:&quot;is_open&quot;` </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type YamlSetting struct &#123;</span><br><span class="line">    TimeStamp         string</span><br><span class="line">    Address           string</span><br><span class="line">    Postcode          int64</span><br><span class="line">    CompanyInfomation CompanyInfomation</span><br><span class="line">&#125;</span><br><span class="line">v := viper.New()</span><br><span class="line">v.SetConfigName(&quot;config&quot;)</span><br><span class="line">v.AddConfigPath(&quot;./&quot;)</span><br><span class="line">v.SetConfigType(&quot;yaml&quot;)</span><br><span class="line"></span><br><span class="line">if err := v.ReadInConfig(); err != nil &#123;</span><br><span class="line">    return err</span><br><span class="line">&#125;</span><br><span class="line">var yamlObj YamlSetting</span><br><span class="line">if err := v.Unmarshal(&amp;yamlObj); err != nil &#123;</span><br><span class="line">    return err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应配置文件内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">TimeStamp: &quot;2018-10-18 10:09:23&quot;</span><br><span class="line">Address: &quot;Shenzhen&quot;</span><br><span class="line">Postcode: 518000</span><br><span class="line">CompanyInfomation:</span><br><span class="line">  Name: &quot;Sunny&quot;</span><br><span class="line">  MarketCapitalization: 50000000</span><br><span class="line">  EmployeeNum: 200</span><br><span class="line">  Department:</span><br><span class="line">    1:</span><br><span class="line">      Country: &quot;Finance&quot;</span><br><span class="line">      Cent: 90</span><br><span class="line">    2:</span><br><span class="line">      Country: &quot;Design&quot;</span><br><span class="line">      Cent: 80</span><br><span class="line">  is_open: true</span><br></pre></td></tr></table></figure></p>
+<p>注意struct中的mapstructure标签，作用类似于json标签，用作控制marshal/unmarshal的过程。<br>另外在对一些复杂数据结构的支持上，如上面的map[int] struct也做了很好的支持，避免二次解析。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>如果仅从上面的内容看，viper跟json直接解析一个config.json库没啥差别。但是viper提供了更多的配置的能力。</p>
+<p>Viper does the following for you:</p>
+<ol>
+<li>Find, load, and unmarshal a configuration file in JSON, TOML, YAML, HCL, INI, envfile or Java properties formats.</li>
+<li>Provide a mechanism to set default values for your different configuration options.</li>
+<li>Provide a mechanism to set override values for options specified through command line flags.</li>
+<li>Provide an alias system to easily rename parameters without breaking existing code.</li>
+<li>Make it easy to tell the difference between when a user has provided a command line or config file which is the same as the default.</li>
+</ol>
+<p>Viper uses the following precedence order. Each item takes precedence over the item below it:</p>
+<ul>
+<li>explicit call to Set</li>
+<li>flag</li>
+<li>env</li>
+<li>config</li>
+<li>key/value store</li>
+<li>default</li>
+</ul>
+<p>个人在项目中遇到个小问题，项目部署使用内部的容器平台，而这种容器平台使用环境变量来映射相关端口等信息。之前在配置文件自己指定端口的方法行不通了。如果之前使用了viper来获取，这个就不再是个问题了，可以通过BindEnv方法来兼容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">v.BindEnv(&quot;port&quot;, &quot;main_port&quot;) // for spetial container</span><br><span class="line">if c.Port == 0 &#123;</span><br><span class="line">    c.Port = v.GetInt(&quot;port&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>viper的更多高级特性有待摸索，后续项目需要实际使用时再研究。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
