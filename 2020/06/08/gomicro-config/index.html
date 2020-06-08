@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="gomicro-config"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>gomicro-config - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>gomicro-config</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2020-06-08
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/go-micro/">#go-micro</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="go-micro配置介绍"><a href="#go-micro配置介绍" class="headerlink" title="go-micro配置介绍"></a>go-micro配置介绍</h1><h2 id="数据结构-amp-流程图"><a href="#数据结构-amp-流程图" class="headerlink" title="数据结构&amp;流程图"></a>数据结构&amp;流程图</h2><p><img src="/img/micro-config.jpg" alt=""></p>
+<h2 id="核心对象"><a href="#核心对象" class="headerlink" title="核心对象"></a>核心对象</h2><h3 id="Config"><a href="#Config" class="headerlink" title="Config"></a>Config</h3><p>暴露给用户的对象，用于加载、读取和同步数据源。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 动态配置的抽象接口。可以作为一个单独组建给业务使用，但框架自身依赖**DefaultConfig**实现</span><br><span class="line">// It manages reading, syncing, watching from multiple backend sources and represents them as a single merged and queryable source.</span><br><span class="line">type Config interface &#123;</span><br><span class="line">    // provide the reader.Values interface</span><br><span class="line">    reader.Values</span><br><span class="line">    // Init the config</span><br><span class="line">    Init(opts ...Option) error</span><br><span class="line">    // Options in the config</span><br><span class="line">    Options() Options</span><br><span class="line">    // Stop the config loader/watcher</span><br><span class="line">    Close() error</span><br><span class="line">    // Load config sources</span><br><span class="line">    Load(source ...source.Source) error</span><br><span class="line">    // Force a source changeset sync</span><br><span class="line">    Sync() error</span><br><span class="line">    // Watch a value for changes</span><br><span class="line">    Watch(path ...string) (Watcher, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然gomicro中一切皆Interface，但内部实现依赖DefaultConfig。</p>
+<h3 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h3><p>配置内容源，支持以下格式：</p>
+<ul>
+<li>configmap - k8s configmap</li>
+<li>consul - consul</li>
+<li>etcd - etcd v3</li>
+<li>env - 环境变量</li>
+<li>file - 配置文件</li>
+<li>flag - 命令行标识</li>
+<li>grpc - grpc</li>
+<li>memory - 内存<br>…</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// Source is the source from which config is loaded</span><br><span class="line">type Source interface &#123;</span><br><span class="line">    Read() (*ChangeSet, error) // 通过Read读取到ChangeSet</span><br><span class="line">    Write(*ChangeSet) error</span><br><span class="line">    Watch() (Watcher, error) // 创建一个Source对应的Watcher</span><br><span class="line">    String() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 代表从Source读取的内容。可能为全量，也可能为增量</span><br><span class="line">type ChangeSet struct &#123;</span><br><span class="line">    Data      []byte</span><br><span class="line">    Checksum  string</span><br><span class="line">    Format    string</span><br><span class="line">    Source    string</span><br><span class="line">    Timestamp time.Time</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Watcher watches a source for changes</span><br><span class="line">type Watcher interface &#123;</span><br><span class="line">    Next() (*ChangeSet, error) // 无变化时会block</span><br><span class="line">    Stop() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Watcher的底层实现还是依赖各Source的watcher，比如file source，就引入了”fsnotify/fsnotify”来监控文件的变化。每个Source被Loader Load时会生成一个对应的source watcher goroutine，用于监控source的变更。</p>
+<h3 id="Loader"><a href="#Loader" class="headerlink" title="Loader"></a>Loader</h3><p>用于加载Source。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">// Loader manages loading sources</span><br><span class="line">type Loader interface &#123;</span><br><span class="line">    // Stop the loader</span><br><span class="line">    Close() error</span><br><span class="line">    // Load the sources</span><br><span class="line">    Load(...source.Source) error</span><br><span class="line">    // A Snapshot of loaded config</span><br><span class="line">    Snapshot() (*Snapshot, error)</span><br><span class="line">    // Force sync of sources</span><br><span class="line">    Sync() error</span><br><span class="line">    // Watch for changes</span><br><span class="line">    Watch(...string) (Watcher, error)</span><br><span class="line">    // Name of loader</span><br><span class="line">    String() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Watcher lets you watch sources and returns a merged ChangeSet</span><br><span class="line">type Watcher interface &#123;</span><br><span class="line">    // First call to next may return the current Snapshot</span><br><span class="line">    // If you are watching a path then only the data from</span><br><span class="line">    // that path is returned.</span><br><span class="line">    Next() (*Snapshot, error)</span><br><span class="line">    // Stop watching for changes</span><br><span class="line">    Stop() error</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 功能：ChangeSet的聚合。</span><br><span class="line">// 场景：当loader重新加载数据之后会保存一份snapshot</span><br><span class="line">type Snapshot struct &#123;</span><br><span class="line">    // The merged ChangeSet</span><br><span class="line">    ChangeSet *source.ChangeSet</span><br><span class="line">    // Deterministic and comparable version of the snapshot</span><br><span class="line">    Version string</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>框架中提供了一个缺省的memory loader，Loader的存在主要基于以下几个原因：<br>1、Source是可以聚合（Merge）的，在Reader中提供了Merge的实现。当系统存在多份Source时，需要将Source聚合好之后给到Config，否则Config中就得处理此类逻辑。<br>2、对Source的failover。当Load失败时，提供了Snapshot。<br>Loader还维护了核心的数据结构：watcher列表。source watcher goroutine发现内容变更时会将变更的内容通知给所有goroutine（通过Get读取对应的path值），“通知”只是将内容写到了update 队列。具体的变更逻辑还得调用方调用Next感知。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">    // Loader中通知各个watcher，内容可能已变化，写入changeset</span><br><span class="line">    for _, w := range watchers &#123;</span><br><span class="line">        select &#123;</span><br><span class="line">        case w.updates &lt;- m.vals.Get(w.path...):</span><br><span class="line">        default:</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// Loader提供的变更获取接口，读取changeset</span><br><span class="line">func (w *watcher) Next() (*loader.Snapshot, error) &#123;</span><br><span class="line">    for &#123;</span><br><span class="line">        select &#123;</span><br><span class="line">        case &lt;-w.exit:</span><br><span class="line">            return nil, errors.New(&quot;watcher stopped&quot;)</span><br><span class="line">        case v := &lt;-w.updates:</span><br><span class="line">            if bytes.Equal(w.value.Bytes(), v.Bytes()) &#123;</span><br><span class="line">                continue</span><br><span class="line">            &#125;</span><br><span class="line">            w.value = v</span><br><span class="line"></span><br><span class="line">            cs := &amp;source.ChangeSet&#123;</span><br><span class="line">                Data:      v.Bytes(),</span><br><span class="line">                Format:    w.reader.String(),</span><br><span class="line">                Source:    &quot;memory&quot;,</span><br><span class="line">                Timestamp: time.Now(),</span><br><span class="line">            &#125;</span><br><span class="line">            cs.Sum()</span><br><span class="line"></span><br><span class="line">            return &amp;loader.Snapshot&#123;</span><br><span class="line">                ChangeSet: cs,</span><br><span class="line">                Version:   fmt.Sprintf(&quot;%d&quot;, time.Now().Unix()),</span><br><span class="line">            &#125;, nil</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// config暴露给外部的watcher接口, 封装Loader的Next接口</span><br><span class="line">func (w *watcher) Next() (reader.Value, error) &#123;</span><br><span class="line">    for &#123;</span><br><span class="line">        s, err := w.lw.Next()   // 内部调用loader的Next获取ChangeSet</span><br><span class="line">        if err != nil &#123;</span><br><span class="line">            return nil, err</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // only process changes</span><br><span class="line">        if bytes.Equal(w.value.Bytes(), s.ChangeSet.Data) &#123;</span><br><span class="line">            continue</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        v, err := w.rd.Values(s.ChangeSet)</span><br><span class="line">        if err != nil &#123;</span><br><span class="line">            return nil, err</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        w.value = v.Get()</span><br><span class="line">        return w.value, nil</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>图中画得比较明白了，比较难以理解的地方也在于Loader为支持多个Source的一些操作，包括sets列表、Merge操作。当理解需要支持多个Source的聚合之后就比较好理解了。<br>另在config中也维护了一个watcher gouroutine，watch的path是各个source的聚合。</p>
+<p>整体感觉config的封装过于复杂了，包括的viper的引入还进行了改造，在代码实现中有比较多的类似的逻辑，包括命名也有不少重复，阅读起来有点心累。估计代码圈复杂度比较高。。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2020 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
