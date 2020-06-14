@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Functional options for friendly APIs"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Functional options for friendly APIs - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Functional options for friendly APIs</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2020-06-14
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Config/">#Config</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <blockquote>
+<p>Written with <a href="https://stackedit.io/" target="_blank" rel="noopener">StackEdit</a>.</p>
+</blockquote>
+<h1 id="Functional-options-for-friendly-APIs"><a href="#Functional-options-for-friendly-APIs" class="headerlink" title="Functional options for friendly APIs"></a>Functional options for friendly APIs</h1><p>在一些框架代码中，比较常见的封装配置的方法是使用WithXXX()的API形态对外暴露接口，而非传统的Config配置数据结构。本文解释了配置API的集中方案。</p>
+<p>原文地址：<a href="https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis" target="_blank" rel="noopener">https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis</a></p>
+<h2 id="一个server-package的列子"><a href="#一个server-package的列子" class="headerlink" title="一个server package的列子"></a>一个server package的列子</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Server <span class="keyword">struct</span> &#123;</span><br><span class="line">    listener net.Listener</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span> <span class="title">Addr</span><span class="params">()</span> <span class="title">net</span>.<span class="title">Addr</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(s *Server)</span> <span class="title">Shutdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">NewServer</span><span class="params">(addr <span class="keyword">string</span>)</span> <span class="params">(*Server, error)</span></span> &#123;</span><br><span class="line">    l, err := net.Listen(<span class="string">"tcp"</span>, addr)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">    &#125;</span><br><span class="line">    srv := Server(listener: l)</span><br><span class="line">    <span class="keyword">go</span> srv.run()</span><br><span class="line">    <span class="keyword">return</span> &amp;srv, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Server暴露出来的API非常简单清晰，但是毫无扩展性。</p>
+<h2 id="功能扩展"><a href="#功能扩展" class="headerlink" title="功能扩展"></a>功能扩展</h2><p>最简单直接的方法，可能就是增加参数了。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewServer</span><span class="params">(addr <span class="keyword">string</span>, </span></span></span><br><span class="line"><span class="function"><span class="params">    clientTimeout time.Duration, // 超时时间</span></span></span><br><span class="line"><span class="function"><span class="params">    maxconns <span class="keyword">int</span>, // 最大连接数</span></span></span><br><span class="line"><span class="function"><span class="params">    maxconcurrent <span class="keyword">int</span>, // 最大并发</span></span></span><br><span class="line"><span class="function"><span class="params">    cert *tls.Cert)</span> // 安全<span class="title">tls</span></span></span><br></pre></td></tr></table></figure>
+<p>带来的问题：</p>
+<ol>
+<li>无法向前兼容的问题</li>
+<li>默认值怎么填？如果我们不关心超时，clientTimeout要填什么？</li>
+</ol>
+<p>可以根据使用场景，提供不同的constructor，但是这种方法过于笨重了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// with timeout</span><br><span class="line">NewServerWithTimeout(addr string, timeout time.Duration) (*Server, error)</span><br><span class="line"></span><br><span class="line">// secure server</span><br><span class="line">NewTlsServer(addr string, cert *tls.Cert) (*Server, error)</span><br></pre></td></tr></table></figure></p>
+<h2 id="可配置"><a href="#可配置" class="headerlink" title="可配置"></a>可配置</h2><p>将配置单独抽离成Config。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type Config struct &#123;</span><br><span class="line">    Cert *tls.Cert</span><br><span class="line">    Timeout time.Duration</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func NewServer(addr string, config Config) *Server</span><br></pre></td></tr></table></figure>
+<p>优点：</p>
+<ol>
+<li>向前兼容，增加参数对老版本兼容</li>
+<li>文档化更方便，在Config中针对每项配置说明即可。</li>
+</ol>
+<p>但是还是没有解决默认值的问题，很多时候大部分参数用户是不想去理解的。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>“I just want a sever, I don’t want to have to think about it”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>为了避免默认值带来影响，用户在调用的时候对不需要的参数不填默认值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func NewServer(addr string, config ...Config) (*Server, error)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    svr, _ = NewServer(&quot;localhost&quot;) // default</span><br><span class="line">    srv2, _ := NewServer(&quot;localhost&quot;, Config&#123;</span><br><span class="line">        Timeout: 300 * time.Second,</span><br><span class="line">        MaxConns: 10,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Functional-Options"><a href="#Functional-Options" class="headerlink" title="Functional Options"></a>Functional Options</h2><p>另一种方法就是将配置拆分成多份，以可变参数的方式传入settler：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewServer</span><span class="params">(addr <span class="keyword">string</span>, options ...<span class="keyword">func</span>(*Server)</span>) <span class="params">(*Server, error)</span></span> &#123;</span><br><span class="line">    l, _ := net.Listen(<span class="string">"tcp"</span>, addr)</span><br><span class="line">    srv := Server&#123;listener: l&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> _, option := <span class="keyword">range</span>(options) &#123;</span><br><span class="line">        options(&amp;srv)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &amp;srv, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// caller</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    srv, _ := NewServer(<span class="string">"localhost"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// timeout setter</span></span><br><span class="line">    timeout := <span class="function"><span class="keyword">func</span><span class="params">(srv *Server)</span></span>&#123;</span><br><span class="line">        srv.timeout = <span class="number">60</span> * time.Second</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// tls settter</span></span><br><span class="line">    tls := <span class="function"><span class="keyword">func</span><span class="params">(srv *Server)</span></span>&#123;</span><br><span class="line">        config := loadTlsConfig()</span><br><span class="line">        srv.listener = tls.NewListener(srv.listener, &amp;config)</span><br><span class="line">    &#125;</span><br><span class="line">    srv2, _ := NewServer(<span class="string">"localhost"</span>, timeout, tls)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以将各种setter function封装在package中，不用直接对外暴露config的内部数据结构，而是暴露API。</p>
+<p>一个完整的demo如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">// Server Package</span><br><span class="line"></span><br><span class="line">package Server</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Options struct &#123;</span><br><span class="line">    Name      string</span><br><span class="line">    Age       int32</span><br><span class="line">    Addesss   string</span><br><span class="line">    IdCard    string</span><br><span class="line">    Cellphone string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Option func(*Options)</span><br><span class="line"></span><br><span class="line">func NewOptions(opts ...Option) (opt Options) &#123;</span><br><span class="line">    for _, o := range opts &#123;</span><br><span class="line">        o(&amp;opt)</span><br><span class="line">    &#125;</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Name(name string) Option &#123;</span><br><span class="line">    return func(o *Options) &#123;</span><br><span class="line">        o.Name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Age(age int32) Option &#123;</span><br><span class="line">    return func(o *Options) &#123;</span><br><span class="line">        o.Age = age</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Address(addr string) Option &#123;</span><br><span class="line">    return func(o *Options) &#123;</span><br><span class="line">        o.Addesss = addr</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 用户调用demo</span><br><span class="line">func main() &#123;</span><br><span class="line">    var opt Options</span><br><span class="line">    opt = NewOptions(</span><br><span class="line">        Name(&quot;xigang&quot;),</span><br><span class="line">        Age(24),</span><br><span class="line">        Address(&quot;Beijing&quot;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2020 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
