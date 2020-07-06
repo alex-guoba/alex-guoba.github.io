@@ -196,16 +196,22 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h1 id="nginx透传X-Forwarded-Proto"><a href="#nginx透传X-Forwarded-Proto" class="headerlink" title="nginx透传X-Forwarded-Proto"></a>nginx透传X-Forwarded-Proto</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote><p>X-Forwarded-Proto (XFP) 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）。在服务器的访问日志中记录的是负载均衡服务器与服务器之间的连接所使用的传输协议，而非客户端与负载均衡服务器之间所使用的协议。为了确定客户端与负载均衡服务器之间所使用的协议， X-Forwarded-Proto 就派上了用场。</p>
+                <h1 id="nginx透传X-Forwarded-Proto"><a href="#nginx透传X-Forwarded-Proto" class="headerlink" title="nginx透传X-Forwarded-Proto"></a>nginx透传X-Forwarded-Proto</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>业务接入https，后端服务需要需要客户端的请求schma是老版本http，还是新版的https请求。这里通常采用的方案是通过X-Forwarded-Proto头来识别：</p>
+<blockquote>
+<p>X-Forwarded-Proto (XFP) 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）。在服务器的访问日志中记录的是负载均衡服务器与服务器之间的连接所使用的传输协议，而非客户端与负载均衡服务器之间所使用的协议。为了确定客户端与负载均衡服务器之间所使用的协议， X-Forwarded-Proto 就派上了用场。</p>
 </blockquote>
-<p>通常通过设置XFP来指定URI的scheme信息，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header X-Forwarded-Proto $scheme;</span><br></pre></td></tr></table></figure>
-<p>然后服务端可以通过读取header X-Forwarded-Proto来获得scheme（如需要区分http还是https请求）。</p>
-<p>但是存在多层反向代理时，这种方式就不灵验了。<br>一个比较常见的https请求路径如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user-agent &gt; haproxy &gt; nginx &gt; apache/php</span><br></pre></td></tr></table></figure><br>haproxy收到user-agent的https请求，但内部和nginx的交互协议为http，所以nginx取到的scheme值就是http了，而非https. php也就无法知道user-agent是使用的http还是https了。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>修改配置如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">map $http_x_forwarded_proto $thescheme &#123;</span><br><span class="line">    default $scheme;</span><br><span class="line">    https https;</span><br><span class="line">&#125;</span><br><span class="line">proxy_set_header X-Forwarded-Proto $thescheme;</span><br></pre></td></tr></table></figure>
-<p>与之前的解决方案不同，不是将XFP设置为固定的scheme值，而是通过计算得出scheme。<br>map配置的意思是先判断是否已经存在XFP的header信息，如果是https则透传，否则使用连接的scheme</p>
-<h2 id="map-directives"><a href="#map-directives" class="headerlink" title="map directives"></a>map directives</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Syntax: map string $variable &#123; ... &#125;</span><br><span class="line">Default:    —</span><br><span class="line">Context:    http</span><br></pre></td></tr></table></figure>
+<p>通常在ng中通过设置XFP来指定URI的scheme信息，如：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br></pre></td></tr></table></figure>
+<p>然后后端可以通过读取header <code>X-Forwarded-Proto</code>来获得对应的scheme。</p>
+<p>但是现网的接入环境会比较复杂，通常存在多层反向代理的情况，这种简单粗暴的方式就不灵验了。<br>一个比较常见的https请求路径如下：</p>
+<p> <strong>User-Agent</strong> —[https]—&gt; <strong>haproxy(公司级接入)</strong> —[http]—&gt; <strong>nginx（业务级接入）</strong> —[http]—&gt; <strong>apache/php（后端服务接入）</strong> </p>
+<p>最外层的接入收到User-Agent的https请求，但在内部和nginx的交互协议为http，所以nginx取到的scheme值就是http了，而非原始的https。 php（后端）也就无法知道真实的schema了。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>修改配置如下（以ng为例）：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">map</span> <span class="variable">$http_x_forwarded_proto</span> <span class="variable">$thescheme</span> &#123;</span><br><span class="line">    <span class="attribute">default</span> <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">https</span> https;</span><br><span class="line">&#125;</span><br><span class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$thescheme</span>;</span><br></pre></td></tr></table></figure>
+<p>与之前的解决方案不同，不是将XFP设置为固定的scheme值，而是通过计算得出scheme。<br>map配置的意思是先判断是否已经存在XFP的header信息，如果是https则透传，否则使用连接的scheme。在最外层的反向代理中，没有XFP的header信息，所以会写入request，后续的接入层会逐步透传，一直到后端服务。</p>
+<h2 id="map-directives"><a href="#map-directives" class="headerlink" title="map directives"></a>map directives</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><blockquote>
+<p>Syntax: map string $variable { … }<br>Default:    —<br>Context:    http</p>
+</blockquote>
 <p>功能：创建一个新的结果变量variable，其值依赖于源变量string。map block内指定了源变量值和结果值的映射关系。</p>
 <h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p><a href="https://xidui.github.io/2016/07/13/nginx%E2%80%94%E2%80%94map%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" target="_blank" rel="noopener">参考连接</a>:</p>
 <table>
