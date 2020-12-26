@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Utopian"/>
+        <meta property="og:title" content="Vscode Remote Connect failed"/>
     
 
     <!--Open Graph Description-->
@@ -33,7 +33,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>Archiv: 2020 - Utopian</title>
+    <title>Vscode Remote Connect failed - Utopian</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -146,127 +146,95 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>2020</h1>
+                <div class="post-heading">
+                    <h1>Vscode Remote Connect failed</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2020-10-05
+                        
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Vscode/">#Vscode</a> <a href="/tags/远程开发/">#远程开发</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/2020/12/26/Introduction-to-memberlist/">
-        <h1 class="post-title archive">
-            Introduction-to-memberlist
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-12-26
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-                <div class="post-preview">
-    <a href="/2020/10/05/Vscode-Remote-Connect-failed/">
-        <h1 class="post-title archive">
-            Vscode Remote Connect failed
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-10-05
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2020/07/02/Introduction-to-Go-Modules/">
-        <h1 class="post-title archive">
-            Introduction to Go Modules
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-07-02
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2020/06/27/Tencent-Scf-Version-Manage/">
-        <h1 class="post-title archive">
-            Tencent Scf Version Manage
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-06-27
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2020/06/14/Functional-options-for-friendly-APIs/">
-        <h1 class="post-title archive">
-            Functional options for friendly APIs
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-06-14
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2020/06/08/gomicro-config/">
-        <h1 class="post-title archive">
-            gomicro-config
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-06-08
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2020/04/06/intern-recruitment/">
-        <h1 class="post-title archive">
-            intern-recruitment
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2020-04-06
-    </p>
-</div>
-            
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="Vscode-Remote连接失败"><a href="#Vscode-Remote连接失败" class="headerlink" title="Vscode Remote连接失败"></a>Vscode Remote连接失败</h1><p>一台很久没有使用vscode remote操作过的机器，今天在调试个项目的时候发现之前配置怎么都连接不上了，一直timeout，也没有给出错误原因。花了些时间来定位，记录一下解决方法。</p>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><p>vscode remote点击”Connect to Host”无响应，过一会报connect timeout</p>
+<h2 id="调试方法"><a href="#调试方法" class="headerlink" title="调试方法"></a>调试方法</h2><ol>
+<li>确认相关配置是否正常。</li>
+</ol>
+<ul>
+<li>.ssh/config中remote Host配置是否完整</li>
+<li>本机id_rsa.pub内容是否导入remote Host的authorized_keys文件中，否则无法免密登录成功</li>
 </ul>
+<ol>
+<li><p>正常情况下应该就可以了在shell中免密登录了。</p>
+</li>
+<li><p>直接ssh Host发现也无法免密登录，于是登录远程主机后查看登录日志。</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tail -f /var/<span class="built_in">log</span>/secure</span><br></pre></td></tr></table></figure>
+<p>发现错误提示：</p>
+<p>Authentication refused: bad ownership or modes for file /data/home/XXX/.ssh/authorized_keys</p>
+<p>仔细观察XXX用户有两个问题：</p>
+<ul>
+<li>group与authorized_keys创建用户的group不一致。应该是我重新创建过用户的关系</li>
+<li>authorized_keys文件权限不对，不允许group有写权限。chmod g-w authorized_keys，去掉后正常。</li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
         </div>
     </div>
-</div>
-
+</article>
 
     <!-- Footer -->
     <hr />

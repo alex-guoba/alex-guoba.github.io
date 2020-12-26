@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="golang blog">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Introduction-to-memberlist"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="golang blog" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Utopian"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Introduction-to-memberlist - Utopian</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Utopian</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/alex-guoba">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Introduction-to-memberlist</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2020-12-26
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="memberlist实现分析"><a href="#memberlist实现分析" class="headerlink" title="memberlist实现分析"></a>memberlist实现分析</h1><h2 id="gossip简介"><a href="#gossip简介" class="headerlink" title="gossip简介"></a>gossip简介</h2><p>Gossip protocol 也叫 Epidemic Protocol （流行病协议），实际上它还有很多别名，比如：“流言算法”、“疫情传播算法”等。这个协议的作用就像其名字表示的意思一样，非常容易理解，它的方式其实在我们日常生活中也很常见，比如电脑病毒的传播，森林大火，细胞扩散等等。</p>
+<p>Gossip的基本思想一个节点想要分享一些信息给网络中的其他的一些节点。于是，它<strong>周期性</strong>的<strong>随机</strong>选择一些节点，并把信息传递给这些节点。这些收到信息的节点接下来会做同样的事情，即把这些信息传递给其他一些随机选择的节点。一般而言，信息会周期性的传递给N个目标节点，而不只是一个。这个N被称为<strong>fan-out</strong>（扇出）。</p>
+<p><a href="https://managementfromscratch.wordpress.com/2016/04/01/introduction-to-gossip/" target="_blank" rel="noopener">这篇文章</a>对gossip协议更详细的描述。</p>
+<p>另外<a href="https://flopezluis.github.io/gossip-simulator/" target="_blank" rel="noopener">gossip-simulator</a>可能会对协议理解更有帮助。</p>
+<p><strong>Gossip 的特点（优势）</strong></p>
+<p><strong>1）扩展性（Scaling）</strong></p>
+<p>网络可以允许节点的任意增加和减少，新增加的节点的状态最终会与其他节点一致。可以从<a href="https://flopezluis.github.io/gossip-simulator/" target="_blank" rel="noopener">gossip-simulator</a>上模拟节点数翻倍的场景，实际上对数据传输周期的影响并不大。</p>
+<p><strong>2）容错性（Fault-tolerance）</strong></p>
+<p>网络中任何节点的宕机和重启都不会影响 Gossip 消息的传播，Gossip 协议具有天然的分布式系统容错特性。源节点消息可以被多个节点分享给到目标节点，且节点间消息分享没有固定的路由。</p>
+<p><strong>3）去中心化</strong></p>
+<p>Gossip 协议不要求任何中心节点，所有节点是对等的，任何一个节点无需知道整个网络状况，只要网络是连通的，任意一个节点就可以把消息散播到全网。</p>
+<p><strong>4）一致性收敛</strong></p>
+<p>Gossip 协议中的消息会以一传十、十传百一样的指数级速度在网络中快速传播，因此系统状态的不一致可以在很快的时间内收敛到一致。消息传播速度达到了 logN。</p>
+<p><strong>5）简单</strong></p>
+<p><strong>Gossip 的缺陷</strong></p>
+<p>分布式网络中，没有一种完美的解决方案，Gossip 协议跟其他协议一样，也有一些不可避免的缺陷，主要是两个：</p>
+<p><strong>1）消息的延迟</strong></p>
+<p>由于 Gossip 协议中，节点只会随机向少数几个节点发送消息，消息最终是通过多个轮次的散播而到达全网的，因此使用 Gossip 协议会造成不可避免的消息延迟。不适合用在对实时性要求较高的场景下。</p>
+<p><strong>2）消息冗余</strong></p>
+<p>Gossip 协议规定，节点会定期随机选择周围节点发送消息，而收到消息的节点也会重复该步骤，因此就不可避免的存在消息重复发送给同一节点的情况，造成了消息的冗余，同时也增加了收到消息的节点的处理压力。而且，由于是定期发送，因此，即使收到了消息的节点还会反复收到重复消息，加重了消息的冗余。</p>
+<h2 id="memberlist实现"><a href="#memberlist实现" class="headerlink" title="memberlist实现"></a>memberlist实现</h2><h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p><a href="https://github.com/hashicorp/memberlist" target="_blank" rel="noopener">memberlist</a>是一个基于gossip（变种）协议的实现，主要使用场景：</p>
+<ul>
+<li>分布式网络的分区节点管理和故障探测。如服务发现组件Consul使用</li>
+<li>分布式网络的数据同步</li>
+</ul>
+<p>memberlist提供了一些Deligate API，可以用作节点间的数据同步。用法可以参考这个<a href="https://github.com/asim/memberlist" target="_blank" rel="noopener">asim/memberlist</a>。实际上关注到memberlist也是因为在预研分布式任务调度系统dkron过程中了解到它有使用memberlist来实现节点间的数据同步。</p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h3 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h3><p>从goroutine分布可以大致了解memberlist的工作原理。goroutine主要分为两类：</p>
+<p><strong>定时器协程</strong><br>定时器协程主要用于memberlist生命过程中一些常规的定时任务，<code>memberlist.schedule()</code> 会启动三个主要的定时器协程，分别介绍如下：</p>
+<ul>
+<li><strong>Probe timer</strong>：执行探测逻辑(Ping)。UDP，也可以强制启用TCP。固定周期。每次只会挑选一个节点进行探测。</li>
+<li><strong>pushPullTrigger timer</strong>：用于两个节点间的全量数据同步。TCP协议+动态实时调整。请求时携带本地全部节点数据，响应中也会携带对端所拥有的节点信息。这样一次交互就实现了一次完整的数据同步。</li>
+<li><strong>Gossip timer</strong>：挑选部分随机节点进行广播推送。采用UDP。</li>
+</ul>
+<p><strong>监听协程</strong></p>
+<p>程序在启动之初（<code>NewNetTransport()</code>），会创建一个tcp和一个udp的监听协程，TCP主要用作节点间的全量状态数据同步。UDP主要用作节点间状态探测。其中一部分消息类型（比如ping）在两条通道上都有可能出现。：</p>
+<ul>
+<li><p><strong>go tcpListen()</strong>： TCP监听，用于接收新的node连接，并写入到独立协程去处理。</p>
+<p>TCP连接消息的处理见<code>handleConn()</code>，主要处理的是<strong>pushPullTrigger timer</strong>的节点状态同步消息。里面也包括了用户侧的全量用户数据。消息类型以及处理流程简介：</p>
+<ol>
+<li><p><strong><em>userMsg</em></strong>：用户消要用作上层业务的用户数据传递。</p>
+<p><a href="https://github.com/asim/memberlist" target="_blank" rel="noopener">asim/memberlist</a>项目中可以看到如何利用broadcast传播用户数据。实际上在将用户数据通过<code>broadcasts.QueueBroadcast(data)</code>写入时并没有触发实时的网络数据同步，而是写入了一个有限优先级队列<code>TransmitLimitedQueue</code>中，然后通过两种方式携带出去：网络探测消息或者gossip定时器，整个过程都是异步的。</p>
+<p>问题：异步如何保证数据不会丢失？</p>
+<p>broadcast消息无法完全保证。udp本就有一定的丢失率，但是只要有一个节点成功，数据就会同步到其他节点。如果100%丢失就不行了。如果需要可以调用其他保证可靠性的接口。broadcast一般用作增量数据的同步，memberlist还提供了同步全量数据的能力，通过pushPullMsg的tcp连接同步对端节点来保证可靠性，以达到最终一致性的目的。</p>
+</li>
+<li><p><strong><em>pushPullMsg</em></strong>: 用作全量节点状态同步，由对端<strong>pushPullTrigger time</strong>定期触发。</p>
+<p>收到对端的pushPullMsg之后，首先会将本地一直的nodes状态也应答给对方，这样就完整了一次完整的全量数据交换。此过程中可以携带用户数据，一般用作调用方全量数据同步。</p>
+<p>然后会将本地nodes状态与对端nodes状态<strong>逐一聚合</strong>。聚合流程跟节点当前状态有关，大致如下：</p>
+<p><em>stateAlive</em>：插入本地nodes列表，同时对stateSuspect、stateDead状态的节点进行特殊处理。</p>
+<p><em>stateLeft</em>：如果为本机需要refute操作，否则广播通知其他节点。</p>
+<p><em>stateDead</em> / <em>stateSuspect</em>：首次会广播给其他节点。同时也会对通知源节点数计数，一段时间内超过一定阈值（实时计算）会将节点设置为dead。</p>
+</li>
+<li><p><strong><em>pingMsg</em></strong></p>
+<p>tcp的ping。默认是关闭的，可以在config中启用，供UDP异常网络环境时使用。</p>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p><strong>go udpListen()</strong>：udp监听，处理节点探测的消息。</p>
+<p>udp类型的消息比较多，为了提升处理性能考虑，避免各类相互影响，拆分为packetListen、packetHandler两部分。各种探测消息类型简介如下：</p>
+<ol>
+<li><p><em>pingMsg</em></p>
+<p><strong>Probe timer</strong>发起，探测节点是否正常。收到ping之后会立即回复ackRespMsg，并携带广播（其实基本大部分消息都会携带广播）。</p>
+</li>
+<li><p><em>ackRespMsg</em></p>
+<p>ping消息的应答。</p>
+</li>
+<li><p><em>indirectPingMsg</em></p>
+<p>当ping无应答时，会挑选若干节点进发送indirectPingMsg，携带目标节点，以佐证是否本地路由问题。</p>
+<p>本机收到indirectPing指令时，会向指定的目标节点发送ping消息：如果有收到回包，则发送ackRespMsg给源节点。如果超时则回复nackRespMsg消息给到源节点，表明自己导目标节点的状态异常。</p>
+</li>
+<li><p><em>nackRespMsg</em></p>
+<p>收到nackRespMsg到一定阈值时，会将节点置未<em>stateSuspect</em>状态，并告知其他节点。</p>
+</li>
+<li><p><em>suspectMsg</em></p>
+<p>收到对端传来的suspectMsg表明节点很可能异常了。如果节点为自己，执行refute操作。否则转发，并判断是否进入stateDead状态。</p>
+</li>
+<li><p><em>aliveMsg</em></p>
+<p>合入本地节点，并broadcast其他节点。</p>
+</li>
+<li><p><em>deadMsg</em></p>
+<p>跟suspectMsg处理流程一致。</p>
+</li>
+<li><p><em>userMsg</em></p>
+<p>通知上层处理增量数据。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="状态合并"><a href="#状态合并" class="headerlink" title="状态合并"></a>状态合并</h3><p><strong>节点状态</strong>：集群中每个节点可能存在以下4种状态。</p>
+<ul>
+<li><em>stateAlive</em>：节点存活。</li>
+<li><em>stateLeft</em>：节点已主动离开</li>
+<li><em>stateDead</em> / <em>stateSuspect</em>：节点已经挂了。Suspect只是一个中间态，当两个节点间路由异常时，可能会出现误判的情形，需要其他节点来一起佐只有满足条件才能确定为dead。</li>
+</ul>
+<p>介绍几种典型的转换流程：</p>
+<p><strong>stateAlive -&gt; stateSuspect</strong></p>
+<ol>
+<li>节点A（本地）启动，初试状态为stateAlive。通过制定目标节点B（目标）加入集群成功，节点B在A中状态为stateAlive</li>
+<li>A定期发送pingMsg指令，且超时时间内没有收到应答<em>ackRespMsg</em>。</li>
+<li>随机挑选N个其他节点，发送<em>indirectPingMsg</em>，并等待应答nackRespMsg</li>
+<li>当收到一定数量的nackRespMsg时，可以确定目标节点B已经异常。于是将B设置<em>stateSuspect</em>状态，并广播给其他节点。</li>
+</ol>
+<p><strong>stateSuspect -&gt; <em>stateDead</em></strong></p>
+<ol>
+<li>在A中节点B刚进入stateSuspect状态之初，会启动一个对应的定时器suspectTimer</li>
+<li>将B已进入suspect消息广播给其他节点。</li>
+<li>如果B收到了suspect消息，需要执行refute操作，告知其他节点B已恢复正常。如果中间过程中有其他节点通过Ping消息主动发现B已经恢复正常，也会广播告知。</li>
+<li>suspectTimer超时，节点B如果状态及更新时间都没有变化，则认为节点已经处于stateDead状态。</li>
+<li>删除对应suspectTimer，广播告知其他节点</li>
+</ol>
+<h3 id="一些细节"><a href="#一些细节" class="headerlink" title="一些细节"></a>一些细节</h3><p>memberlist的整体流程及状态转换其实很简单，但在一些细节的处理上考虑比较多。</p>
+<p><strong>广播</strong>：广播类数据的占比比较高，且很多为重复消息，为了尽可能减少网络交互，做了一些细节上的优化：</p>
+<ol>
+<li>优先队列：控制了整体的报文数据量，当超过最大值时会丢弃数据。另外对报文也区分了优先级。</li>
+<li>compoundMsg+异步：内部交互协议上做了优化，在package长度有限的情况下，尽可能通过一次交互携带尽可能多的数据。如在ping的过程中将队列中的广播消息也一起携带出去。</li>
+</ol>
+<p><strong>awareness</strong>：两个节点间的通信失败，很难判断是本机节点还是对端节点的网络异常，所以引入了类似健康度的概念。健康度越低，表明本地网络状态可能越差，执行对应网络请求时设置的超时时间就越长。</p>
+<p>比如在ping失败后默认是会将本地健康度降低，因为无法排除为自己问题，但是当执行indirectPing并收到其他节点的回复后会再度调整。</p>
+<h2 id="REFERENCES"><a href="#REFERENCES" class="headerlink" title="REFERENCES"></a>REFERENCES</h2><ul>
+<li><a href="https://managementfromscratch.wordpress.com/2016/04/01/introduction-to-gossip/" target="_blank" rel="noopener">INTRODUCTION TO GOSSIP</a></li>
+<li><a href="https://www.hashicorp.com/resources/everybody-talks-gossip-serf-memberlist-raft-swim-hashicorp-consul" target="_blank" rel="noopener">Everybody Talks: Gossip, Serf, memberlist, Raft, and SWIM in HashiCorp Consul</a></li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2020 John Doe<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+      var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?5662fb1ef5030f3890e74f50d478ea0a";
+          var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+
+</body>
+
+</html>
