@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="个人技术博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utopian">
+<meta property="og:url" content="https://www.goroutine.cn/page/3/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="个人技术博客">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:author" content="Alex guo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/page/3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Utopian',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-01-06 22:36:21'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background: transparent"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Utopian</h1><div id="site_social_icons"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/07/02/Introduction-to-Go-Modules/" title="Introduction to Go Modules">Introduction to Go Modules</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-07-02T11:59:58.000Z" title="Created 2020-07-02 19:59:58">2020-07-02</time></span></div><div class="content">Introduction to Go Modules原文链接
+
+
+Creating a Module先创建一个package，用于测试go mod的版本管理。
+$ mkdir testmod$ cd testmod$ go mod init github.com/robteix/testmod
+
+package的代码也很简单：
+package testmodimport &quot;fmt&quot; // Hi returns a friendly greetingfunc Hi(name string) string &#123;   return fmt.Sprintf(&quot;Hi, %s&quot;, name)&#125;
+
+将package放入仓库：
+$ git init $ git add * $ git commit -am &quot;First commit&quot; $ git push -u origin master
+
+现在就可以通过go get将package获取到本地使用了：
+$ go get github.com/robteix/testmod
+ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/06/27/Tencent-Scf-Version-Manage/" title="Tencent Scf Version Manage">Tencent Scf Version Manage</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-06-27T03:39:22.000Z" title="Created 2020-06-27 11:39:22">2020-06-27</time></span></div><div class="content">腾讯云函数的版本管理前段时间体验了下腾讯云的云函数，试着将一个古老的cgi迁移到云函数，由于特性比较简单，整体还算顺利。
+云函数的概念比较多，新接入的开发者需要了解许多概念，如果是简单的功能接入还是挺方便的，跟着文档操作一遍就行了。但许多文档还不是很深入。比如如何在golang云函数操作HTTP Header使其返回302，这个就研究了挺久。
+如果在生产环境使用腾讯云函数相关的能力来进行版本的迭代，官方并没有给出标准解决方案。大致摸索了一下云函数、云网关的相关能力，介绍如下。
+
+
+云函数通常一个逻辑服务server对应一个云函数。后续相关需求的迭代，对应的逻辑服务也会有频繁的版本更新发布。
+云函数版本
+版本概念跟git&#x2F;svn仓库类似，但默认只有$Latest版本可以重新上传代码，所以：
+建议$Lastest用于开发，其他版本用于（预）发布。
+当存在多人并行开发时，建议建立个人云函数，以及对应的云网关，避免相关影响。
+
+
+功能特性上线时应该发布到新的版本。只能使用 $LATEST 的配置和代码生成新版本，代码版本发布后不可变更。
+
+别名
+大部分代码（云函数）的版本特性迭代，是 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/06/14/Functional-options-for-friendly-APIs/" title="Functional options for friendly APIs">Functional options for friendly APIs</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-06-14T03:56:00.000Z" title="Created 2020-06-14 11:56:00">2020-06-14</time></span></div><div class="content">
+Written with StackEdit.
+
+Functional options for friendly APIs在一些框架代码中，比较常见的封装配置的方法是使用WithXXX()的API形态对外暴露接口，而非传统的Config配置数据结构。本文解释了配置API的集中方案。
+原文地址：https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
+
+
+一个server package的列子type Server struct &#123;    listener net.Listener&#125;func (s *Server) Addr() net.Addrfunc (s *Server) Shutdown()func NewServer(addr string) (*Server, error) &#123;    l, err := net.Listen(&quot;tcp&quot;, addr)    if err != nil &#123;        return nil, er ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/06/08/gomicro-config/" title="gomicro-config">gomicro-config</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-06-08T14:41:46.000Z" title="Created 2020-06-08 22:41:46">2020-06-08</time></span></div><div class="content">go-micro配置介绍go-micro&#x2F;config基础特性及用法，参考官方文档。
+
+
+
+数据结构&amp;流程图
+核心数据结构感觉go-micro的设计理念应该是一切皆是Interface，所以除了Pluggable Sources等特性外，内部的一些数据结构上也预留了插件化的可能。几个数据结构在官网上都介绍比较清楚了，主要关注下几个核心数据结构的方法。
+Config暴露给用户的对象，用于加载、读取和同步数据源。
+// 动态配置的抽象接口。可以作为一个单独组建给业务使用，但框架自身依赖**DefaultConfig**实现// 将多个source聚合成一个对外的统一数据源，支持加载、同步、观测一个或多个source。type Config interface &#123;    // provide the reader.Values interface    reader.Values    // Init the config    Init(opts ...Option) error    // Options in the config    Options()  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/04/06/intern-recruitment/" title="intern-recruitment">intern-recruitment</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-06T01:41:37.000Z" title="Created 2020-04-06 09:41:37">2020-04-06</time></span></div><div class="content">
+Written with StackEdit.
+
+实习生招聘tips最近几周花了大量的精力在实习生的招聘上，记录过程中的一些心得，用作后续的参考。
+
+
+整体感悟我厂实习生招聘的流程就是从简历库中筛选简历，然后经过初试、复试及HR面试的过程。初试根据各业务BG的需要，可能分多次。简历的筛选是一个繁重的工作，需要从数万简历库中筛选出优秀的应聘者，不仅要靠运气，也要靠大量的精力投入，因为竞争激励。个人经验一般在错峰时间（晚上或者清早）能找到优秀的简历的概率要大一些。
+优秀简历的一些特点：
+
+好的学校
+个人简历的细节在个人简历中至少要有学校专业课、专业技能、（个人）项目的一些详细介绍。如果能有一些实践的经验会更好。
+个人社会实践、初步职业规划等等
+
+一些硬性指标行业的关系，一般对实习生有些基础的硬性要求。个人认为专业的基础知识是必须的，当然如果面试人有其他比较优秀的闪光点的话，这方面也可以酌情考虑比重。否则很难保证过程的客观和公正。基础考察点各有差异，个人比较偏重以下点：
+后端考察点：
+
+语言
+计算机网络
+操作系统、linux基础操作
+数据结构与算法
+数据库概念
+
+前端考察点：
+
+网络协议（ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2019/12/15/golang-viper-tips/" title="golang viper tips">golang viper tips</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2019-12-15T03:19:55.000Z" title="Created 2019-12-15 11:19:55">2019-12-15</time></span></div><div class="content">viper tips简介vipper是golang下一个配置文件的解决方案，功能强大，也被很多开源项目所引用。主要特性包括：
+
+setting defaults
+reading from JSON, TOML, YAML, HCL, envfile and Java properties config files
+live watching and re-reading of config files (optional)
+reading from environment variables
+reading from remote config systems (etcd or Consul), and watching changes
+reading from command line flags
+reading from buffer
+setting explicit values
+
+具体使用方法就不copy了，主要记录下使用过程中遇到的一些小问题，避免后续再次踩坑。
+
+
+
+如何使用配置文件的解析、使用方法有多种，简单的方法在业务代码中直接调用viper相关的API：
+
+Get(k ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2019/11/17/docker-redis-install/" title="docker redis install">docker redis install</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2019-11-16T16:02:16.000Z" title="Created 2019-11-17 00:02:16">2019-11-17</time></span></div><div class="content">记录docker-redis安装过程
+
+
+流程
+下载镜像docker pull redis
+
+静态文件目录、log目录mkdir .&#x2F;redis&#x2F;confmdkir .&#x2F;redis&#x2F;data
+
+配置文件从官方下载一份最新的redis.confcd .&#x2F;redis&#x2F;confwget http://download.redis.io/redis-stable/redis.conf
+
+创建容器&amp;启动
+
+
+docker run \-p 6379:6379 \-v $PWD/data:/data \-v $PWD/conf/redis.conf:/etc/redis/redis.conf \--name myredis \-d redis redis-server /etc/redis/redis.conf \--appendonly yes
+
+appendonly为落地方案，可选。启动之后redis应该为正常状态了，可以使用docker上的redis-cli查看。
+docker exec -it myredis redis-c ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2019/09/13/docker-nginx-install/" title="docker nginx install">docker nginx install</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2019-09-12T16:02:16.000Z" title="Created 2019-09-13 00:02:16">2019-09-13</time></span></div><div class="content">docker新手，docker nginx的安装折腾了半天，记录一下。
+
+
+流程
+下载镜像docker pull nginx
+
+静态文件目录、log目录直接使用本地目录即可，因为不需要从container中copy源文件到本地，所以宿主主机本地mkdir对应的目录即可。mkdir ~&#x2F;development&#x2F;docker&#x2F;docker-nginx&#x2F;logmdkir ~&#x2F;development&#x2F;docker&#x2F;docker-nginx&#x2F;html
+
+配置文件需要从container中的文件中copy一份到本地，作为初始配置，所以先启动一个默认container，copy文件后将其删除即可。mkdir ~&#x2F;development&#x2F;docker&#x2F;docker-nginx&#x2F;confdocker cp 525adda2ecb7:&#x2F;etc&#x2F;nginx&#x2F;* ~&#x2F;development&#x2F;docker&#x2F;docker-nginx&# ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2019/08/21/groupcache/" title="groupcache">groupcache</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2019-08-21T15:31:42.000Z" title="Created 2019-08-21 23:31:42">2019-08-21</time></span></div><div class="content">groupcache简介周末阅读groupcache的源码，比较简单，也总结一下。
+
+
+定位groupcache虽然跟memcache是出自同一作者之手，但是定位相差挺大。memcached（简称mc）是一个独立的nosql存储服务，后台服务必须按照mc协议与之通信来实现数据缓存功能。而groupcache只是一个简单的缓存lib，定位类似于leveldb，后台服务必须继承到代码中来实现缓存的能力。
+代码及功能简介
+LRU支持LRU的cache实现，与传统的LRU实现没有大的差别。核心数据结构：
+type  Cache  struct  &#123;  // MaxEntries is the maximum number of cache entries before  // an item is evicted. Zero means no limit.  MaxEntries int  // OnEvicted optionally specifies a callback function to be  // executed when an entry is purged f ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2019/03/16/golang-pprof/" title="golang pprof">golang pprof</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2019-03-15T16:22:38.000Z" title="Created 2019-03-16 00:22:38">2019-03-16</time></span></div><div class="content">golang pprof以常见的one-gouroutine-per-connection模式来介绍pprof的用法
+
+
+# server.gofunc main() &#123;    ln, err := net.Listen(&quot;tcp&quot;, &quot;:8972&quot;)    if err != nil &#123;        panic(err)    &#125;    go func() &#123;        if err := http.ListenAndServe(&quot;:6060&quot;, nil); err != nil &#123;            log.Fatalf(&quot;pprof failed: %v&quot;, err)        &#125;    &#125;()    var connections []net.Conn    defer func() &#123;        for _, conn := range connections &#123;            co ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/4/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BC%95%E6%93%8E/" style="font-size: 1.1em; color: #999">工作流引擎</a> <a href="/tags/Golang/" style="font-size: 1.1em; color: #999">Golang</a> <a href="/tags/COS/" style="font-size: 1.1em; color: #999">COS</a> <a href="/tags/Readingnotes/" style="font-size: 1.1em; color: #999">Readingnotes</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.2em; color: #999da3">分布式</a> <a href="/tags/%E7%A7%92%E6%9D%80/" style="font-size: 1.1em; color: #999">秒杀</a> <a href="/tags/redis/" style="font-size: 1.1em; color: #999">redis</a> <a href="/tags/Architecture/" style="font-size: 1.2em; color: #999da3">Architecture</a> <a href="/tags/libuv/" style="font-size: 1.1em; color: #999">libuv</a> <a href="/tags/Supabase/" style="font-size: 1.1em; color: #999">Supabase</a> <a href="/tags/Microservices/" style="font-size: 1.3em; color: #99a1ac">Microservices</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/gossip/" style="font-size: 1.1em; color: #999">gossip</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/%E4%BA%91%E5%87%BD%E6%95%B0/" style="font-size: 1.1em; color: #999">云函数</a> <a href="/tags/groupcache/" style="font-size: 1.1em; color: #999">groupcache</a> <a href="/tags/Outline/" style="font-size: 1.1em; color: #999">Outline</a> <a href="/tags/UUID/" style="font-size: 1.1em; color: #999">UUID</a> <a href="/tags/Governance/" style="font-size: 1.3em; color: #99a1ac">Governance</a> <a href="/tags/RWMutex/" style="font-size: 1.1em; color: #999">RWMutex</a> <a href="/tags/AUTH/" style="font-size: 1.1em; color: #999">AUTH</a> <a href="/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">远程开发</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 1.1em; color: #999">随笔</a> <a href="/tags/Notion/" style="font-size: 1.1em; color: #999">Notion</a> <a href="/tags/CMS/" style="font-size: 1.2em; color: #999da3">CMS</a> <a href="/tags/memos/" style="font-size: 1.1em; color: #999">memos</a> <a href="/tags/Authentication/" style="font-size: 1.1em; color: #999">Authentication</a> <a href="/tags/BaaS/" style="font-size: 1.4em; color: #99a5b6">BaaS</a> <a href="/tags/nginx/" style="font-size: 1.3em; color: #99a1ac">nginx</a> <a href="/tags/cron/" style="font-size: 1.1em; color: #999">cron</a> <a href="/tags/memberlist/" style="font-size: 1.1em; color: #999">memberlist</a> <a href="/tags/HTTPS/" style="font-size: 1.2em; color: #999da3">HTTPS</a> <a href="/tags/Vscode/" style="font-size: 1.1em; color: #999">Vscode</a> <a href="/tags/nocoDB/" style="font-size: 1.1em; color: #999">nocoDB</a> <a href="/tags/golang/" style="font-size: 1.5em; color: #99a9bf">golang</a> <a href="/tags/Puppeteer/" style="font-size: 1.1em; color: #999">Puppeteer</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="View More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">January 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">December 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">November 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">October 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/09/"><span class="card-archive-list-date">September 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">March 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">January 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">December 2021</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">39</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-01-06T14:36:20.876Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

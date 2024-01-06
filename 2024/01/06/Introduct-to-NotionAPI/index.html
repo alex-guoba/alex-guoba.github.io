@@ -1,0 +1,414 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Introduct to NotionAPI | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Notion API 介绍Notion的页面组织结构非常灵活，但是一直没有找到相关介绍，最近了解到一个使用Notion作为后台CMS的项目，浏览了一下源码和Notion API。通过API也能大致了解下官方开放的能力以及相关数据结构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduct to NotionAPI">
+<meta property="og:url" content="https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="Notion API 介绍Notion的页面组织结构非常灵活，但是一直没有找到相关介绍，最近了解到一个使用Notion作为后台CMS的项目，浏览了一下源码和Notion API。通过API也能大致了解下官方开放的能力以及相关数据结构。">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2024-01-06T14:26:24.000Z">
+<meta property="article:modified_time" content="2024-01-06T14:31:29.499Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="BaaS">
+<meta property="article:tag" content="Notion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Introduct to NotionAPI',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-06 22:31:29'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Introduct to NotionAPI</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-06T14:31:29.499Z" title="Updated 2024-01-06 22:31:29">2024-01-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Introduct to NotionAPI"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Notion-API-介绍"><a href="#Notion-API-介绍" class="headerlink" title="Notion API 介绍"></a>Notion API 介绍</h1><p>Notion的页面组织结构非常灵活，但是一直没有找到相关介绍，最近了解到一个使用Notion作为后台CMS的项目，浏览了一下源码和Notion API。通过API也能大致了解下官方开放的能力以及相关数据结构。</p>
+<span id="more"></span>
+
+<h3 id="pages"><a href="#pages" class="headerlink" title="pages"></a>pages</h3><hr>
+<p><a target="_blank" rel="noopener" href="https://developers.notion.com/docs/working-with-page-content">page</a>内容主要由两部分构成</p>
+<p><img src="https://files.readme.io/369b6a5-page-properties-and-content.png" alt="https://files.readme.io/369b6a5-page-properties-and-content.png"></p>
+<ol>
+<li><strong>page properties</strong></li>
+</ol>
+<ul>
+<li><p>指定page的基础信息，基础数据结构详见<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/page#page-object-properties">文档</a>，包括：</p>
+  <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Page <span class="keyword">struct</span> &#123;</span><br><span class="line">	Object         ObjectType <span class="string">`json:&quot;object&quot;`</span></span><br><span class="line">	ID             ObjectID   <span class="string">`json:&quot;id&quot;`</span></span><br><span class="line">	CreatedTime    time.Time  <span class="string">`json:&quot;created_time&quot;`</span></span><br><span class="line">	LastEditedTime time.Time  <span class="string">`json:&quot;last_edited_time&quot;`</span></span><br><span class="line">	CreatedBy      User       <span class="string">`json:&quot;created_by,omitempty&quot;`</span></span><br><span class="line">	LastEditedBy   User       <span class="string">`json:&quot;last_edited_by,omitempty&quot;`</span></span><br><span class="line">	Archived       <span class="type">bool</span>       <span class="string">`json:&quot;archived&quot;`</span></span><br><span class="line">	Properties     Properties <span class="string">`json:&quot;properties&quot;`</span></span><br><span class="line">	Parent         Parent     <span class="string">`json:&quot;parent&quot;`</span></span><br><span class="line">	URL            <span class="type">string</span>     <span class="string">`json:&quot;url&quot;`</span></span><br><span class="line">	PublicURL      <span class="type">string</span>     <span class="string">`json:&quot;public_url&quot;`</span></span><br><span class="line">	Icon           *Icon      <span class="string">`json:&quot;icon,omitempty&quot;`</span></span><br><span class="line">	Cover          *Image     <span class="string">`json:&quot;cover,omitempty&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>所有的page都有一个parent，当其parent为database时（也就是当前page为db中的一条记录时）， <code>properties</code> 格式与db的<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/property-object">property</a>格式一致。否则 <code>properties</code> 仅包含一个title属性。</p>
+<ol>
+<li><strong>page content</strong></li>
+</ol>
+<p>一个页面的内容由多个块(<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/block">block</a>)组成。这些块被称为页面的子块。每个块都有一个类型，例如段落(paragraph)、标题(heading)或图像(image)。某些类型的块，例如切换列表(toggle list)，还有自己的子块。</p>
+<p>段落块（Paragraph blocks）是文档结构中的一个基本组成单元，block具有一些<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/block#keys">通用的属性</a>，包括：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> BasicBlock <span class="keyword">struct</span> &#123;</span><br><span class="line">	Object         ObjectType <span class="string">`json:&quot;object&quot;`</span> <span class="comment">// 通常为block</span></span><br><span class="line">	ID             BlockID    <span class="string">`json:&quot;id,omitempty&quot;`</span></span><br><span class="line">	Type           BlockType  <span class="string">`json:&quot;type&quot;`</span> <span class="comment">// 比如heading_1、image、quote、pdf等</span></span><br><span class="line">	CreatedTime    *time.Time <span class="string">`json:&quot;created_time,omitempty&quot;`</span></span><br><span class="line">	LastEditedTime *time.Time <span class="string">`json:&quot;last_edited_time,omitempty&quot;`</span></span><br><span class="line">	CreatedBy      *User      <span class="string">`json:&quot;created_by,omitempty&quot;`</span></span><br><span class="line">	LastEditedBy   *User      <span class="string">`json:&quot;last_edited_by,omitempty&quot;`</span></span><br><span class="line">	HasChildren    <span class="type">bool</span>       <span class="string">`json:&quot;has_children,omitempty&quot;`</span></span><br><span class="line">	Archived       <span class="type">bool</span>       <span class="string">`json:&quot;archived,omitempty&quot;`</span></span><br><span class="line">	Parent         *Parent    <span class="string">`json:&quot;parent,omitempty&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除此之外，块还包含了一些特定于其类型的属性，这些属性存储在“paragraph”属性中，其内容与具体的block type有关，具体见<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/block#block-type-objects">文档</a>。</p>
+<p>以todo block类型为例，paragraph的内容格式如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;block&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;380c78c0-e0f5-4565-bdbd-c4ccb079050d&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;paragraph&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;created_time&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;last_edited_time&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;has_children&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">&quot;paragraph&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="comment">/* details omitted */</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;children&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;block&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6d5b2463-a1c1-4e22-9b3b-49b3fe7ad384&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;to_do&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;created_time&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;last_edited_time&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;has_children&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  </span><br><span class="line">        <span class="attr">&quot;to_do&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="comment">/* details omitted */</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;checked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>很多block type支持<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/block#block-types-that-support-child-blocks">嵌套</a>，故API返回的block列表并非扁平化的数据。而是存在多级嵌套关系。</li>
+<li>还有unsupported类型的block type</li>
+<li>许多块类型支持富文本。在支持的情况下，块类型对象将包含一个 <a target="_blank" rel="noopener" href="https://pkg.go.dev/github.com/jomei/notionapi#RichText">rich_text</a> 对象。所有 rich_text 对象都将包含一个 plain_text 属性，这为开发人员从 Notion 块中访问未格式化的文本提供了一种方便的方法。</li>
+</ul>
+<p><strong>page</strong>相关接口包括：</p>
+<table>
+<thead>
+<tr>
+<th>接口名</th>
+<th>HTTP Method</th>
+<th>URL</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-page">https://developers.notion.com/reference/post-page</a></td>
+<td>POST</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/pages">https://api.notion.com/v1/pages</a></td>
+<td>创建page，parent只能是一个已存在page或database。不包括page内容。</td>
+</tr>
+<tr>
+<td>增加内容只能通过<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/patch-block-children%E6%8E%A5%E5%8F%A3">https://developers.notion.com/reference/patch-block-children接口</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/retrieve-a-page">https://developers.notion.com/reference/retrieve-a-page</a></td>
+<td>GET</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/pages/%7Bpage_id%7D">https://api.notion.com/v1/pages/{page_id}</a></td>
+<td>取page的属性property，不包括content。</td>
+</tr>
+<tr>
+<td>property数量限制在25个。如果超过25，使用下面的接口。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>如果page的parent是db类型，property信息与db的property schema一致。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/retrieve-a-page-property">https://developers.notion.com/reference/retrieve-a-page-property</a></td>
+<td>GET</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/pages/%7Bpage_id%7D/properties/%7Bproperty_id%7D">https://api.notion.com/v1/pages/{page_id}/properties/{property_id}</a></td>
+<td>根据page_id和property_id取property（列表）信息。支持分页，用于property大于25的场景。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/patch-page">https://developers.notion.com/reference/patch-page</a></td>
+<td>PATCH</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/pages/%7Bpage_id%7D">https://api.notion.com/v1/pages/{page_id}</a></td>
+<td>支持更新parent为db类型page的property值（即更新db中的某条记录）。</td>
+</tr>
+<tr>
+<td>也可以更新任意page类型的icon、cover、archive等公共属性。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>block</strong>相关的接口包括：</p>
+<table>
+<thead>
+<tr>
+<th>接口名</th>
+<th>HTTP Method</th>
+<th>URL</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/patch-block-children">https://developers.notion.com/reference/patch-block-children</a></td>
+<td>PATCH</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/blocks/%7Bblock_id%7D/children">https://api.notion.com/v1/blocks/{block_id}/children</a></td>
+<td>为block、page、db增加子block。</td>
+</tr>
+<tr>
+<td>api限制每次最多新增100个block。对于有child类型的block，api限制在单词请求中存在最高2层的child block嵌套。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/retrieve-a-block">https://developers.notion.com/reference/retrieve-a-block</a></td>
+<td>GET</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/blocks/%7Bblock_id%7D">https://api.notion.com/v1/blocks/{block_id}</a></td>
+<td>取一个block的数据。如果has_children为true，使用retrieve block child接口取其children信息。&#x2F;&#x2F; 感觉有点鸡肋</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/get-block-children">https://developers.notion.com/reference/get-block-children</a></td>
+<td>GET</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/blocks/%7Bblock_id%7D/children">https://api.notion.com/v1/blocks/{block_id}/children</a></td>
+<td>翻页的方式取block的children列表。<a target="_blank" rel="noopener" href="https://developers.notion.com/docs/working-with-page-content#modeling-content-as-blocks%E4%B9%9F%E6%98%AF%E9%80%9A%E8%BF%87block">https://developers.notion.com/docs/working-with-page-content#modeling-content-as-blocks也是通过block</a> list来组织的。</td>
+</tr>
+<tr>
+<td>仅返回第一级的children，如果children也有嵌套的子block需要通过api递归获取。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/update-a-block">https://developers.notion.com/reference/update-a-block</a></td>
+<td>PATCH</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/blocks/%7Bblock_id%7D">https://api.notion.com/v1/blocks/{block_id}</a></td>
+<td>更新block_id的内容。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/delete-a-block">https://developers.notion.com/reference/delete-a-block</a></td>
+<td>DELETE</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/blocks/%7Bblock_id%7D">https://api.notion.com/v1/blocks/{block_id}</a></td>
+<td>删除block</td>
+</tr>
+</tbody></table>
+<h3 id="databases"><a href="#databases" class="headerlink" title="databases"></a>databases</h3><hr>
+<p>数据库是 Notion 工作区中的page集合，可以根据需要过滤、排序和组织。允许用户在 Notion 中创建和操作结构化数据。</p>
+<p>目前public API不支持两种db：<strong><strong>Linked databases、Wiki databases</strong></strong></p>
+<p><strong>database数据结构：</strong></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Database <span class="keyword">struct</span> &#123;</span><br><span class="line">	Object         ObjectType <span class="string">`json:&quot;object&quot;`</span> <span class="comment">// database</span></span><br><span class="line">	ID             ObjectID   <span class="string">`json:&quot;id&quot;`</span> <span class="comment">// &quot;2f26ee68-df30-4251-aad4-8ddc420cba3d&quot;</span></span><br><span class="line">	CreatedTime    time.Time  <span class="string">`json:&quot;created_time&quot;`</span></span><br><span class="line">	LastEditedTime time.Time  <span class="string">`json:&quot;last_edited_time&quot;`</span></span><br><span class="line">	CreatedBy      User       <span class="string">`json:&quot;created_by,omitempty&quot;`</span></span><br><span class="line">	LastEditedBy   User       <span class="string">`json:&quot;last_edited_by,omitempty&quot;`</span></span><br><span class="line">	Title          []RichText <span class="string">`json:&quot;title&quot;`</span> <span class="comment">// [/* details omitted */],</span></span><br><span class="line">	Parent         Parent     <span class="string">`json:&quot;parent&quot;`</span></span><br><span class="line">	URL            <span class="type">string</span>     <span class="string">`json:&quot;url&quot;`</span></span><br><span class="line">	PublicURL      <span class="type">string</span>     <span class="string">`json:&quot;public_url&quot;`</span></span><br><span class="line">	**<span class="comment">// Properties is a map of property configurations that defines what Page.Properties each page of the database can use**</span></span><br><span class="line">	Properties  PropertyConfigs <span class="string">`json:&quot;properties&quot;`</span> <span class="comment">// &#123;/* a collection of property objects */&#125;,</span></span><br><span class="line">	Description []RichText      <span class="string">`json:&quot;description&quot;`</span> <span class="comment">//  [/* details omitted */],</span></span><br><span class="line">	IsInline    <span class="type">bool</span>            <span class="string">`json:&quot;is_inline&quot;`</span></span><br><span class="line">	Archived    <span class="type">bool</span>            <span class="string">`json:&quot;archived&quot;`</span></span><br><span class="line">	Icon        *Icon           <span class="string">`json:&quot;icon,omitempty&quot;`</span></span><br><span class="line">	Cover       *Image          <span class="string">`json:&quot;cover,omitempty&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>properties</code> 中存储DB字段相关定义map，key为字段名称，value为字段属性object，其定义与<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/property-object">属性字段类型</a>相关。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;database&quot;</span><span class="punctuation">,</span></span><br><span class="line">    </span><br><span class="line">  <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;Grocery item&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;fy:&#123;&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;title&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Price&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dia[&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;number&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;number&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dollar&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Last ordered&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;]\\R[&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;date&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;date&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// remaining details omitted</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>属性类型 <code>title</code> 比较特殊，每个db都有一个具有title类型的属性。这种类型的属性是指数据库中每个项目的页面标题。</li>
+<li>类型的值对应于属性对象中的另一个键。每个属性对象都有一个与其类型值相同的嵌套属性。例如，“Last ordered”的类型为“date”，并且它还有一个date属性。这种模式在许多对象上都使用了Notion API，我们称之为特定类型的数据。</li>
+<li>某些属性对象类型具有额外的配置。例如，Price的类型为“number”。Number属性对象在number属性内部具有额外的配置。在此示例中，格式配置设置为“美元”，以控制此列中页面属性值的外观。</li>
+</ul>
+<p><strong>新增page到DB</strong></p>
+<p>向db中<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-page">插入一个page</a>时，需要指定其属性定义与db属性定义一致，同时parent信息为database的id。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">curl -X POST https<span class="punctuation">:</span><span class="comment">//api.notion.com/v1/pages \</span></span><br><span class="line">  -H &#x27;Authorization<span class="punctuation">:</span> Bearer &#x27;<span class="string">&quot;$NOTION_API_KEY&quot;</span>&#x27;&#x27; \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;Notion-Version: 2022-06-28&quot;</span> \</span><br><span class="line">  --data &#x27;<span class="punctuation">&#123;</span></span><br><span class="line">	  <span class="attr">&quot;parent&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;database_id&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;database_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2f26ee68-df30-4251-aad4-8ddc420cba3d&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">	  <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;Grocery item&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;title&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Tomatoes&quot;</span> <span class="punctuation">&#125;</span> <span class="punctuation">&#125;</span><span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;Price&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;number&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;number&quot;</span><span class="punctuation">:</span> <span class="number">1.49</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;Last ordered&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;date&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;date&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2021-05-11&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span>&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>注意：组织上面的properties数据结构比较麻烦，容易出错。所以更好的方案是在构造page记录前使用database的<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/retrieve-a-database">retrieve接口</a>，先获取到db的properties数据结构后再填充相关字段值。</p>
+<p>插入page成功后会返回对应的pageid，这时再使用pageid填充block内容即可。</p>
+<p><strong>查询db</strong></p>
+<p>通过<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-database-query">Query接口</a>可以查询db中的部分page。</p>
+<ul>
+<li><code>filter</code> 用于指定<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-database-query#compound-filters">查询条件</a>，多个条件可以相互组合。格式</li>
+</ul>
+<p><img src="https://files.readme.io/6fe4a44-Screen_Shot_2021-12-23_at_11.46.21_AM.png" alt="客户端中的filter设置"></p>
+<p>客户端中的filter设置</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;filter&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;and&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;property&quot;</span><span class="punctuation">:</span><span class="string">&quot;Done&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;checkbox&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;equals&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;or&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;property&quot;</span><span class="punctuation">:</span><span class="string">&quot;Tags&quot;</span><span class="punctuation">,</span></span><br><span class="line">                        <span class="attr">&quot;contains&quot;</span><span class="punctuation">:</span><span class="string">&quot;A&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;property&quot;</span><span class="punctuation">:</span><span class="string">&quot;Tags&quot;</span><span class="punctuation">,</span></span><br><span class="line">                        <span class="attr">&quot;contains&quot;</span><span class="punctuation">:</span><span class="string">&quot;B&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>sort</code> 参数用于指定<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-database-query-sort">排序条件</a>，格式如下</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;sorts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;property&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Food group&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;direction&quot;</span><span class="punctuation">:</span> <span class="string">&quot;descending&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;property&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Name&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;direction&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ascending&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>查询接口返回db中已过滤&amp;排序的page数组，格式大致如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;list&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;results&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="string">&quot;page&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="comment">/* details omitted */</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;has_more&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;next_cursor&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>仅返回page信息，不包括其block内容。</li>
+<li>通过翻页方式返回，每次最大返回<a target="_blank" rel="noopener" href="https://developers.notion.com/docs/working-with-databases#sorting-database-pages">100</a>条page。</li>
+<li>如果需要遍历所有记录，需通过 <code>start_cursor</code> 、 <code>page_size</code> 参数指定<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/pagination">翻页条件</a>。</li>
+</ul>
+<h3 id="files-and-media"><a href="#files-and-media" class="headerlink" title="files and media"></a>files and media</h3><hr>
+<ul>
+<li><p>notion优先推荐将文件存储到外部系统，以链接的方式插入db或page。（每个page的大小限制为10M？）</p>
+</li>
+<li><p>notion也提供了文件上传能力，将文件存储在notion的s3实例中提供访问。</p>
+<ul>
+<li>文件上传目前notion API不支持，只能通过客户端上传</li>
+<li>当通过page或db的接口读取到文件的url后，可以通过url下载文件。url只有1个小时的有效期，具体过期时间通过expiry_time指定。</li>
+</ul>
+  <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9bc6c6e0-32b8-4d55-8c12-3ae931f43a01/brocolli.jpeg?...&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;expiry_time&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2020-03-17T19:10:04.968Z&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>database相关的接口</strong></p>
+<table>
+<thead>
+<tr>
+<th>接口名</th>
+<th>HTTP Method</th>
+<th>URL</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/create-a-database">https://developers.notion.com/reference/create-a-database</a></td>
+<td>POST</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/databases">https://api.notion.com/v1/databases</a></td>
+<td>在指定的（parent）page插入一个db，同时需要指定db的属性schema（property）。parent只能是page或者wiki database类型。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/post-database-query">https://developers.notion.com/reference/post-database-query</a></td>
+<td>POST</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/databases/%7Bdatabase_id%7D/query">https://api.notion.com/v1/databases/{database_id}/query</a></td>
+<td>分页获取db中的page记录列表，可以通过filter、sort指定查询条件。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/retrieve-a-database">https://developers.notion.com/reference/retrieve-a-database</a></td>
+<td>GET</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/databases/%7Bdatabase_id%7D">https://api.notion.com/v1/databases/{database_id}</a></td>
+<td>获取<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/database%EF%BC%8C%E5%8C%85%E6%8B%ACdb%E5%9F%BA%E7%A1%80%E4%BF%A1%E6%81%AF%E4%BB%A5%E5%8F%8Aproperties%E5%AD%97%E6%AE%B5%E3%80%82">https://developers.notion.com/reference/database，包括db基础信息以及properties字段。</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://developers.notion.com/reference/update-a-database">https://developers.notion.com/reference/update-a-database</a></td>
+<td>PATCH</td>
+<td><a target="_blank" rel="noopener" href="https://api.notion.com/v1/databases/%7Bdatabase_id%7D">https://api.notion.com/v1/databases/{database_id}</a></td>
+<td>更新db对象，包括title、description或者properties</td>
+</tr>
+</tbody></table>
+<h3 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h3><hr>
+<p>notion支持两种形态的comment，对page的评论和对文本内容（block）的评论。</p>
+<p>通过API访问时需要有page对应的comment权限，包括：</p>
+<ol>
+<li>Read comments.</li>
+<li>Write (or insert) comments.</li>
+</ol>
+<p>使用公共API可以实现：</p>
+<ul>
+<li>给页面添加评论。</li>
+<li>对内联评论做出回应（即向现有讨论线程添加评论）。</li>
+<li>读取一个块或页面上开放（”open” or “un-resolved”）的评论。</li>
+</ul>
+<p>不支持的点：</p>
+<ul>
+<li>启动新的讨论线程。</li>
+<li>编辑现有的评论。</li>
+<li>检索已解决（resolved）的评论。</li>
+</ul>
+<p><strong>读取page或者block的<a target="_blank" rel="noopener" href="https://developers.notion.com/docs/working-with-comments#retrieving-comments-for-a-page-or-block">评论</a></strong></p>
+<p>请求方式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl <span class="string">&#x27;https://api.notion.com/v1/comments?block_id=5c6a28216bb14a7eb6e1c50111515c3d&#x27;</span>\</span><br><span class="line">  -H <span class="string">&#x27;Authorization: Bearer &#x27;</span><span class="string">&quot;<span class="variable">$NOTION_API_KEY</span>&quot;</span><span class="string">&#x27;&#x27;</span> \</span><br><span class="line">  -H <span class="string">&quot;Notion-Version: 2022-06-28&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>应答格式详见<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/comment-object">文档</a>。</p>
+<p><strong>增加<a target="_blank" rel="noopener" href="https://developers.notion.com/docs/working-with-comments#adding-a-comment-to-a-page">评论</a></strong></p>
+<p>重点参数为parent（page或者block）、<a target="_blank" rel="noopener" href="https://developers.notion.com/reference/rich-text">rich-text</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/">https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/BaaS/">BaaS</a><a class="post-meta__tags" href="/tags/Notion/">Notion</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Architecture of Supabase</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Architecture of Supabase</div></div></a></div><div><a href="/2023/10/24/Introduct-to-dexide-dex/" title="Introduct to dexide &#x2F; dex"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">Introduct to dexide &#x2F; dex</div></div></a></div><div><a href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-08</div><div class="title">Introduct-to-nocoDB</div></div></a></div><div><a href="/2023/10/23/Introduct-to-pocketbase/" title="Introduct to pocketbase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-23</div><div class="title">Introduct to pocketbase</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Notion-API-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">Notion API 介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pages"><span class="toc-number">1.0.1.</span> <span class="toc-text">pages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#databases"><span class="toc-number">1.0.2.</span> <span class="toc-text">databases</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#files-and-media"><span class="toc-number">1.0.3.</span> <span class="toc-text">files and media</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#comments"><span class="toc-number">1.0.4.</span> <span class="toc-text">comments</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

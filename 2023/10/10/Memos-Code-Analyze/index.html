@@ -1,0 +1,519 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>memos code analyze | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="简介Memos是一个开源的支持自托管部署的知识库，类似flomo。作为一个go+react实现的产品，功能齐全，且活跃度一直不错，所以找了个时间阅读了一下代码。本次仅记录后端及DB设计部分，前端部分后续有时间了再继续。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="memos code analyze">
+<meta property="og:url" content="https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="简介Memos是一个开源的支持自托管部署的知识库，类似flomo。作为一个go+react实现的产品，功能齐全，且活跃度一直不错，所以找了个时间阅读了一下代码。本次仅记录后端及DB设计部分，前端部分后续有时间了再继续。">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2023-10-10T14:14:53.344Z">
+<meta property="article:modified_time" content="2023-10-10T14:14:53.344Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="memos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'memos code analyze',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-10 22:14:53'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">memos code analyze</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-10-10T14:14:53.344Z" title="Created 2023-10-10 22:14:53">2023-10-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-10-10T14:14:53.344Z" title="Updated 2023-10-10 22:14:53">2023-10-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="memos code analyze"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><a target="_blank" rel="noopener" href="https://github.com/usememos/memos">Memos</a>是一个开源的支持自托管部署的知识库，类似flomo。作为一个go+react实现的产品，功能齐全，且活跃度一直不错，所以找了个时间阅读了一下代码。<br>本次仅记录后端及DB设计部分，前端部分后续有时间了再继续。</p>
+<span id="more"></span>
+
+<h3 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h3><p><strong>方法一</strong>：可能是出于部署便捷的考虑，代码中仅支持docker安装，下面解析Dockerfile中镜像构建步骤，属于典型的多阶构建过程：</p>
+<ol>
+<li>协议代码生成：安装buf，buf generate生成协议代码。包括后端所需的pb、grpc、grpc-gateway代码以及前端所需的ts代码。详见buf.yml配置</li>
+<li>使用pnpm build编译前端文件，详见前端文件夹（web&#x2F;）下的package.json</li>
+<li>将前端打包结果（web&#x2F;dist）copy到server目录，build后端服务。<br>注意：项目中使用了<a target="_blank" rel="noopener" href="https://go.googlesource.com/proposal/+/master/design/draft-embed.md">go embed</a>，将前端资源目录一并打包到了二进制memos文件中，并在代码中提供了静态文件的读服务。所以部署时不再需要copy前端目录文件，也无需其他反向代理。</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">//go:embed dist</span></span><br><span class="line"><span class="keyword">var</span> embeddedFiles embed.FS</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getFileSystem</span><span class="params">(path <span class="type">string</span>)</span></span> http.FileSystem &#123;</span><br><span class="line">    fs, err := fs.Sub(embeddedFiles, path)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="built_in">panic</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> http.FS(fs)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">embedFrontend</span><span class="params">(e *echo.Echo)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Use echo static middleware to serve the built dist folder</span></span><br><span class="line">    <span class="comment">// refer: https://github.com/labstack/echo/blob/master/middleware/static.go</span></span><br><span class="line">    e.Use(middleware.StaticWithConfig(middleware.StaticConfig&#123;</span><br><span class="line">        Skipper:    defaultAPIRequestSkipper,</span><br><span class="line">        HTML5:      <span class="literal">true</span>,</span><br><span class="line">        Filesystem: getFileSystem(<span class="string">&quot;dist&quot;</span>),</span><br><span class="line">    &#125;))</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>构建服务运行环境</li>
+</ol>
+<p>注意在docker-compose.yml中采用的从远程拉取镜像的方式。如果想使用本地构建，将image改为build指令即可。</p>
+<p><strong>方法二</strong>：本地安装<br>动手能力强的可以直接本地编译安装，无需依赖docker。但是需要手工安装各类工具。</p>
+<ol>
+<li>安装pb、buf等工具，生成协议代码。</li>
+<li>前端编译。并将编译结果copy到server&#x2F;dist目录。</li>
+<li>go build，编译可执行文件。然后直接执行即可。</li>
+</ol>
+<p><strong>更新：源码下已经有个现成的编译脚本(scripts&#x2F;build.sh)了。自己安装好编译工具即可。</strong></p>
+<h3 id="DB存储结构"><a href="#DB存储结构" class="headerlink" title="DB存储结构"></a>DB存储结构</h3><p>后台代码分析之前，可以对DB结构有个大致了解，因为其接口大部分是基于DB的CRUD操作。</p>
+<h4 id="system-setting"><a href="#system-setting" class="headerlink" title="system_setting"></a><code>system_setting</code></h4><p>存储系统设置。详见系统设置页面配置项（仅ROLE为HOST用户有权限）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> system_setting (</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">value</span> TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    description TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span>(name)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【用户】-user"><a href="#【用户】-user" class="headerlink" title="【用户】 user"></a>【用户】 <code>user</code></h4><p>注册用户表。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- user</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span> (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    created_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    updated_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    row_status TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (row_status <span class="keyword">IN</span> (<span class="string">&#x27;NORMAL&#x27;</span>, <span class="string">&#x27;ARCHIVED&#x27;</span>)) <span class="keyword">DEFAULT</span> <span class="string">&#x27;NORMAL&#x27;</span>,</span><br><span class="line">    username TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    role TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (role <span class="keyword">IN</span> (<span class="string">&#x27;HOST&#x27;</span>, <span class="string">&#x27;ADMIN&#x27;</span>, <span class="string">&#x27;USER&#x27;</span>)) <span class="keyword">DEFAULT</span> <span class="string">&#x27;USER&#x27;</span>,</span><br><span class="line">    email TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    nickname TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    password_hash TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    avatar_url TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【用户】-user-setting"><a href="#【用户】-user-setting" class="headerlink" title="【用户】 user_setting"></a>【用户】 <code>user_setting</code></h4><p>用户设置表，存放用户个性化配置。以key-value方式存储，所以部分用户类数据也存放于此，比如用户token。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- user_setting</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> user_setting (</span><br><span class="line">    user_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    key TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">value</span> TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span>(user_id, key)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【发表】-memo"><a href="#【发表】-memo" class="headerlink" title="【发表】 memo"></a>【发表】 <code>memo</code></h4><p>发表memo记录表，类似tweet、微博记录。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> memo (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    creator_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>, <span class="comment">-- 发表人，关联user.id</span></span><br><span class="line">    created_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    updated_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    row_status TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (row_status <span class="keyword">IN</span> (<span class="string">&#x27;NORMAL&#x27;</span>, <span class="string">&#x27;ARCHIVED&#x27;</span>)) <span class="keyword">DEFAULT</span> <span class="string">&#x27;NORMAL&#x27;</span>,</span><br><span class="line">    content TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    visibility TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (visibility <span class="keyword">IN</span> (<span class="string">&#x27;PUBLIC&#x27;</span>, <span class="string">&#x27;PROTECTED&#x27;</span>, <span class="string">&#x27;PRIVATE&#x27;</span>)) <span class="keyword">DEFAULT</span> <span class="string">&#x27;PRIVATE&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【发表】-memo-organizer"><a href="#【发表】-memo-organizer" class="headerlink" title="【发表】 memo_organizer"></a>【发表】 <code>memo_organizer</code></h4><p>目前仅记录pin状态的memos记录，后续应该有更多场景。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> memo_organizer (</span><br><span class="line">    memo_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    user_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    pinned <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (pinned <span class="keyword">IN</span> (<span class="number">0</span>, <span class="number">1</span>)) <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span>(memo_id, user_id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【发表】-memo-relation"><a href="#【发表】-memo-relation" class="headerlink" title="【发表】 memo_relation"></a>【发表】 <code>memo_relation</code></h4><p>记录memo记录间关联关系。关系类型：REFERENCE、ADDITIONAL</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- memo_relation</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> memo_relation (</span><br><span class="line">    memo_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    related_memo_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    type TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span>(memo_id, related_memo_id, type)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【资源】-resource"><a href="#【资源】-resource" class="headerlink" title="【资源】 resource"></a>【资源】 <code>resource</code></h4><p>资源存放记录。可以包括资源内容本身，也可能为外部链接、本地文件名等。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> resource (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    creator_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    created_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    updated_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    filename TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="type">blob</span> <span class="type">BLOB</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    external_link TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    type TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    size <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    internal_path TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【资源】-memo-resource"><a href="#【资源】-memo-resource" class="headerlink" title="【资源】 memo_resource"></a>【资源】 <code>memo_resource</code></h4><p>memos记录与资源的关联关系（1:N）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- memo_resource</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> memo_resource (</span><br><span class="line">    memo_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    resource_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    created_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    updated_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    <span class="keyword">UNIQUE</span>(memo_id, resource_id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="【标签】-tag"><a href="#【标签】-tag" class="headerlink" title="【标签】 tag"></a>【标签】 <code>tag</code></h4><p>跟tweet、微博之类的不同，memos使用上需要先创建标签之后才能在发表时使用标签。所以标签有单独的一套接口。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- tag</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tag (</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    creator_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span>(name, creator_id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="idp"><a href="#idp" class="headerlink" title="idp"></a><code>idp</code></h4><p>没有具体研究，感觉应该是跟外部应用关联时使用。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> idp (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    type TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    identifier_filter TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    config TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#123;&#125;&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="activity"><a href="#activity" class="headerlink" title="activity"></a><code>activity</code></h4><p>操作流水日志</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> activity (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    creator_id <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    created_ts <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%s&#x27;</span>, <span class="string">&#x27;now&#x27;</span>)),</span><br><span class="line">    type TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    level TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (level <span class="keyword">IN</span> (<span class="string">&#x27;INFO&#x27;</span>, <span class="string">&#x27;WARN&#x27;</span>, <span class="string">&#x27;ERROR&#x27;</span>)) <span class="keyword">DEFAULT</span> <span class="string">&#x27;INFO&#x27;</span>,</span><br><span class="line">    payload TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#123;&#125;&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="storage"><a href="#storage" class="headerlink" title="storage"></a><code>storage</code></h4><p>S3存储配置列表，用于资源文件的存储。注意local、database配置不在此内。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- storage</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> storage (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">PRIMARY</span> KEY AUTOINCREMENT,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    type TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    config TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#123;&#125;&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="后端源码分析"><a href="#后端源码分析" class="headerlink" title="后端源码分析"></a>后端源码分析</h3><p><strong>入口文件：cmd&#x2F;memos.go</strong></p>
+<ul>
+<li>项目采用了cobra框架，支持几个子命令。此处仅关注root command的主流程。其他子命令参见mvrss、setup。</li>
+<li>初始化init()：项目使用了viper来实现配置的解析，包括mode（dev&#x2F;prod&#x2F;demo）、addr、port、data（数据存储目录）参数。相关参数在启动时会输出到console。<ul>
+<li>注意：db文件名：”memos_+$mode.db”</li>
+</ul>
+</li>
+<li>open DB。<ul>
+<li>使用了sqlite作为db driver。为何不将DSN放在配置中支持多个db类型？</li>
+<li>Migrate DB：db初始化，包括表构建，新版本db老数据迁移。</li>
+</ul>
+</li>
+</ul>
+<p><strong>构造echo server对象。核心数据结构包括：</strong></p>
+<ul>
+<li>echo server：项目使用<a target="_blank" rel="noopener" href="https://github.com/labstack/echo">echo</a>作为服务器框架。</li>
+<li>读取、生成 Server ID（唯一，如果只支持单机的话server ID有啥用？）</li>
+<li>读取、生成 secret-session</li>
+<li>embedFrontend：为前端资源目录（server&#x2F;dist、server&#x2F;dist&#x2F;asserts）启用静态文件中间件</li>
+<li>demo、dev模式时支持echoSwagger，方便查看API。URL：<a target="_blank" rel="noopener" href="http://127.0.0.1:8081/api/index.html">http://ip:port/api/index.html</a>。&#x2F;&#x2F; swagger确实好用，查看、调试API很方便。</li>
+<li>使用到的echo中间件<ul>
+<li>Logger（日志）、CORS（防cors）、Timeout（30s）、RateLimiter（频控，防止ip恶意访问）</li>
+<li>JWT鉴权：token校验通过会在context中写入用户id（key: “user-id”）</li>
+</ul>
+</li>
+</ul>
+<h4 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h4><p><strong>RSS路由，包括</strong></p>
+<ul>
+<li>&#x2F;explore&#x2F;rss.xml：提供rss接口，展示所有（max：100条）公开的memos记录</li>
+<li>&#x2F;u&#x2F;:id&#x2F;rss.xml：与上面类似，不过进列出该用户的memos记录。</li>
+</ul>
+<p><strong>前端REST接口路由apiv1（root path: “&#x2F;api&#x2F;v1”）</strong></p>
+<ul>
+<li><p><strong>system routes</strong></p>
+<ul>
+<li>&#x2F;ping：return HTTP 200 code.</li>
+<li>&#x2F;status：some information from system_setting table</li>
+<li>&#x2F;system&#x2F;vacuum：各表垃圾类记录清理操作，包括memos、resouce、tag表等。</li>
+</ul>
+</li>
+<li><p><strong>system setting</strong>：system_setting，仅限于role类型为HOST的用户</p>
+<ul>
+<li>【GET】&#x2F;system&#x2F;setting：拉取配置</li>
+<li>【POST】&#x2F;system&#x2F;setting：写配置</li>
+</ul>
+</li>
+<li><p><strong>auth</strong>：登录鉴权</p>
+<ul>
+<li>&#x2F;auth&#x2F;signin：登录<ul>
+<li>系统设置为disablePasswordLoginSystemSetting、用户状态为Archived、（加密）密码不匹配，返回错误</li>
+<li>生成JWT token，参数包括：username、userID、expire time、duration。</li>
+<li>token写入&#x2F;更新【追加】存储表（user_setting表，key：详见user_seting.proto），注意用户token可以有多个</li>
+<li>记录操作流水activity表。</li>
+<li>返回用户信息，并设置cookie</li>
+</ul>
+</li>
+<li>&#x2F;auth&#x2F;signin&#x2F;sso：SSO登录支持？</li>
+<li>&#x2F;auth&#x2F;signout：登出。删除存储的token，清理cookie</li>
+<li>auth&#x2F;signup：注册<ul>
+<li>参数：username、password</li>
+<li>user中第一个用户默认设置Role为HOST（系统管理员）。其他均为USER用户</li>
+<li>写user表。注意db中存储为hash过的password（防拖库）</li>
+<li>其他登录流程，token生成、写流水等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>idb</strong> IDP相关接口</p>
+<ul>
+<li>【GET】&#x2F;idp</li>
+<li>【POST】&#x2F;idp</li>
+<li>【GET】&#x2F;idp&#x2F;:idpId</li>
+<li>【PATCH】&#x2F;idp&#x2F;:idpId</li>
+<li>【DELETE】&#x2F;idp&#x2F;:idpId</li>
+</ul>
+</li>
+<li><p><strong>user</strong>：用户</p>
+<ul>
+<li>【GET】&#x2F;user：Get a list of users</li>
+<li>【POST】&#x2F;user：Create a user<ul>
+<li>仅当前用户角色为HOST用户时才可以创建用户。且创建用户的角色不允许为HOST。（可以为admin？）</li>
+<li>与&#x2F;auth&#x2F;signup不同的是不需要产生token、种cookie等操作。</li>
+</ul>
+</li>
+<li>【GET】&#x2F;user&#x2F;me：Get current user<ul>
+<li>user basic info from <code>user</code></li>
+<li>user setting from <code>user_setting</code></li>
+</ul>
+</li>
+<li>【GET】&#x2F;user&#x2F;name&#x2F;:username：Get user by username<ul>
+<li>根据用户名称查找基础信息。部分敏感字段隐藏</li>
+<li>这里不需要用户鉴权？</li>
+</ul>
+</li>
+<li>【GET】&#x2F;user&#x2F;:id：Get user by id。与上面基本一致</li>
+<li>【PATCH】&#x2F;user&#x2F;:id：更新用户信息。注意仅HOST用户或者更新用户自己才允许操作</li>
+<li>【DELETE】&#x2F;user&#x2F;:id：Delete a user from <code>user</code> table.</li>
+</ul>
+</li>
+<li><p><strong>user setting</strong></p>
+<ul>
+<li>【POST】&#x2F;user&#x2F;setting：Upsert user setting for <code>user_setting</code></li>
+</ul>
+</li>
+<li><p><strong>tag</strong></p>
+<ul>
+<li>【GET】&#x2F;tag：Get a list of tags。<ul>
+<li><code>tag</code> 中有用户id字段，仅拉取用户自己的tagid</li>
+</ul>
+</li>
+<li>【POST】&#x2F;tag：Create a tag into <code>tag</code></li>
+<li>【GET】&#x2F;tag&#x2F;suggestion：Get a list of tags suggested from other memos contents。—— 没看懂使用场景</li>
+<li>【POST】&#x2F;tag&#x2F;delete：Delete a tag from <code>tag</code></li>
+</ul>
+</li>
+<li><p><strong>storage</strong>：<code>system_setting</code> 中存放的storage-service-id值为当前使用的存储。Local（value: -1)，Database（value：0）两个不可修改、删除，可以新增S3类型的存储。</p>
+<ul>
+<li>【GET】&#x2F;storage：Get a list of storages from <code>storage</code></li>
+<li>【POST】&#x2F;storage：Create storage into <code>storage</code><ul>
+<li>目前仅支持 “S3” 类型的存储</li>
+</ul>
+</li>
+<li>【PATCH】&#x2F;storage&#x2F;:storageId：Update a storage by storageId</li>
+<li>【DELETE】&#x2F;storage&#x2F;:storageId：Delete a storage by storageId<ul>
+<li>需要检查 <code>system_setting</code> 的当前storage-service-id值，如果是正在使用的存储，则不允许直接删除。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>resource</strong>：memo发表前可以先上传资源（得到返回的资源id），然后发表时关联对应的资源（id列表）即可。</p>
+<ul>
+<li>【GET】&#x2F;resource：Get a list of resources<ul>
+<li>拉取用户上传资源列表。注：需要关联<code>memo_resource</code> 表，如果memo记录已删除是否就无法找回了。</li>
+<li>看页面请求，已经走的是v2的接口（ <code>/memos.api.v2.ResourceService/ListResources</code> ）了。v1接口已废弃？</li>
+</ul>
+</li>
+<li>【POST】&#x2F;resource：Create resource into <code>resource</code> table</li>
+<li>【POST】&#x2F;resource&#x2F;blob：Upload resource。<ul>
+<li>settingMaxUploadSizeBytes：文件大小限制，默认32M</li>
+<li>根据 <code>system_setting.storage-service-id</code> 的存储类型，选择对应的存储地址<ul>
+<li><code>database</code> ：直接存储在 <code>resource.blob</code> 字段中</li>
+<li><code>LocalStorage</code> ：存储在本地文件，默认为asserts目录（可修改）。InternalPath字段关联文件存储地址</li>
+<li><code>StorageS3</code> ：S3远程存储。ExternalLink字段关联下载地址。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>【PATCH】&#x2F;resource&#x2F;:resourceId：仅更新Filename。业务场景是什么？</li>
+<li>【DELETE】&#x2F;resource&#x2F;:resourceId：删除对应的资源。包括文件blob以及 <code>storage</code> 表</li>
+</ul>
+</li>
+<li><p><strong>memo</strong>：发表相关</p>
+<ul>
+<li>【GET】&#x2F;memo：Get a list of memos matching optional filters。<ul>
+<li><code>PRIVATE</code> 仅用户自身可见。 <code>PROTECTED</code> 登录用户也可以查看。 <code>PUBLIC</code> 未登录也可见。</li>
+<li><code>system_setting.memo-display-with-updated-ts</code> 开关用于控制是否按按update time排序，否则按create time排序 【desc】</li>
+<li>除 <code>memo</code> 表外，也会将 <code>memo_relation</code> 、 <code>memo_organizer</code>、 <code>memo_resource</code> 等关联字段一起拉出。</li>
+</ul>
+</li>
+<li>【POST】&#x2F;memo：发表。<ul>
+<li>visibility默认继承自 <code>user_setting.memo-visibility</code> or Private。如果 <code>system_setting.disable-public-memos</code> 开启，将USER角色的用户发表改为Private。</li>
+<li>插入 <code>mem</code> 表</li>
+<li>插入 <code>memo_resource</code> 表（if ResourceIDList not null）</li>
+<li>插入 <code>memo_relation</code> 表（if RelationList not null）</li>
+<li>写后立即读？完全没有考虑性能以及db可能的延迟。</li>
+<li>如果 <code>user_setting.telegram-user-id</code> 存在，使用telegram bot同步</li>
+</ul>
+</li>
+<li>【GET】&#x2F;memo&#x2F;all：跟上面的list接口没啥区别。此处不限用户拉取所有 <code>PUBLIC</code>、 <code>PROTECTED</code>状态的memo。explore场景使用（类似于微博广场的场景）</li>
+<li>【GET】&#x2F;memo&#x2F;stats：Get memo stats by creator ID or username。<ul>
+<li>查询某用户或自己的memo记录的发表&#x2F;更新时间。首页右侧的heat map使用。</li>
+</ul>
+</li>
+<li>【GET】&#x2F;memo&#x2F;:memoId：Get memo by ID</li>
+<li>【PATCH】&#x2F;memo&#x2F;:memoId：更新 <code>memo</code> 以及  <code>memo_relation</code> 、 <code>memo_resource</code></li>
+<li>【DELETE】&#x2F;memo&#x2F;:memoId：删除 <code>memo</code>。注意 <code>memo_relation</code> 、 <code>memo_resource</code> 、<code>memo_organizer</code> 记录并没有清除。删除后资源应该可见，逻辑不严谨。</li>
+</ul>
+</li>
+<li><p><strong>Organize memo</strong> (pin&#x2F;unpin)</p>
+<ul>
+<li>【POST】&#x2F;memo&#x2F;:memoId&#x2F;organizer：插入 <code>memo_organizer</code> 表。<ul>
+<li>注意仅memo的发表人CreatorID才允许执行Pin操作。—— 感觉此处单独一个表有点多余。完全可以在memo中增加一个字段即可。另外也不需要单独接口，完全可以复用update memo接口。</li>
+<li>register memo &amp; resource relation.</li>
+</ul>
+</li>
+<li>【GET】&#x2F;memo&#x2F;:memoId&#x2F;resource：根据memoID拉取对应的resource列表信息</li>
+<li>【POST】&#x2F;memo&#x2F;:memoId&#x2F;resource：根据memoID更新 <code>memo_resource</code> 中对应的资源id。使用场景是什么？如果是更新memo对应的资源，直接调用更新memo即可。貌似没有必要为资源更新单独保留接口。</li>
+<li>【DELETE】&#x2F;memo&#x2F;:memoId&#x2F;resource&#x2F;:resourceId：Delete from <code>memo_resource</code> 。也没找找到使用场景。如果是删除资源，直接更新memo即可。</li>
+</ul>
+</li>
+<li><p><strong>register memo relation</strong>。接口与上面resouce类似，GET、POST、DELETE 操作 <code>memo_relation</code> 表</p>
+</li>
+<li><p><strong>公共路由（”&#x2F;o”）</strong></p>
+<ul>
+<li>外部资源<ul>
+<li>【GET】&#x2F;get&#x2F;httpmeta：取外部链接的http meta信息</li>
+<li>【GET】&#x2F;get&#x2F;image：拉取外部链接图片，返回给页面，并设置max-age。为啥页面不直接拉取，而需要走服务端代理？</li>
+</ul>
+</li>
+<li>Resouce<ul>
+<li>【GET】&#x2F;r&#x2F;:resourceId：拉取资源<ul>
+<li>支持thumbnail拉取。如果资源type为“image&#x2F;png”、”image&#x2F;jpeg”，会实时生成512的缩略图（Resouce页面首次拉取会展示缩略图，点击是显示完整图片）</li>
+</ul>
+</li>
+<li>【GET】&#x2F;r&#x2F;:resourceId&#x2F;*：与上面接口实现相同。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="gRPC路由注册"><a href="#gRPC路由注册" class="headerlink" title="gRPC路由注册"></a>gRPC路由注册</h4><p>gRPC使用的端口号为 <code>Profile.Port</code> +1，使用gRPC server框架。包括以下gRPC接口：</p>
+<ul>
+<li>gRPC拦截器：与v1中的鉴权流程一致，鉴权完毕会在context中写入username供后续逻辑使用。详见 <code>acl.go</code> 实现。<ul>
+<li>意味着所有v2接口都需要登录？</li>
+</ul>
+</li>
+<li>systeminfo：与v1版本的user_setting基本一致。v1版本没有get接口，应该是已经迁移了。</li>
+</ul>
+ <figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="keyword">service </span><span class="title class_">SystemService</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">rpc</span> GetSystemInfo(GetSystemInfoRequest) <span class="keyword">returns</span> (GetSystemInfoResponse) </span>&#123;</span><br><span class="line">    <span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/system/info&quot;</span>&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">rpc</span> UpdateSystemInfo(UpdateSystemInfoRequest) <span class="keyword">returns</span> (UpdateSystemInfoResponse) </span>&#123;</span><br><span class="line">    <span class="keyword">option</span> (google.api.http) = &#123;post: <span class="string">&quot;/api/v2/system/info&quot;</span>&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>UserService：包括两部分接口<ul>
+<li><code>user</code> 中的用户基础信息</li>
+<li>拉取、创建、删除Token列表（ <code>user_setting.UserSettingKey</code> ），注意v1版本API仅在sigin、signout相关流程中有操作token，无直接接口。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="keyword">service </span><span class="title class_">UserService</span> &#123;</span><br><span class="line"> <span class="function"><span class="keyword">rpc</span> GetUser(GetUserRequest) <span class="keyword">returns</span> (GetUserResponse) </span>&#123;</span><br><span class="line">   <span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/users/&#123;username&#125;&quot;</span>&#125;;</span><br><span class="line">   <span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;username&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">rpc</span> UpdateUser(UpdateUserRequest) <span class="keyword">returns</span> (UpdateUserResponse) </span>&#123;</span><br><span class="line">   <span class="keyword">option</span> (google.api.http) = &#123;</span><br><span class="line">     post: <span class="string">&quot;/api/v2/users/&#123;username&#125;&quot;</span></span><br><span class="line">     body: <span class="string">&quot;*&quot;</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;username&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">// ListUserAccessTokens returns a list of access tokens for a user.</span></span><br><span class="line"> <span class="function"><span class="keyword">rpc</span> ListUserAccessTokens(ListUserAccessTokensRequest) <span class="keyword">returns</span> (ListUserAccessTokensResponse) </span>&#123;</span><br><span class="line">   <span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/users/&#123;username&#125;/access_tokens&quot;</span>&#125;;</span><br><span class="line">   <span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;username&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">// CreateUserAccessToken creates a new access token for a user.</span></span><br><span class="line"> <span class="function"><span class="keyword">rpc</span> CreateUserAccessToken(CreateUserAccessTokenRequest) <span class="keyword">returns</span> (CreateUserAccessTokenResponse) </span>&#123;</span><br><span class="line">   <span class="keyword">option</span> (google.api.http) = &#123;</span><br><span class="line">     post: <span class="string">&quot;/api/v2/users/&#123;username&#125;/access_tokens&quot;</span></span><br><span class="line">     body: <span class="string">&quot;*&quot;</span></span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;username&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">// DeleteUserAccessToken deletes an access token for a user.</span></span><br><span class="line"> <span class="function"><span class="keyword">rpc</span> DeleteUserAccessToken(DeleteUserAccessTokenRequest) <span class="keyword">returns</span> (DeleteUserAccessTokenResponse) </span>&#123;</span><br><span class="line">   <span class="keyword">option</span> (google.api.http) = &#123;delete: <span class="string">&quot;/api/v2/users/&#123;username&#125;/access_tokens/&#123;access_token&#125;&quot;</span>&#125;;</span><br><span class="line">   <span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;username,access_token&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>memos：提供拉取memos的两个接口（目前应该还没有迁移完毕）</li>
+</ul>
+<figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="keyword">service </span><span class="title class_">MemoService</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">rpc</span> ListMemos(ListMemosRequest) <span class="keyword">returns</span> (ListMemosResponse) </span>&#123;</span><br><span class="line"><span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/memos&quot;</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">rpc</span> GetMemo(GetMemoRequest) <span class="keyword">returns</span> (GetMemoResponse) </span>&#123;</span><br><span class="line"><span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/memos/&#123;id&#125;&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">option</span> (google.api.method_signature) = <span class="string">&quot;id&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>tag：与&#x2F;api&#x2F;v1&#x2F;tag基本一致。</li>
+</ul>
+<figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="keyword">service </span><span class="title class_">TagService</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">rpc</span> ListTags(ListTagsRequest) <span class="keyword">returns</span> (ListTagsResponse) </span>&#123;</span><br><span class="line"><span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/tags&quot;</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>resource：与 &#x2F;api&#x2F;v1&#x2F;resource 基本一致</li>
+</ul>
+<figure class="highlight protobuf"><table><tr><td class="code"><pre><span class="line"><span class="keyword">service </span><span class="title class_">ResourceService</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">rpc</span> ListResources(ListResourcesRequest) <span class="keyword">returns</span> (ListResourcesResponse) </span>&#123;</span><br><span class="line">    <span class="keyword">option</span> (google.api.http) = &#123;get: <span class="string">&quot;/api/v2/resources&quot;</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>v2接口也支持reflection，可以通过 <code>grpcurl</code> 查看接口说明。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">» grpcurl  -plaintext localhost:8082 list</span><br><span class="line">grpc.reflection.v1.ServerReflection</span><br><span class="line">grpc.reflection.v1alpha.ServerReflection</span><br><span class="line">memos.api.v2.MemoService</span><br><span class="line">memos.api.v2.ResourceService</span><br><span class="line">memos.api.v2.SystemService</span><br><span class="line">memos.api.v2.TagService</span><br><span class="line">memos.api.v2.UserService</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将所有gRPC接口注册到gRPC gateway，提供v2版本的http API（&#x2F;api&#x2F;v2&#x2F;）。</li>
+<li>另外也注册了GRPC web proxy，供前端gRPC web直接使用。<ul>
+<li>前端使用了<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/nice-grpc-web">nice-grpc-web</a> 来调用grpc接口。避免通过rest API的转换。</li>
+<li>另外grpc web proxy是依赖http2的，无法在非h2环境下使用？</li>
+</ul>
+</li>
+</ul>
+<p>路由注册等完成后启动http、gRPC server接口，启动服务。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>目前memos作为一款笔记记录工具，从功能上还是比较完善的。但是整体架构比较简单，基本都是DB的CRUD操作，也不支持多机部署，目前无法支撑大量在线的访问场景。在一些数据可靠性、备份机制等方面基本没有考虑。所以建议目前仅个人部署来体验，不适合大规模使用的场景。</p>
+<ul>
+<li>优点<ul>
+<li>功能结构完整：用户、发表、标签、资源以及鉴权、TEL机器人等功能相关接口，接口近50个。</li>
+<li>docker等一键部署能力。不需要开发能力可以完成host部署。</li>
+</ul>
+</li>
+<li>不足<ul>
+<li>memo等存储还基于嵌入式数据库sqlite，量大时一定会有性能上的瓶颈。看项目roadmap支持mysql已经在计划中了，支持mysql之后性能应该会有所改善。部分接口实现上也没有考虑性能问题的优化（比如去掉多余的db访问）</li>
+<li>表过多，造成大量的left join之类的查询。如果记录量达到百万级应该也会产生新的性能问题。感觉一些非核心数据（比如pin、relation、resouce）可以使用redis之类的缓存来解决，避免频繁的多表join等操作。</li>
+<li>API代码冗长。接口存在一些重复。目前已经在朝v2版本接口迁移中了。后续应该能简化。</li>
+</ul>
+</li>
+</ul>
+<h3 id="优化方向"><a href="#优化方向" class="headerlink" title="优化方向"></a>优化方向</h3><p>架构本身并没有最佳，目前的架构在支撑当前的产品定位上是没有任何问题的。这里抛开产品定位，仅从技术角度来谈谈后续可以优化的方向，思路上也会受个人经验的限制。</p>
+<h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><ul>
+<li>支撑更大在线的用户并发量</li>
+<li>数据安全性</li>
+</ul>
+<h4 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h4><ol>
+<li>支持分布式部署</li>
+</ol>
+<p>当在线量变大时，最直接的解决方案就是横向扩容了。目前的memos记录存储、资源文件存储以及缓存设计等都还是基于本地文件或者嵌入式DB，没有考虑反向代理+分布式多记部署来横向扩展性能的能力。</p>
+<p>所以第一步要做的就是将memos记录等依赖本地文件的方案废弃，迁移到DB等中间件。Mysql已经在支持中了，但是在缓存设计、资源管理上也需要进一步考虑。目标上要做到数据与后端服务分离。</p>
+<ol start="2">
+<li>轻重分离</li>
+</ol>
+<p>资源管理等重逻辑应该与发表等轻逻辑分析。文件上传、下载以及图片处理等重逻辑不应该与接口逻辑部署在一起而相互影响。</p>
+<p>另外资源上传、下载最好直接使用第三方存储、CDN类服务，避免与服务端直接交互，提升终端体验。</p>
+<ol start="3">
+<li>微服务化改造</li>
+</ol>
+<ul>
+<li>数据层、逻辑层分离。</li>
+<li>接口按功能组拆分。仅50个接口堆在一个单体服务内，性能上也会有影响。</li>
+</ul>
+<p>4、核心逻辑重建</p>
+<p>将业务核心逻辑拆分为几大系统，各系统针对性优化。比如账号系统、发表系统、资源管理等，各系统按照其能力目标针对性建设。<br>以发表为例，需要考虑的点：</p>
+<ul>
+<li>发表消息存储：主要管理memosID与消息体的映射关系，简单实现的话，可以使用mysql（落地）+redis（在线访问）来存储此类key-value数据。后续进一步考虑成本等优化方案</li>
+<li>发表索引：主要目前是为构建首页的memos消息列表而使用，游客态、广场等也有类似的需求。简单实现可以使用redis.zset等实现来存储此类key-list数据类型，或者使用es来构建多种倒排索引并存的需求。后续可以根据实际需要自行实现倒排索引。</li>
+<li>读扩散or写扩散：开放式关系链可能更适合读扩散，比如微博等大V场景。封闭式关系链，比如微信，可能更适合写扩散。或者读写并存的方式来构建Timeline类场景服务。</li>
+</ul>
+<p>每一块扩展开来也有大量的优化空间，比如缓存的设计、分布式系统热点数据的性能问题、防击穿等，需要逐步来优化。</p>
+<p>当然最重要的还是根据系统需求来选择对应的方案，毕竟能有如此在线量的产品本身也不多，大厂内也没几个，没有必要为了过早优化而投入过多的人力。<br>满足当前需求，以及为未来保留一定的可扩展性方案才是最好的。不必纠结于技术系统的构建上而错过业务发展的最佳时间。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/">https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/golang/">golang</a><a class="post-meta__tags" href="/tags/memos/">memos</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/23/Introduct-to-pocketbase/" title="Introduct to pocketbase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Introduct to pocketbase</div></div></a></div><div class="next-post pull-right"><a href="/2023/09/18/Introduct-to-temporalio/" title="Introduct to temporalio"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Introduct to temporalio</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/06/14/Functional-options-for-friendly-APIs/" title="Functional options for friendly APIs"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-14</div><div class="title">Functional options for friendly APIs</div></div></a></div><div><a href="/2023/09/18/Introduct-to-go-clean-template/" title="Introduct to go-clean-template"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-18</div><div class="title">Introduct to go-clean-template</div></div></a></div><div><a href="/2023/10/23/Introduct-to-pocketbase/" title="Introduct to pocketbase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-23</div><div class="title">Introduct to pocketbase</div></div></a></div><div><a href="/2020/07/02/Introduction-to-Go-Modules/" title="Introduction to Go Modules"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-02</div><div class="title">Introduction to Go Modules</div></div></a></div><div><a href="/2019/03/16/golang-pprof/" title="golang pprof"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-16</div><div class="title">golang pprof</div></div></a></div><div><a href="/2019/12/15/golang-viper-tips/" title="golang viper tips"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-15</div><div class="title">golang viper tips</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">安装方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DB%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">DB存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#system-setting"><span class="toc-number">3.1.</span> <span class="toc-text">system_setting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E7%94%A8%E6%88%B7%E3%80%91-user"><span class="toc-number">3.2.</span> <span class="toc-text">【用户】 user</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E7%94%A8%E6%88%B7%E3%80%91-user-setting"><span class="toc-number">3.3.</span> <span class="toc-text">【用户】 user_setting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E5%8F%91%E8%A1%A8%E3%80%91-memo"><span class="toc-number">3.4.</span> <span class="toc-text">【发表】 memo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E5%8F%91%E8%A1%A8%E3%80%91-memo-organizer"><span class="toc-number">3.5.</span> <span class="toc-text">【发表】 memo_organizer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E5%8F%91%E8%A1%A8%E3%80%91-memo-relation"><span class="toc-number">3.6.</span> <span class="toc-text">【发表】 memo_relation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91-resource"><span class="toc-number">3.7.</span> <span class="toc-text">【资源】 resource</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91-memo-resource"><span class="toc-number">3.8.</span> <span class="toc-text">【资源】 memo_resource</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E3%80%90%E6%A0%87%E7%AD%BE%E3%80%91-tag"><span class="toc-number">3.9.</span> <span class="toc-text">【标签】 tag</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#idp"><span class="toc-number">3.10.</span> <span class="toc-text">idp</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#activity"><span class="toc-number">3.11.</span> <span class="toc-text">activity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#storage"><span class="toc-number">3.12.</span> <span class="toc-text">storage</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">后端源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1"><span class="toc-number">4.1.</span> <span class="toc-text">路由</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gRPC%E8%B7%AF%E7%94%B1%E6%B3%A8%E5%86%8C"><span class="toc-number">4.2.</span> <span class="toc-text">gRPC路由注册</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">优化方向</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">6.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="toc-number">6.2.</span> <span class="toc-text">优化思路</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

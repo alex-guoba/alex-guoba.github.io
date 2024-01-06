@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Doploy outline without docker | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="非Docker方式部署outline预研了几个可托管部署的团队wiki，看了一圈还是觉得outline比较合适。但是不太希望以docker的方式来部署，所以折腾下本地非docker方式的部署方案。记录如下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Doploy outline without docker">
+<meta property="og:url" content="https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="非Docker方式部署outline预研了几个可托管部署的团队wiki，看了一圈还是觉得outline比较合适。但是不太希望以docker的方式来部署，所以折腾下本地非docker方式的部署方案。记录如下。">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2023-12-06T08:41:25.000Z">
+<meta property="article:modified_time" content="2024-01-06T14:32:09.361Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="Outline">
+<meta property="article:tag" content="CMS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Doploy outline without docker',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-06 22:32:09'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Doploy outline without docker</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-06T14:32:09.361Z" title="Updated 2024-01-06 22:32:09">2024-01-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Doploy outline without docker"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="非Docker方式部署outline"><a href="#非Docker方式部署outline" class="headerlink" title="非Docker方式部署outline"></a>非Docker方式部署outline</h1><p>预研了几个可托管部署的团队wiki，看了一圈还是觉得outline比较合适。但是不太希望以docker的方式来部署，所以折腾下本地非docker方式的部署方案。记录如下。</p>
+<span id="more"></span>
+
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>作为团队知识管理系统，选型上重点考虑以下需求：</p>
+<ol>
+<li>开源，可定制。</li>
+<li>支持多机部署。即所有数据不存储在本地，而是外部存储服务中。</li>
+<li>Markdown语法支持。</li>
+<li>可导出Markdown。即随时可以切换到别的平台。</li>
+<li>团队协作的权限管理。针对用户设置不同级别的访问权限。内部用户可编辑，外部用户仅查看。</li>
+<li>支持多种账号形态。</li>
+</ol>
+<p>outline基本符合以上各类条件。支持Slack、Google以及Azure，同时也支持第三方OIDC认证。刚好前段时间预研过<a target="_blank" rel="noopener" href="https://goroutine.cn/2023/10/24/Introduct-to-dexide-dex/">dex</a>的用法，所以就以dex作为OIDC的服务方来部署。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>整体部署流程分为几步：</p>
+<ol>
+<li>安装相关依赖，包括Postgres、Redis、minio（可选）</li>
+<li>安装OIDC鉴权服务。配置相关认证鉴权参数。</li>
+<li>从git下载代码，启动方式参考<a target="_blank" rel="noopener" href="https://docs.getoutline.com/s/hosting/doc/local-development-5hEhFRXow7">官方文档</a>即可。</li>
+</ol>
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>存在以下几个存储依赖：</p>
+<ul>
+<li>Postgres：用于存储outline内部数据以及文章数据。</li>
+<li>Redis：用作缓存</li>
+<li>minio：存储图片。看配置文件已经支持了本地文件方式了，但为了可扩展性考虑还是选用了兼容s3的minio。</li>
+</ul>
+<p><em>注：我以为minio图片下载会有自己的域名，部署完毕后发现还是通过monio服务下发的。如果图片量比较大的话可能要考虑优化为CDN方式。或者在内容编辑过程中就使用自己的CDN服务。</em></p>
+<p>这几个模块都比较常见了，本地我都已经docker部署过了，就直接拿来用了。docker命令可以参考<a target="_blank" rel="noopener" href="https://github.com/alex-guoba/dock-dev-tools">这里</a>。</p>
+<p>相关配置：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="variable constant_">DATABASE_URL</span>=<span class="attr">postgres</span>:<span class="comment">//postgres:xxx@localhost:5432/outline</span></span><br><span class="line"><span class="variable constant_">DATABASE_URL_TEST</span>=<span class="attr">postgres</span>:<span class="comment">//postgres:xxx@localhost:5432/outline-test</span></span><br><span class="line"></span><br><span class="line"><span class="variable constant_">REDIS_URL</span>=<span class="attr">redis</span>:<span class="comment">//localhost:6379</span></span><br><span class="line"></span><br><span class="line"><span class="variable constant_">AWS_ACCESS_KEY_ID</span>=xxxxxxxx</span><br><span class="line"><span class="variable constant_">AWS_SECRET_ACCESS_KEY</span>=xxxxxxxx</span><br><span class="line"><span class="variable constant_">AWS_REGION</span>=uto-<span class="number">1</span></span><br><span class="line"><span class="variable constant_">AWS_S3_ACCELERATE_URL</span>=</span><br><span class="line"><span class="variable constant_">AWS_S3_UPLOAD_BUCKET_URL</span>=<span class="attr">http</span>:<span class="comment">//localhost:9000</span></span><br><span class="line"><span class="variable constant_">AWS_S3_UPLOAD_BUCKET_NAME</span>=outline</span><br><span class="line"><span class="variable constant_">AWS_S3_FORCE_PATH_STYLE</span>=<span class="literal">true</span></span><br><span class="line"><span class="variable constant_">AWS_S3_ACL</span>=private</span><br><span class="line"></span><br><span class="line"><span class="variable constant_">FILE_STORAGE</span>=s3</span><br></pre></td></tr></table></figure>
+
+<h2 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h2><p>如果是直接使用Slack、Google或者Azure账号，这里应该不复杂。但为了可扩展性考虑，所以我选用了第三方OIDC服务，流程上也就稍微麻烦。以dex为例的配置方法如下：</p>
+<p>首先需要在dex server端为app配置基础信息。配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">staticClients:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">id:</span> <span class="string">outline</span></span><br><span class="line">  <span class="attr">redirectURIs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;http://localhost:3000/auth/oidc.callback&#x27;</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">&#x27;Outline App&#x27;</span></span><br><span class="line">  <span class="attr">secret:</span> <span class="string">xxxxx</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>id、secret：分配的app id以及秘钥，与outline中的配置一致即可。</li>
+<li>redirectURIs：授权重定向地址。使用过程中会校验callback是否与outline登录中的callback参数一致，如果不一致会禁止回跳。</li>
+<li>name：外显的授权App名称。</li>
+</ul>
+<p>其他参数可以参考我之前的<a target="_blank" rel="noopener" href="https://goroutine.cn/2023/10/24/Introduct-to-dexide-dex/">dex介绍</a>。</p>
+<p>启动dex之后可以通过dex的discovery链接查看相关服务的具体地址，参考<a target="_blank" rel="noopener" href="https://dexidp.io/docs/openid-connect/#discovery">这里</a>。本地部署时相关配置如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;issuer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;authorization_endpoint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex/auth&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;token_endpoint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex/token&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;jwks_uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex/keys&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;userinfo_endpoint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex/userinfo&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;device_authorization_endpoint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://127.0.0.1:5556/dex/device/code&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在outline配置OIDC相关地址，配置参考：</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="variable constant_">OIDC_CLIENT_ID</span>=outline</span><br><span class="line"><span class="variable constant_">OIDC_CLIENT_SECRET</span>=xxxxx</span><br><span class="line"><span class="variable constant_">OIDC_AUTH_URI</span>=<span class="attr">http</span>:<span class="comment">//127.0.0.1:5556/dex/auth</span></span><br><span class="line"><span class="variable constant_">OIDC_TOKEN_URI</span>=<span class="attr">http</span>:<span class="comment">//127.0.0.1:5556/dex/token</span></span><br><span class="line"><span class="variable constant_">OIDC_USERINFO_URI</span>=<span class="attr">http</span>:<span class="comment">//127.0.0.1:5556/dex/userinfo</span></span><br></pre></td></tr></table></figure>
+
+<p><code>OIDC_CLIENT_ID</code> 与 <code>OIDC_CLIENT_SECRET</code> 与dex server中的id和secret保持一致即可。授权、token获取以及用户信息获取与dex服务的discovery返回信息中的地址保持一致即可。</p>
+<p>授权相关的基础配置就完成了。当然现网部署需要根据自己的需求调整dex的配置，但是整体配置流程还是比较简单的。重点是要理解OIDC相关的基础概念以及流程。</p>
+<p><em>注：之前对dex不是很熟悉，所以摸索花了点时间。不得不承认这种OIDC基础服务还是非常方便的，能够快速打通各种类型的账号，开发仅需要关注业务本身即可。顺便也搜索了一下国内的常用账号系统（比如微信）是否有类似的标准化服务，貌似各种账号体系都有其特殊性，没有找到相关实现。。。</em></p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>参考官方的<a target="_blank" rel="noopener" href="https://docs.getoutline.com/s/hosting/doc/from-source-BlBxrNzMIP">从源码启动方式</a>即可。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/">https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Outline/">Outline</a><a class="post-meta__tags" href="/tags/CMS/">CMS</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Introduct-to-nocoDB</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Archive Service Governance</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-08</div><div class="title">Introduct-to-nocoDB</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%9EDocker%E6%96%B9%E5%BC%8F%E9%83%A8%E7%BD%B2outline"><span class="toc-number">1.</span> <span class="toc-text">非Docker方式部署outline</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">1.2.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%88%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">1.4.</span> <span class="toc-text">启动</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

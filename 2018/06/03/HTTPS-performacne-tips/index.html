@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>HTTPS performacne tips | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="HTTP vs HTTPS performance相对HTTP，影响HTTPS性能的因素包括以下几个方面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS performacne tips">
+<meta property="og:url" content="https://www.goroutine.cn/2018/06/03/HTTPS-performacne-tips/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="HTTP vs HTTPS performance相对HTTP，影响HTTPS性能的因素包括以下几个方面。">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2018-06-03T10:32:33.000Z">
+<meta property="article:modified_time" content="2022-02-09T03:49:57.801Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="HTTPS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2018/06/03/HTTPS-performacne-tips/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HTTPS performacne tips',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-09 11:49:57'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HTTPS performacne tips</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2018-06-03T10:32:33.000Z" title="Created 2018-06-03 18:32:33">2018-06-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-02-09T03:49:57.801Z" title="Updated 2022-02-09 11:49:57">2022-02-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HTTPS performacne tips"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="HTTP-vs-HTTPS-performance"><a href="#HTTP-vs-HTTPS-performance" class="headerlink" title="HTTP vs HTTPS performance"></a>HTTP vs HTTPS performance</h1><p>相对HTTP，影响HTTPS性能的因素包括以下几个方面。</p>
+<span id="more"></span>
+
+<h2 id="TLS协议开销"><a href="#TLS协议开销" class="headerlink" title="TLS协议开销"></a>TLS协议开销</h2><p>TLS协议采用主从式架构模型，用于在两个应用程序间通过网络创建起安全的连接，防止在交换数据时受到窃听及篡改。<br>TLS协议的优势是与高层的应用层协议（如HTTP、FTP、Telnet等）无耦合。应用层协议能透明地运行在TLS协议之上，由TLS协议进行创建加密通道需要的协商和认证。应用层协议传送的数据在通过TLS协议时都会被加密，从而保证通信的私密性。</p>
+<h3 id="TLS握手"><a href="#TLS握手" class="headerlink" title="TLS握手"></a>TLS握手</h3><p><img src="https://www.ibm.com/support/knowledgecenter/SSFKSJ_7.1.0/com.ibm.mq.doc/sy10660a.gif" alt="握手流程"></p>
+<p>The SSL or TLS handshake enables the SSL or TLS client and server to establish the secret keys with which they communicate.</p>
+<ol>
+<li>TCL client send “<strong>client hello</strong>“ to TLS server. include: <ul>
+<li><strong>cryptographic information</strong> such as the SSL or TLS version</li>
+<li>the CipherSuites supported by the client</li>
+<li>a <strong>random byte string</strong> that is used in subsequent computations</li>
+<li>data compression methods supported by the client</li>
+</ul>
+</li>
+<li>The TLS server responds with a “<strong>server hello</strong>“ message that contains:<ul>
+<li>the CipherSuite chosen by the server from the list provided by the client. </li>
+<li>the session ID. </li>
+<li><strong>another random byte string</strong>. </li>
+<li>The server also sends its digital certificate. </li>
+<li>If the server requires a digital certificate for client authentication, the server sends a <strong>“client certificate request”</strong> that includes a list of the types of certificates supported and the Distinguished Names of acceptable Certification Authorities (CAs).</li>
+</ul>
+</li>
+<li>The TLS client verifies the server’s digital certificate. For more information, see <a target="_blank" rel="noopener" href="https://www.ibm.com/support/knowledgecenter/SSFKSJ_7.1.0/com.ibm.mq.doc/sy10670_.htm">How SSL and TLS provide identification, authentication, confidentiality, and integrity</a>.</li>
+<li>The TLS client sends <strong>the random byte string</strong> (also called <strong>pre-master-secret</strong>) that enables both the client and the server to compute the <strong>secret key</strong> to be used for encrypting subsequent message data. The random byte string itself is encrypted with the server’s public key.</li>
+<li>(<strong>optional</strong>)If the TLS server sent a <strong>“client certificate request”</strong>, the client sends a random byte string encrypted with the client’s private key, together with the client’s digital certificate, or a “no digital certificate alert”. This alert is only a warning, but with some implementations the handshake fails if client authentication is mandatory.</li>
+<li>The SSL or TLS server verifies the client’s certificate. For more information, see How SSL and TLS provide identification, authentication, confidentiality, and integrity.</li>
+<li>The SSL or TLS client sends the server a “finished” message, which is encrypted with the secret key, indicating that the client part of the handshake is complete.  客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。</li>
+<li>The SSL or TLS server sends the client a “finished” message, which is encrypted with the secret key, indicating that the server part of the handshake is complete.</li>
+<li>For the duration of the SSL or TLS session, the server and client can now exchange messages that are symmetrically encrypted with the shared <strong>secret key</strong>.</li>
+</ol>
+<p>可见，相比http，client和server至少增加了2个来回的交互。<img src="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images%5ccc785811.9b1c0823-16f3-43fb-95cd-1f1f4911be67(ws.10).gif"><br>对于长连接的使用场景影响还好，因为handshake只影响到了session建立的过程，对于后面的数据交互无影响，但对于端链接的场景冲击会相对较大，每次请求都会多了2个来回的交互。</p>
+<h3 id="交换数据加解密"><a href="#交换数据加解密" class="headerlink" title="交换数据加解密"></a>交换数据加解密</h3><p>TLS连接建立后，CS间采用secret key来加密交换数据。对称加密会对服务端的性能造成一些压力。</p>
+<p>注意secret key的生成依赖上面提到的三个随机数，<a href="!https://blog.csdn.net/dog250/article/details/5717162">原因如下</a></p>
+<blockquote>
+<p>ssl3_send_client_key_exchange是openssl中客户端确定密钥的函数，同时也发送了“一部分”数据给服务器，这一部分数据就是所谓的pre_master，不管是客户端还是服务器都根据对端传过来的pre_master和自己计算出来的另一部分数据来生成最终的对称密钥，生成过程中需要hello消息中的随机数，这样生成的密钥才不会每次都一样。由于ssl协议中dh份额来源于证书，而证书又是静态的，因此十分有必要引入一种随机因素来保证通过静态证书导出的密钥份额协商出来的密钥的随机性。同时这也是pre_master的意义，那就是随机，对于rsa密钥交换算法来说，pre-master-key本身就是一个随机数，再加上hello消息中的随机，三个随机数通过一个密钥导出器最终导出一个对称密钥，但是对于dh，包括ecdh算法(不考虑匿名dh和瞬时dh)，就只有hello消息中的两个随机数因子了。<br>pre master的存在在于ssl协议不信任每个主机都能产生完全随机的随机数，如果随机数不随机，那么pre master secret就有可能被猜出来，那么仅适用pre master secret作为密钥就不合适了，因此必须引入新的随机因素，那么客户端和服务器加上pre master secret三个随机数一同生成的密钥就不容易被猜出了，一个伪随机可能完全不随机，可是是三个伪随机就十分接近随机了，每增加一个自由度，随机性增加的可不是一。</p>
+</blockquote>
+<h2 id="CA验证"><a href="#CA验证" class="headerlink" title="CA验证"></a>CA验证</h2><p>(未完)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2018/06/03/HTTPS-performacne-tips/">https://www.goroutine.cn/2018/06/03/HTTPS-performacne-tips/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HTTPS/">HTTPS</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2018/06/24/Unique-ID-generator/" title="Unique ID generator"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Unique ID generator</div></div></a></div><div class="next-post pull-right"><a href="/2018/06/03/HTTPS-explained-with-carrier-pigeons/" title="HTTPS explained with carrier pigeons"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">HTTPS explained with carrier pigeons</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2018/06/03/HTTPS-explained-with-carrier-pigeons/" title="HTTPS explained with carrier pigeons"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-06-03</div><div class="title">HTTPS explained with carrier pigeons</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP-vs-HTTPS-performance"><span class="toc-number">1.</span> <span class="toc-text">HTTP vs HTTPS performance</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TLS%E5%8D%8F%E8%AE%AE%E5%BC%80%E9%94%80"><span class="toc-number">1.1.</span> <span class="toc-text">TLS协议开销</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS%E6%8F%A1%E6%89%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">TLS握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E6%95%B0%E6%8D%AE%E5%8A%A0%E8%A7%A3%E5%AF%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">交换数据加解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CA%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.</span> <span class="toc-text">CA验证</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

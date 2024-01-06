@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="个人技术博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utopian">
+<meta property="og:url" content="https://www.goroutine.cn/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="个人技术博客">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:author" content="Alex guo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Utopian',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-01-06 22:36:21'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background: transparent"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Utopian</h1><div id="site_social_icons"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></span></div><div class="content">Notion API 介绍Notion的页面组织结构非常灵活，但是一直没有找到相关介绍，最近了解到一个使用Notion作为后台CMS的项目，浏览了一下源码和Notion API。通过API也能大致了解下官方开放的能力以及相关数据结构。
+
+
+pages
+page内容主要由两部分构成
+
+
+page properties
+
+
+指定page的基础信息，基础数据结构详见文档，包括：
+  type Page struct &#123;	Object         ObjectType `json:&quot;object&quot;`	ID             ObjectID   `json:&quot;id&quot;`	CreatedTime    time.Time  `json:&quot;created_time&quot;`	LastEditedTime time.Time  `json:&quot;last_edited_time&quot;`	CreatedBy      User       `json:&quot;created_by,omitempty&quot;`	 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></span></div><div class="content">supabase 整体架构分析Firebase是一家典型的BaaS公司，它可以帮助手机以及网页应用的开发者轻松构建App。通过Firebase的框架就可以简单地开发一个App，无需服务器以及基础设施，简单来说，它就是一整套的解决方案。Supabase 是一个开源的 Firebase 替代方案。官方表示，其正在使用企业级开源工具构建 Firebase 的功能。Supabase 可以：• 监听数据库的变化。• 查询你的表，包括过滤、分页和深度嵌套关系（如GraphQL）。• 创建、更新和删除行。• 管理你的用户和他们的权限。• 使用一个简单的用户界面与你的数据库进行交互
+本文通过从本地部署方案大致分析其整体架构。
+
+
+
+简介Supabase的定位为Firebase的开源替代，围绕 PostgreSQL 组合了一系列的开源工具，用以实现 BaaS 所需的用户认证、实时数据库、对象存储、RESTAPI 接口等功能。在整合这些工具的同时，为开发者封装了统一的 SDK，方便开发者以统一的方式调用这些能力。官方提供了 JavaScript 和 Flutter 的 SDK，社区贡献了 Python、C ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></span></div><div class="content">nocoDB 体验本地安装体验了一把nocoDB，总体感觉功能挺丰富。既适合作为headerless CMS使用，也适合作为数据展示、编辑终端，官网描述的主要特点：
+
+
+丰富的电子表格界面
+
+⚡ 基本操作：创建、读取、更新和删除表、列和行
+⚡ 字段操作：排序、过滤、隐藏&#x2F;取消隐藏列
+⚡ 多种视图类型：网格（默认）、图库、表单视图和看板视图
+⚡ 查看权限类型：协作视图和锁定视图
+⚡ 共享基础&#x2F;视图：公共或私有（受密码保护）
+⚡ 变体单元格类型：ID、LinkToAnotherRecord、Lookup、Rollup、SingleLineText、附件、货币、公式等
+⚡ 角色访问控制：不同级别的细粒度访问控制
+
+用于工作流程自动化的 App Store
+我们在三个主要类别中提供不同的集成。详情请参阅应用商店。
+
+⚡ 聊天：Slack、Discord、Mattermost 等等
+⚡ 电子邮件：AWS SES、SMTP、MailerSend 等
+⚡ 存储：AWS S3、Google Cloud Storage、Minio 等
+
+接口访问
+我们提供以下方法让用户以编程方式调用 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></span></div><div class="content">非Docker方式部署outline预研了几个可托管部署的团队wiki，看了一圈还是觉得outline比较合适。但是不太希望以docker的方式来部署，所以折腾下本地非docker方式的部署方案。记录如下。
+
+
+需求作为团队知识管理系统，选型上重点考虑以下需求：
+
+开源，可定制。
+支持多机部署。即所有数据不存储在本地，而是外部存储服务中。
+Markdown语法支持。
+可导出Markdown。即随时可以切换到别的平台。
+团队协作的权限管理。针对用户设置不同级别的访问权限。内部用户可编辑，外部用户仅查看。
+支持多种账号形态。
+
+outline基本符合以上各类条件。支持Slack、Google以及Azure，同时也支持第三方OIDC认证。刚好前段时间预研过dex的用法，所以就以dex作为OIDC的服务方来部署。
+部署整体部署流程分为几步：
+
+安装相关依赖，包括Postgres、Redis、minio（可选）
+安装OIDC鉴权服务。配置相关认证鉴权参数。
+从git下载代码，启动方式参考官方文档即可。
+
+依赖存在以下几个存储依赖：
+
+Postgres：用于存储outline内部数据以及文章数据。 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></span></div><div class="content">业务服务治理背景挑战故障频发上半年新老系统突发N次故障，部分已经影响用户体验。
+
+故障1：xx服务故障，原因为系统设计不合理，导致晚高峰流量突破系统瓶颈，而相关服务缺少过载保护措施。幸好主流程有对应的稳定性措施，未造成大规模影响。
+故障2：xx服务故障，原因未开发同学误操作接入层现网配置，且相关变更未同步到团队其他人，另外接入层问题相对隐晦，定位耗时比较长。影响部分用户体验。
+故障3：xx服务重构，因老系统交接N手，新接手同学未考虑到老版本的特殊需求，上线后问题一直未大规模暴露。直到某节假日现网问题集中反馈才暴露。
+
+研发效率、质量差几个典型问题：
+
+开发、测试环境冲突，缺少系统集成测试环境：因为业务的复杂性，大部分业务都需要依赖平台相关服务，而平台业务却很少考虑业务的诉求，导致环境各异，开发、测试冲突时有发生。
+版本兼容性：业务的特殊性，终端还有N年前的版本在线上，这些都需要后台兼容。后台祖传的服务太多，交接过多手后不清楚哪些特性还在使用，哪些已经废弃。不敢重构。
+系统容灾能力考虑不足：容灾措施评估不足，或者年久失修，没有真正经历过故障的考验。当故障发生时发现跟预估的效果差别较大。
+ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/11/10/Sentinel-Code-Analyze/" title="Sentinel Code Analyze">Sentinel Code Analyze</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-11-10T07:18:05.000Z" title="Created 2023-11-10 15:18:05">2023-11-10</time></span></div><div class="content">sentinel-go背景之前团队在服务治理项目过程中引入了司内稳定性相关的组件，其中也包含了流量控制、熔断降级等稳定性相关的能力，但我一直也没有时间来深挖各模块的实现细节。趁最近有空，看了下阿里开源版本的稳定性组件sentinel实现，整体感觉代码结构清晰，在并发控制、性能优化细节上也做了不少工作，于是花时间仔细阅读了下部分代码，并输出笔记一篇。
+另外写文章之前发现sentinel的官方文档非常细致，包括功能使用以及原理介绍，于是直接copy了部分，并根据最新代码做了修正。最后补充了流量控制的代码分析，其他模块原理也类似，时间有限就没有逐一阅读了。
+Sentinel介绍：Sentinel 是面向分布式、多语言异构化服务架构的流量治理组件，主要以流量为切入点，从流量路由、流量控制、流量整形、熔断降级、系统自适应过载保护、热点流量防护等多个维度来帮助开发者保障微服务的稳定性。
+
+
+流量控制任意时间到来的请求往往是随机不可控的，而系统的处理能力是有限的。我们需要根据系统的处理能力对流量进行控制。Sentinel 作为一个调配器，可以根据需要把随机的请求调整成合适的形状。
+
+流量控制有以下几 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/24/Introduct-to-dexide-dex/" title="Introduct to dexide / dex">Introduct to dexide / dex</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-10-24T09:36:21.000Z" title="Created 2023-10-24 17:36:21">2023-10-24</time></span></div><div class="content">dexidp &#x2F; dex 部署及使用简介阅读pocketbase源码时其授权流程比较感兴趣，但pocketbase代码量太大了，授权部分并不是一个独立的模块。之前也看了kratos文档，感觉太过庞大，形态一套自己的生态体系。今天刚好看到了dex的介绍，预览了一下用法和代码仓库，感觉复杂度居中，而且能力不差。所以研究了一下其用法。
+功能：降低app开发者实现Identifier provider对接的成本，可以通过Dex来快速实现各类provider的对接。 
+
+当用户通过dex进行登陆时，用户的身份信息通常存放在第三方用户管理系统中，例如LDAP。Dex作为客户端和第三方用户管理系统之间的垫片，其价值是，客户端仅仅需要理解OIDC，后端用户管理系统可以随时切换。
+
+
+
+用法Demo演示
+启动Dex server
+
+$ make$ ./bin/dex serve examples/config-dev.yamltime=&quot;2023-10-24T06:23:41Z&quot; level=info msg=&quot;Dex Version: 6f745746c1c98 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/23/Introduct-to-pocketbase/" title="Introduct to pocketbase">Introduct to pocketbase</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-10-23T11:43:51.000Z" title="Created 2023-10-23 19:43:51">2023-10-23</time></span></div><div class="content">pocketbase &#x2F; pocketbase 源码分析功能介绍pocketbase 是一个开源的开箱即用的后端服务（库），使用它可以快速搭建一个典型的后台服务，支持简单的CRUD操作，同时也支持权限控制、关联查询、插件化等特性，包括：
+CRUD基础能力
+大量后台服务的要求就是基于DB的CRUD操作，比如创建一个自定义字段的表格，以及对应的增删改啥。pocketbase提供了一个管理台页面支持快速创建数据表（collection），指定字段名称及字段类型等。后台使用sqlite作为数据engine。
+业务方可以通过RESTFUL接口（可以理解为普通用户）实现基础的CRUD操作，当然也可以直接在管理台配置（admin用户）。
+权限校验：创建、更新、删除、查询等可以灵活配置规则，比如要求删除记录的用户必须与记录中的用户id保持一致、查询数据（ListRule）时当前用户必须已登录或者属于某个集合等。此功能可以实现比较精细化的权限控制，保护数据安全。
+
+
+
+用户管理
+除数据表外，还支持用户表的创建。具有同一批用户权限的用户可以存储在同一个用户表中，同一个表中的用户具有类似的权限以及 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/10/Memos-Code-Analyze/" title="memos code analyze">memos code analyze</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-10-10T14:14:53.344Z" title="Created 2023-10-10 22:14:53">2023-10-10</time></span></div><div class="content">简介Memos是一个开源的支持自托管部署的知识库，类似flomo。作为一个go+react实现的产品，功能齐全，且活跃度一直不错，所以找了个时间阅读了一下代码。本次仅记录后端及DB设计部分，前端部分后续有时间了再继续。
+
+
+安装方法方法一：可能是出于部署便捷的考虑，代码中仅支持docker安装，下面解析Dockerfile中镜像构建步骤，属于典型的多阶构建过程：
+
+协议代码生成：安装buf，buf generate生成协议代码。包括后端所需的pb、grpc、grpc-gateway代码以及前端所需的ts代码。详见buf.yml配置
+使用pnpm build编译前端文件，详见前端文件夹（web&#x2F;）下的package.json
+将前端打包结果（web&#x2F;dist）copy到server目录，build后端服务。注意：项目中使用了go embed，将前端资源目录一并打包到了二进制memos文件中，并在代码中提供了静态文件的读服务。所以部署时不再需要copy前端目录文件，也无需其他反向代理。
+
+//go:embed distvar embeddedFiles embed.FS ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/18/Introduct-to-temporalio/" title="Introduct to temporalio">Introduct to temporalio</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-09-18T15:42:06.533Z" title="Created 2023-09-18 23:42:06">2023-09-18</time></span></div><div class="content">Temporalio 简介简介引用wiki来介绍工作流引擎的定义：
+
+A workflow engine manages and monitors the state of activities in a workflow, such as the processing and approval of a loan application form, and determines which new activity to transition to according to defined processes (workflows). The actions may be anything from saving an application form in a document management system to sending a reminder e-mail to users or escalating overdue items to management. A workflow engine facilitates the flow of information,  ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BC%95%E6%93%8E/" style="font-size: 1.1em; color: #999">工作流引擎</a> <a href="/tags/Golang/" style="font-size: 1.1em; color: #999">Golang</a> <a href="/tags/COS/" style="font-size: 1.1em; color: #999">COS</a> <a href="/tags/Readingnotes/" style="font-size: 1.1em; color: #999">Readingnotes</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.2em; color: #999da3">分布式</a> <a href="/tags/%E7%A7%92%E6%9D%80/" style="font-size: 1.1em; color: #999">秒杀</a> <a href="/tags/redis/" style="font-size: 1.1em; color: #999">redis</a> <a href="/tags/Architecture/" style="font-size: 1.2em; color: #999da3">Architecture</a> <a href="/tags/libuv/" style="font-size: 1.1em; color: #999">libuv</a> <a href="/tags/Supabase/" style="font-size: 1.1em; color: #999">Supabase</a> <a href="/tags/Microservices/" style="font-size: 1.3em; color: #99a1ac">Microservices</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/gossip/" style="font-size: 1.1em; color: #999">gossip</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/%E4%BA%91%E5%87%BD%E6%95%B0/" style="font-size: 1.1em; color: #999">云函数</a> <a href="/tags/groupcache/" style="font-size: 1.1em; color: #999">groupcache</a> <a href="/tags/Outline/" style="font-size: 1.1em; color: #999">Outline</a> <a href="/tags/UUID/" style="font-size: 1.1em; color: #999">UUID</a> <a href="/tags/Governance/" style="font-size: 1.3em; color: #99a1ac">Governance</a> <a href="/tags/RWMutex/" style="font-size: 1.1em; color: #999">RWMutex</a> <a href="/tags/AUTH/" style="font-size: 1.1em; color: #999">AUTH</a> <a href="/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">远程开发</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 1.1em; color: #999">随笔</a> <a href="/tags/Notion/" style="font-size: 1.1em; color: #999">Notion</a> <a href="/tags/CMS/" style="font-size: 1.2em; color: #999da3">CMS</a> <a href="/tags/memos/" style="font-size: 1.1em; color: #999">memos</a> <a href="/tags/Authentication/" style="font-size: 1.1em; color: #999">Authentication</a> <a href="/tags/BaaS/" style="font-size: 1.4em; color: #99a5b6">BaaS</a> <a href="/tags/nginx/" style="font-size: 1.3em; color: #99a1ac">nginx</a> <a href="/tags/cron/" style="font-size: 1.1em; color: #999">cron</a> <a href="/tags/memberlist/" style="font-size: 1.1em; color: #999">memberlist</a> <a href="/tags/HTTPS/" style="font-size: 1.2em; color: #999da3">HTTPS</a> <a href="/tags/Vscode/" style="font-size: 1.1em; color: #999">Vscode</a> <a href="/tags/nocoDB/" style="font-size: 1.1em; color: #999">nocoDB</a> <a href="/tags/golang/" style="font-size: 1.5em; color: #99a9bf">golang</a> <a href="/tags/Puppeteer/" style="font-size: 1.1em; color: #999">Puppeteer</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="View More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">January 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">December 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">November 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">October 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/09/"><span class="card-archive-list-date">September 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">March 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">January 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">December 2021</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">39</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-01-06T14:36:20.876Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

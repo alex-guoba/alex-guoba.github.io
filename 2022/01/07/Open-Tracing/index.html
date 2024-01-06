@@ -1,0 +1,326 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Open Tracing | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近在阅读微服务相关书籍时，提到了微服务相关的监控措施，其中分布式追踪就属于其中不可或缺的一部分，恰好之前也有计划在团队内引入，所以就花了两天时间稍微深入了解了一下相关概念和实现。动手实验了一遍jaeger提供All-In-One+HotROD示例，也大致了解了其基本原理和实现思路。时间关系就没有去学习jaeger之类的系统源码了，深入了解其存储方案之类的细节了，感觉必要性不大。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Open Tracing">
+<meta property="og:url" content="https://www.goroutine.cn/2022/01/07/Open-Tracing/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="最近在阅读微服务相关书籍时，提到了微服务相关的监控措施，其中分布式追踪就属于其中不可或缺的一部分，恰好之前也有计划在团队内引入，所以就花了两天时间稍微深入了解了一下相关概念和实现。动手实验了一遍jaeger提供All-In-One+HotROD示例，也大致了解了其基本原理和实现思路。时间关系就没有去学习jaeger之类的系统源码了，深入了解其存储方案之类的细节了，感觉必要性不大。">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2022-01-07T09:45:03.000Z">
+<meta property="article:modified_time" content="2023-11-10T07:20:30.247Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="Governance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2022/01/07/Open-Tracing/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Open Tracing',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-10 15:20:30'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Open Tracing</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-01-07T09:45:03.000Z" title="Created 2022-01-07 17:45:03">2022-01-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-11-10T07:20:30.247Z" title="Updated 2023-11-10 15:20:30">2023-11-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Open Tracing"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>最近在阅读微服务相关书籍时，提到了微服务相关的监控措施，其中分布式追踪就属于其中不可或缺的一部分，恰好之前也有计划在团队内引入，所以就花了两天时间稍微深入了解了一下相关概念和实现。动手实验了一遍jaeger提供All-In-One+HotROD示例，也大致了解了其基本原理和实现思路。时间关系就没有去学习jaeger之类的系统源码了，深入了解其存储方案之类的细节了，感觉必要性不大。</p>
+<span id="more"></span>
+
+<h1 id="为什么需要Tracing"><a href="#为什么需要Tracing" class="headerlink" title="为什么需要Tracing"></a>为什么需要Tracing</h1><p>微服务在部署上线后，需要有一套完善的监控体系来监控服务的质量。可观察性就是更关注的是从系统自身出发，去展现系统的运行状况，为开发运营人员提供故障排查、维护及优化的相关信息。</p>
+<p>可观察性目前主要包含以下三大支柱：</p>
+<ul>
+<li>日志（Logging）：Logging 主要记录一些离散的事件，应用往往通过将定义好格式的日志信息输出到文件，然后用日志收集程序收集起来用于分析和聚合。虽然可以用时间将所有日志点事件串联起来，但是却很难展示完整的调用关系路径；</li>
+<li>度量（Metrics）：Metric 往往是一些聚合的信息，相比 Logging 丧失了一些具体信息，但是占用的空间要比完整日志小的多，可以用于监控和报警，在这方面 Prometheus 已经基本上成为了事实上的标准；</li>
+<li>分布式追踪（Tracing）：Tracing 介于 Logging 和 Metric 之间，以请求的维度来串联服务间的调用关系并记录调用耗时，即保留了必要的信息，又将分散的日志事件通过 Span 串联，帮助我们更好的理解系统的行为、辅助调试和排查性能问题。</li>
+</ul>
+<h1 id="Tracing及OpenTracing"><a href="#Tracing及OpenTracing" class="headerlink" title="Tracing及OpenTracing"></a>Tracing及OpenTracing</h1><p>分布式追踪（Tracing）是一种用于分析和监视应用程序的方法，特别是那些使用微服务体系结构构建的应用程序；分布式追踪有助于查明故障发生的位置或导致性能低下的原因，开发人员可以使用分布式追踪来帮助调试和优化他们的代码，IT 和 DevOps 团队可以使用分布式追踪来监视应用程序。</p>
+<p>分布式追踪系统的核心步骤一般有三个：代码埋点，数据存储、查询展示。</p>
+<p>OpenTracing 旨在标准化 Trace 数据结构和格式，其目的是：</p>
+<ul>
+<li>不同语言开发的 Trace 客户端的互操作性。各语言开发的客户端，只要遵循 OpenTracing 规范，就都可以对接 OpenTracing 兼容的监控后端。</li>
+<li>Tracing 监控后端的互操作性。只要遵循 OpenTracing 规范，企业可以根据需要替换具体的 Tracing 监控后端产品，比如从 Zipkin 替换成Jaeger&#x2F;CAT&#x2F;Skywalking 等后端。</li>
+</ul>
+<h1 id="OpenTracing-数据模型"><a href="#OpenTracing-数据模型" class="headerlink" title="OpenTracing 数据模型"></a>OpenTracing 数据模型</h1><p>核心概念：</p>
+<ul>
+<li>Trace (调用链&#x2F;链路)：在广义上，一个 Trace 代表了一个事务或者流程在（分布式）系统中的执行过程。一个 Trace 是由多个 Span 组成的一个有向无环图（DAG），每一个 Span 代表 Trace 中被命名并计时的连续性的执行片段。</li>
+<li>Span (跨度)：一个 Span 代表系统中具有开始时间和执行时长的逻辑运行单元，即应用中的一个逻辑操作。Span 之间通过嵌套或者顺序排列建立逻辑因果关系。一个 Span 可以被理解为一次方法调用，一个程序块的调用，或者一次 RPC &#x2F; 数据库访问，只要是一个具有完整时间周期的程序访问，都可以被认为是一个 Span。</li>
+<li>Logs：每个 Span 可以进行多次 Logs 操作，每一次 Logs 操作，都需要一个带时间戳的时间名称，以及可选的任意大小的存储结构。</li>
+<li>Tags：每个Span可以有多个键值对（key:value）形式的 Tags，Tags 是没有时间戳的，支持简单的对 Span 进行注解和补充。</li>
+<li>SpanContext：SpanContext 更像是一个“概念”，而不是通用 OpenTracing 层的有用功能。在创建 Span、向传输协议 Inject（注入）和从传输协议 中Extract（提取）调用链信息时，SpanContext 发挥着重要作用</li>
+</ul>
+<h3 id="Traces"><a href="#Traces" class="headerlink" title="Traces"></a>Traces</h3><p>Trace 描述在分布式系统中的端到端事务，例如来自客户端的一个请求从接收到处理完成的过程。一个 Trace 可以被认为是由一个或多个 Span 组成的有向无环图（DAG）。</p>
+<p>以下为从jaeger中摘录出的trace记录：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;traceID&quot;</span><span class="punctuation">:</span><span class="string">&quot;3b6ca8e6f4b0a696&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;spans&quot;</span><span class="punctuation">:</span>Array<span class="punctuation">[</span><span class="number">51</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;processes&quot;</span><span class="punctuation">:</span>Object<span class="punctuation">&#123;</span>...<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;warnings&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span></span><br></pre></td></tr></table></figure>
+
+<p>重点字段：</p>
+<ul>
+<li>Spans: 为整个Trace包括的Span数组，根据Span信息以及内部Reference形成完整DAG。</li>
+<li>process：为全链条涉及到的具体模块信息，在Span中会被引用。这个是否是标准的一部分？</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;processes&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;p1&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;serviceName&quot;</span><span class="punctuation">:</span><span class="string">&quot;driver&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;client-uuid&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;5aa0df28d025a501&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;hostname&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;m-mac&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;192.168.1.1&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;jaeger.version&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;Go-2.30.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<h3 id="Span"><a href="#Span" class="headerlink" title="Span"></a>Span</h3><p>表示分布式调用链条中的一个调用，可以理解为一次方法调用或者一次 RPC &#x2F; 数据库访问。只要是一个具有完整时间周期的程序访问，都可以被认为是一个 Span 。</p>
+<p>一个 Span 一般会记录这个调用单元内部的一些信息，例如每个 Span 包含的操作名称、开始和结束时间、附加额外信息的 Span Tag、可用于记录 Span 内特殊事件 Span Log 、用于传递 Span 上下文的 SpanContext 和定义 Span 之间关系的 References 。</p>
+<p>以下为从jaeger中摘录出的span记录：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;spans&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;traceID&quot;</span><span class="punctuation">:</span><span class="string">&quot;3b6ca8e6f4b0a696&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;spanID&quot;</span><span class="punctuation">:</span><span class="string">&quot;00ad43f5f41c8a69&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;flags&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;operationName&quot;</span><span class="punctuation">:</span><span class="string">&quot;/driver.DriverService/FindNearest&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;references&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;refType&quot;</span><span class="punctuation">:</span><span class="string">&quot;CHILD_OF&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;traceID&quot;</span><span class="punctuation">:</span><span class="string">&quot;3b6ca8e6f4b0a696&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;spanID&quot;</span><span class="punctuation">:</span><span class="string">&quot;29e6aba07e2ad32f&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;startTime&quot;</span><span class="punctuation">:</span><span class="number">1641536033862574</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;duration&quot;</span><span class="punctuation">:</span><span class="number">231910</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;span.kind&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;server&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;logs&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span><span class="number">1641536033862601</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;event&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;Searching for nearby drivers&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;level&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;info&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;location&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span><span class="string">&quot;115,277&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;processID&quot;</span><span class="punctuation">:</span><span class="string">&quot;p1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;warnings&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>重点字段：</p>
+<ul>
+<li><p>操作名称 (An operation name): operationName</p>
+</li>
+<li><p>开始时间 (A start timestamp): startTime</p>
+</li>
+<li><p>时长：duration</p>
+</li>
+<li><p>标签信息 (Span Tag)：零个或多个键值对（keys:values）组成的 Span Tags。</p>
+<p>规范中也约定了一些通用tag，包括：</p>
+<ul>
+<li>HTTP Server Tags：作用于基于HTTP的服务入口的span，keys包括http.url、http.method、http.status_code、span.kind等</li>
+<li>Peer tags：这些tag可以被客户端或者服务端提供，用于描述远程请求过程中，请求调用的方向。（客户端记录下行访问，服务端记录上行访问）。keys包括peer.hostname,     peer.port, peer.service等。</li>
+</ul>
+</li>
+<li><p>日志信息 (Span Log)：零个或多个 Span Logs。每次 log 操作包含一个键值对和一个时间戳。键值对中，键必须为 string类型，值可以是任意类型。但并不是所有的支持     OpenTracing 的 Tracer 都需要支持所有的值类型。</p>
+</li>
+<li><p>References：该Span引用的其它关联Span，主要有两种引用关系，Childof 和 FollowsFrom。</p>
+<ul>
+<li>Childof：最常用的一种引用关系，表示 Parent Span 和 Child Span 之间存在直接的依赖关系。例PRC 服务端 Span 和 RPC 客户端Span，或者数据库 SQL 插入 Span 和ORM Save 动作 Span 之间的关系。</li>
+<li>FollowsFrom：如果Parent Span 并不依赖 Child Span 的执行结果，则可以用FollowsFrom 表示。例如网上商店购物付款后会向用户发一个邮件通知，但无论邮件通知是否发送成功，都不影响付款成功的状态，这种情况则适用于用FollowsFrom 表示。</li>
+</ul>
+</li>
+</ul>
+<h3 id="SpanContext"><a href="#SpanContext" class="headerlink" title="SpanContext"></a>SpanContext</h3><p>分布式追踪的上下文信息，包括 Trace id，Span id 以及其它需要传递到下游服务的内容。一个 <a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 的实现需要将 SpanContext 通过某种序列化协议 (Wire Protocol) 在进程边界上进行传递，以将不同进程中的 Span 关联到同一个 Trace 上。对于 HTTP 请求来说，SpanContext 一般是采用 HTTP header 进行传递的。</p>
+<p>SpanContext 是 <a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 中一个让人比较迷惑的概念。在 <a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 的概念模型 SpanContext 用于跨进程边界传递分布式调用的上下文，但实际上 <a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 只定义一个 SpanContext 的抽象接口，该接口封装了分布式调用中一个 Span 的相关上下文内容，包括该 Span 所属的 Trace id，Span id 以及其它需要传递到下游服务的信息。</p>
+<p>SpanContext 自身并不能实现跨进程的上下文传递，而是需要由 Tracer（Tracer 是一个遵循 <a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 协议的实现，如 Jaeger，Skywalking 的 Tracer） 将 SpanContext 序列化后通过 Wire Protocol 传递到下一个进程中，然后在下一个进程将 SpanContext 反序列化，得到相关的上下文信息，以用于生成 Child Span。</p>
+<p>为了为各种具体实现提供最大的灵活性，<a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/GLOSSARY.html#opentracing">OpenTracing</a> 只是提出了跨进程传递 SpanContext 的要求，并未规定将 SpanContext 进行序列化并在网络中传递的具体实现方式。各个不同的 Tracer 可以根据自己的情况使用不同的 Wire Protocol 来传递 SpanContext。</p>
+<p>在基于 HTTP 协议的分布式调用中，通常会使用 HTTP Header 来传递， SpanContext 的内容。常见的 Wire Protocol 包含 Zipkin 使用的 <a target="_blank" rel="noopener" href="https://github.com/openzipkin/b3-propagation">b3 HTTP header</a>，Jaeger 使用的 <a target="_blank" rel="noopener" href="https://www.jaegertracing.io/docs/1.7/client-libraries/#trace-span-identity">uber-trace-id HTTP Header</a>，LightStep 使用的 “x-ot-span-context” HTTP Header 等。</p>
+<p>将jaeger Hot R.O.D example中的demo稍作修改，打印出server端收到请求的header信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line">Header field <span class="string">&quot;Uber-Trace-Id&quot;</span>, Value [<span class="string">&quot;29f4561f77c249c3:59ebcdc4f3a29e20:5eeb5a2763093c4d:1&quot;</span>]</span><br><span class="line">Header field <span class="string">&quot;Uberctx-Request&quot;</span>, Value [<span class="string">&quot;6146-1&quot;</span>]</span><br><span class="line">Header field <span class="string">&quot;Uberctx-Session&quot;</span>, Value [<span class="string">&quot;6146&quot;</span>]</span><br><span class="line">Header field <span class="string">&quot;Accept-Encoding&quot;</span>, Value [<span class="string">&quot;gzip&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>可以看到Uber-Trace-Id中的携带的traceID、spanid等信息。其中spanid包括主调用方（发起http 调用的服务）和被调用方（接收http调用的服务）两部分。</p>
+<p> 主调用方span：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;traceID&quot;</span><span class="punctuation">:</span> <span class="string">&quot;29f4561f77c249c3&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;spanID&quot;</span><span class="punctuation">:</span> <span class="string">&quot;59ebcdc4f3a29e20&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;flags&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;operationName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HTTP GET&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<p>被调用方span：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;traceID&quot;</span><span class="punctuation">:</span> <span class="string">&quot;29f4561f77c249c3&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;spanID&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5eeb5a2763093c4d&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;flags&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;operationName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HTTP GET: /customer&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p> Opentracing不包括具体实现。Jaeger 主要有以下几个组成部分：</p>
+<ul>
+<li>Jaeger Client：为不同语言实现符合 OpenTracing 的 SDK。应用程序通过 API 写入数据，client library 把 trace 信息按照应用程序制定的采样策略传递给 jaeger-agent 。</li>
+<li>Agent：一个监听在 UDP 端口上接收 span 数据的网络守护进程，它会将数据批量发送给 collector 。它被设计成一个基础组件，部署到所有的宿主机上。Agent 将 client library 和 collector 解耦，为 client library 屏蔽了路由和发现 collector 的细节。</li>
+<li>Collector：接收 jaeger-agent 发送来的数据，然后将数据写入后端存储。Collector 被设计成无状态的组件，因此用户可以运行任意数量的 Collector。</li>
+<li>Data Store：后端存储被设计成一个可插拔的组件，支持数据写入 cassandra ， elastic search 等。</li>
+<li>Query：接收查询请求，从后端存储系统中检索 tarce 并通过 UI 进行展示。Query 是无状态的，可以启动多个实例并把它们部署在例如 nginx 这样的负载均衡器之后。</li>
+</ul>
+<p>一些开源的分布式追踪系统对比：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>厂商</th>
+<th>语言</th>
+<th>OpenTracing  兼容</th>
+<th>侵入性</th>
+<th>时效性</th>
+<th>可视化</th>
+<th>消耗</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/jaegertracing/jaeger">Jaeger</a></td>
+<td>Uber</td>
+<td>Go</td>
+<td>是</td>
+<td>中</td>
+<td>高</td>
+<td>中</td>
+<td>低</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin">Zipkin</a></td>
+<td>twitter</td>
+<td>Java</td>
+<td>是</td>
+<td>高</td>
+<td>高</td>
+<td>中</td>
+<td>低</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/pinpoint-apm/pinpoint">Pinpoint</a></td>
+<td>NAVER</td>
+<td>Java</td>
+<td>否</td>
+<td>低</td>
+<td>-</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/dianping/cat">CAT</a></td>
+<td>大众点评</td>
+<td>Java</td>
+<td>否</td>
+<td>高</td>
+<td>中</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/sourcegraph/appdash">Appdash</a></td>
+<td>sourcegraph</td>
+<td>Go</td>
+<td>是</td>
+<td>低</td>
+<td>高</td>
+<td>低</td>
+<td>不支持大规模部署</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/apache/incubator-skywalking">SkyWalking</a></td>
+<td>华为</td>
+<td>Java</td>
+<td>是</td>
+<td>低</td>
+<td>中</td>
+<td>高</td>
+<td>低</td>
+</tr>
+</tbody></table>
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><ul>
+<li>[<a target="_blank" rel="noopener" href="https://jckling.github.io/2021/04/02/Jaeger/%E5%85%A8%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA%E4%B8%8E%20Jaeger%20%E5%85%A5%E9%97%A8/]">https://jckling.github.io/2021/04/02/Jaeger/%E5%85%A8%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA%E4%B8%8E%20Jaeger%20%E5%85%A5%E9%97%A8/]</a>(<a target="_blank" rel="noopener" href="https://jckling.github.io/2021/04/02/Jaeger/%E5%85%A8%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA%E4%B8%8E">https://jckling.github.io/2021/04/02/Jaeger/全链路追踪与</a> Jaeger 入门&#x2F;)</li>
+<li><a target="_blank" rel="noopener" href="https://wu-sheng.gitbooks.io/opentracing-io/content/">https://wu-sheng.gitbooks.io/opentracing-io/content/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.servicemesher.com/istio-handbook/practice/opentracing.html">https://www.servicemesher.com/istio-handbook/practice/opentracing.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34318538">https://zhuanlan.zhihu.com/p/34318538</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2022/01/07/Open-Tracing/">https://www.goroutine.cn/2022/01/07/Open-Tracing/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Governance/">Governance</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/10/Microservices-in-Action/" title="Microservices in Action"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Microservices in Action</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/04/Application-Tracking/" title="Application Tracking"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Application Tracking</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/12/04/Application-Tracking/" title="Application Tracking"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-04</div><div class="title">Application Tracking</div></div></a></div><div><a href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-13</div><div class="title">Archive Service Governance</div></div></a></div><div><a href="/2023/11/10/Sentinel-Code-Analyze/" title="Sentinel Code Analyze"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">Sentinel Code Analyze</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81Tracing"><span class="toc-number">1.</span> <span class="toc-text">为什么需要Tracing</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tracing%E5%8F%8AOpenTracing"><span class="toc-number">2.</span> <span class="toc-text">Tracing及OpenTracing</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenTracing-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">OpenTracing 数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Traces"><span class="toc-number">3.0.1.</span> <span class="toc-text">Traces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Span"><span class="toc-number">3.0.2.</span> <span class="toc-text">Span</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SpanContext"><span class="toc-number">3.0.3.</span> <span class="toc-text">SpanContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.0.4.</span> <span class="toc-text">实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">相关链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

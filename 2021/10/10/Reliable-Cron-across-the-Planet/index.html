@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Reliable Cron across the Planet | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Written with StackEdit.  Reliable Cron across the Planet…or How I stopped worrying and learned to love time Štěpán Davidovič, Kavita Guliani, Google 原文: https:&#x2F;&#x2F;queue.acm.org&#x2F;detail.cfm?id&#x3D;2745840 前段">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reliable Cron across the Planet">
+<meta property="og:url" content="https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="Written with StackEdit.  Reliable Cron across the Planet…or How I stopped worrying and learned to love time Štěpán Davidovič, Kavita Guliani, Google 原文: https:&#x2F;&#x2F;queue.acm.org&#x2F;detail.cfm?id&#x3D;2745840 前段">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2021-10-10T11:29:13.000Z">
+<meta property="article:modified_time" content="2022-02-09T03:52:36.333Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="cron">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Reliable Cron across the Planet',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-09 11:52:36'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Reliable Cron across the Planet</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-10-10T11:29:13.000Z" title="Created 2021-10-10 19:29:13">2021-10-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-02-09T03:52:36.333Z" title="Updated 2022-02-09 11:52:36">2022-02-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Reliable Cron across the Planet"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>Written with <a target="_blank" rel="noopener" href="https://stackedit.io/">StackEdit</a>.</p>
+</blockquote>
+<h2 id="Reliable-Cron-across-the-Planet…or-How-I-stopped-worrying-and-learned-to-love-time"><a href="#Reliable-Cron-across-the-Planet…or-How-I-stopped-worrying-and-learned-to-love-time" class="headerlink" title="Reliable Cron across the Planet…or How I stopped worrying and learned to love time"></a>Reliable Cron across the Planet…or How I stopped worrying and learned to love time</h2><p> Štěpán Davidovič, Kavita Guliani, Google</p>
+<p>原文: <a target="_blank" rel="noopener" href="https://queue.acm.org/detail.cfm?id=2745840">https://queue.acm.org/detail.cfm?id=2745840</a></p>
+<p>前段时间预研分布式任务调度系统的方案，了解到了一个比较靠谱的解决方案：<a target="_blank" rel="noopener" href="https://dkron.io/">dkron</a>，看介绍其实现就是基于基于google的这篇whitepaper <a target="_blank" rel="noopener" href="https://queue.acm.org/detail.cfm?id=2745840">《Reliable Cron across the Planet》</a>。</p>
+<p>这篇文章也被收录到了书籍《SRE：google运维解密》一书中（第24章），于是将部分内容摘抄了一遍，补充了部分自己的理解，当做自己的读书笔记了。文章较长，部分个人认为不重要的内容就简单跳过了。</p>
+<p>本文主要介绍了google的cron调度服务的实现机制，重点对实现的难点部分做了详细介绍。详见下文。</p>
+<p>先对Cron系统的功能做了个简单的介绍。包括单机下crontab格式以及linux下的crond守护进程。此处略。</p>
+<span id="more"></span>
+
+<h3 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h3><p>从可靠性的角度来看待服务，需要注意几件事情。首先，故障域本质上只是一台机器，如果机器未运行，则Cron 调度程序及其启动的作业也不能运行（例如由于无法访问网络或尝试访问坏掉的硬盘驱动器导致的个别作业失败超出了本文分析的范围）。我们就先考虑使用两台机器的非常简单的分布式案例，其中 Cron 调度程序在单独的机器上运行作业（例如使用SSH）。我们就已经有了不同的可能会影响我们运行作业可靠性的故障域：<strong>调度程序</strong>或<strong>目标机器</strong>*可能会失败。</p>
+<p>另一个重要方面是在 crond 重新启动（包括机器重新启动）时，需要持久化的唯一状态是  crontab配置  本身。Cron 执行者向来都是睡醒就忘的，而且 crond 也不会试图去跟踪它们的状态。</p>
+<h4 id="Cron任务和幂等性"><a href="#Cron任务和幂等性" class="headerlink" title="Cron任务和幂等性"></a>Cron任务和幂等性</h4><p>Cron 工作常常被用于周期任务，但事实上我们很难预料它们可能执行的真正功能。让我们跑题一下，说说Cron 工作本身的行为，因为了解 Cron 工作的各种要求将成为文章其余部分中的一个主题，显然会影响我们的可靠性要求。</p>
+<p>一些 Cron 作业是幂等的，并且在系统故障的情况下，可以安全地多次运行它们，例如垃圾收集，但是其他 Cron 任务则不然，例如，一个发送电子邮件的任务显然就不应该如此。</p>
+<p>这种各种各样的 Cron 工作让我们难以定义故障模式：对于像 Cron 这样的服务，没有一个适合各种情况的单一答案。在本文中，我们倾向于采用<strong>跳过执行</strong>这种方法，而不是像其他基础架构那样采用有风险的<strong>再次运行</strong>。Cron 管理员可以（并且应该）监视他们的 Cron 任务，例如通过使 Cron 服务为其管理的任务显示状态，或者设置对 Cron 任务的影响的独立监控。如果跳过运行，Cron 管理员可以采取与任务性质相符的行动。相比之下，撤销再次运行可能就很困难了，在某些情况下（考虑发邮件的例子）甚至是不可能的。所以，我们更倾向于失效关闭（fail closed），避免系统自动地创建出不良状态。</p>
+<h3 id="大规模Cron系统"><a href="#大规模Cron系统" class="headerlink" title="大规模Cron系统"></a>大规模Cron系统</h3><p>从单机迁移到大规模部署需要对如何使 Cron 在这样的环境中良好运行做一些根本性的反思，在介绍 Google Cron 解决方案的详细内容之前，让我们先讨论一下这些差异及其在设计上需要做的改变。</p>
+<h4 id="基础设施扩展"><a href="#基础设施扩展" class="headerlink" title="基础设施扩展"></a>基础设施扩展</h4><p>普通 Cron 限于单机，然而，对于大规模的系统部署，我们的 Cron 解决方案却不能与单机绑定。假设如果我们一个单独的数据中心有 1000 台机器，那么只要有 1&#x2F;1000 的机器发生故障都将会引起整个 Cron 服务不可用，显而易见，这肯定是不可接受的。</p>
+<p>为了解决这个常见的问题，我们将<strong>任务进程</strong>与<strong>物理机器</strong>解耦。如果你想要运行某个服务，只需指定在哪个数据中心运行以及要运行的服务，然后数据中心内的任务调度系统（data center scheduling system，本身应该是可靠的）就可以接管并决定要哪些机器去运行它。“在数据中心中运行一个任务”就有效的转换为“发送一个或多个RPC请求到数据中心的调度程序”。</p>
+<blockquote>
+<p>说明：google的实现中，Cron Service不负责具体的任务执行，只负责发起任务和接收结果。具体任务执行通过RPC调用，转给数据中心内的任务调度（分发）系统来安排，任务调度系统根据任务所需的资源分配具体执行的机器、 容器节点。google的基建已经很完善了，所以本文的重点也仅限于描述Cron Service的实现。<br>业界部分分布式调度系统实现将整个系统拆分为调度(schedular)和执行(executor)两个独立模块，调度只负责管理任务和状态存储，但是具体的调度交给executor去完成。</p>
+</blockquote>
+<p>但是，任务进程执行是需要时间的，有可能发生在  发现机器宕机（健康检查超时）和 将作业重新调度到不同机器（软件安装，过程启动时间）之间。</p>
+<p>由于将任务进程移动到不同的机器，那就可能意味着可能存在丢失存储在旧机器上的任何本地状态（除非采用实时迁移），并且重新调度时延可能会超过cron最小时间间隔一分钟，所以我们应该清楚如何应对这个情况。最明显的选择之一是简单地将状态保存在分布式文件系统（如GFS）上，并在启动期间使用它来识别由于重新安排而无法启动的作业，这种方案可以让作业快速失败，但是，如果是每五分钟运行一次 Cron 作业，那么由于重新调度导致的延迟时间是一分钟或两分钟，那么这个时间间隔其实就长调度周期的很大一部分了。</p>
+<h4 id="对需求的扩展"><a href="#对需求的扩展" class="headerlink" title="对需求的扩展"></a>对需求的扩展</h4><p>将Cron系统部署到整个数据中心级别，一般来说意味着将进程部署到容器中，以便更好地进行资源隔离。<strong>在这里，隔离是很有必要的，因为数据中心中每个独立进程不会互相影响是一个基础性假设</strong>。为了保证这种假设有效，我们必须在每个进程运行之前知道它预计使用的资源—不管是Cron系统本身，还是该系统所要运行的任务。某个Cron任务可能由于数据中心没有足够资源满足该任务而延迟。这种资源要求，加上用户对任务运行情况的监控需要，使得我们<strong>需要记录Cron任务的全过程</strong>，从预计执行一直到任务终止。</p>
+<p>将进程启动过程与具体运行的机器分离使得整个Cron系统需要处理“<strong>部分失败</strong>”（partial launch failures）的故障类型。Cron任务的多样性意味着某些任务在启动的时候可能需要发送多个RPC，有时我们会遇到某个RPC成功，而其他RPC不成功的问题（例如，发送RPC的进程本身在发送过程中崩溃了）。Cron 故障恢复过程必须要处理这种情况。</p>
+<p>在讨论故障模式的时候，一个数据中心相比单个物理机来说是一个更加丰富的生态系统。Cron服务，当大规模部署时从一个简单的二进制文件演变成了一个具有许多明显和不明显的依赖的服务。对Cron这样的基础服务来说，必须保证在数据中心遇到部分故障的时候（例如部分供电系统故障，或者存储系统故障），整个服务仍然能够正常运行。通过在数据中心内部分散地同时运行<strong>多份调度器的副本</strong>，我们可以避免单个供电单元故障造成整个Cron系统不可用。</p>
+<p>将Cron服务部署在全球范围内可能是可行的，但是将Cron部署在一个单独的数据中心中有其对应的好处：该服务与其对应的数据中心任务分发系统延迟很低，同时共享一个故障域。毕竟，数据中心任务分发系统是Cron服务的一个核心依赖。</p>
+<h3 id="google-Cron系统的构建过程"><a href="#google-Cron系统的构建过程" class="headerlink" title="google Cron系统的构建过程"></a>google Cron系统的构建过程</h3><p>本节主要展示构建一个可靠的大型分布式Cron系统所必须要解决的问题。同时也强调了Google的分布式Cron服务的几个设计要点。</p>
+<h4 id="跟踪Cron任务的状态"><a href="#跟踪Cron任务的状态" class="headerlink" title="跟踪Cron任务的状态"></a>跟踪Cron任务的状态</h4><p>如上一节所述，我们需要记录关于Cron任务的一些状态信息，并且必须能够在系统发生故障的时候快速恢复。更重要的是，该状态信息的一致性是关键！还记得前文所述的那些发送邮件和计算工资之类的非幂等的Cron任务吗？<br>跟踪任务的状态有两个选项：</p>
+<p>● 将数据存储在一个可用度很高的外部分布式存储上。<br>● 系统内部自行存储一些（很小量的）状态信息。</p>
+<p>当Google设计分布式Cron任务的时候，我们选择的是第二个选项。这样选择的原因有以下几个：<br>● 分布式文件系统，包括GFS和HDFS通常用来存储非常大的文件（例如，网页爬虫程序的输出文件），而我们需要存储的Cron任务状态信息通常来说是非常小的。小型写操作在分布式文件系统上的开销很高，同时延迟也很高，因为这些文件系统就不是为这种类型的写操作进行优化的。<br>● 基础服务，也就是那些失效时会带来许多副作用的（就像Cron这样的）服务应该依赖越少越好。即使数据中心的一部分出现故障，Cron服务也应该能够持续工作一段时间。但是这个要求并不一定意味着存储区域一定要在Cron进程内部（存储部分其实只是一个实现细节）。然而，Cron服务应该可以独立于下游系统而运行，以便服务更多的内部用户。</p>
+<blockquote>
+<p>说明：之前了解的一些外部开源实现方案中，部分采用了mysql、redis之类的外部依赖来存储状态数据，好处是实现简单，不用考虑数据一致性问题。坏处在于加入了第三方的依赖，而且也没有解决唯一主调度的问题，需要额外引入etcd等组件来完成竞争锁等机制。google的实现引入了Paxos组件来解决选举及数据同步的问题。</p>
+</blockquote>
+<h3 id="The-Use-of-Paxos"><a href="#The-Use-of-Paxos" class="headerlink" title="The Use of Paxos"></a>The Use of Paxos</h3><p>我们为Cron服务部署了多个副本，同时采用Paxos分布式共识算法保证它们状态的一致。就算某些基础设施出现故障，只要整个组中大多数成员可用，整个分布式系统就可以顺利地进行状态变更。</p>
+<p>分布式 Cron 使用单个主副本，如图所示，它是唯一可以修改共享状态的副本，也可以是启动 Cron 作业的唯一副本。我们利用 Paxos 的变体（称为 Fast Paxos）在内部使用主副本作为优化 - Fast Paxos 主副本也充当Cron服务主机。</p>
+<p><img src="https://vmat.gtimg.com/kt1/web/img/202110101937193868_image-3.png" alt="Reliable Cron across the Planet: The Interactions Between Distributed Cron Replicas"></p>
+<p>如果主副本崩溃了，Paxos 组的健康检查会很快发现这个问题（通常在几秒之内）。由于已经有另外几个Cron进程处于启动状态，所以可以很快地选举出一个新的主副本。一旦新的主副本选举出来，根据Cron服务自定义的选举过程使得新的主副本进程接手之前领头人未完成的工作。虽然Cron服务的主副本进程和Paxos协议的主副本进程其实是一个，但是Cron主副本在选举结束后需要完成一系列额外的操作。选举速度很快，使我们可以很轻松地保证在可接受的一分钟故障时间内进行故障切换。</p>
+<p>各个副本利用Paxos协议同步的最重要的状态信息就是哪些Cron任务已经被启动了。该服务需要不停地以同步方式通知大多数的副本每个计划任务的启动和结束信息。因为每个任务的调度周期计算时需要了解上次的执行起止时间。</p>
+<h4 id="主从副本角色"><a href="#主从副本角色" class="headerlink" title="主从副本角色"></a>主从副本角色</h4><p>正如前文所述，Cron服务使用Paxos协议分配两个角色：领导者(主副本、the master)和追随者(从副本、the slave)。下文会详述每种角色的职责。</p>
+<h4 id="The-Master"><a href="#The-Master" class="headerlink" title="The Master"></a>The Master</h4><p>主副本进程是唯一一个主动启动Cron任务的进程。该进程内部有一个内置调度器，与本章开头提到的简单的crond实现非常类似。该调度器按照预定的启动时间排序维护一个Cron任务列表。进程在第一个任务的预期执行时间之前一直处于等待状态。当到达预定启动时间时，主副本宣布它将要开始启动该Cron任务，同时计算新的（下一次的）启动时间，和普通的crond实现一样。当然，与普通的crond类似，自从上次执行过后，Cron任务的启动条件可能已经变化了，这些启动信息也必须同步给其他所有的副本角色。简单地标记某个Cron任务是不够的，应该将某次启动时间作为唯一标识符标记；否则在记录Cron任务的启动时可能会产生歧义（这种歧义通常出现在那些高频任务中，比如那些每分钟运行一次的任务）。如所示，全部通信都是基于Paxos协议之上完成的</p>
+<p><img src="https://vmat.gtimg.com/kt1/web/img/202110101937327215_image-4.png" alt="Reliable Cron across the Planet: Progress of a Cron Job Launch"></p>
+<p>Paxos 通信的同步性是很重要的，Cron任务的实际启动在得到Paxos法定仲裁过程结束之前不会进行。Cron服务需要知道每个任务是否已经启动了，这样才能在主副本切换的时候决定正确的操作。如果这些操作是异步进行的，可能意味着整个任务的启动过程都在主副本进程上已完成，而没有通知到其他的副本。当故障切换的时候，新的主副本可能会重新进行这次启动，因为它们不知道这个任务已经被启动过一次了。</p>
+<p>Cron任务启动过程的完成也需要通过Paxos协议同步通知给其他的副本。要注意的是，我们这里仅仅记录了Cron服务在某个时间试图进行一次启动操作，并不关心这次启动是否真正成功或者是否由于外部原因失败了（例如，如果数据中心任务分发系统当前不可用）。下文会提到如何处理发生在这项操作过程中的问题。</p>
+<p>另外一个作为主副本角色非常重要的功能是，当其由于各种原因失去主副本角色时，该进程必须立刻终止一切和数据中心任务分发系统之间的交互。主副本角色必须意味着对数据中心级别任务分发服务的独占性。如果缺少了这种独占性，新旧主副本进程同时进行相互冲突的操作。</p>
+<h4 id="The-Slave"><a href="#The-Slave" class="headerlink" title="The Slave"></a>The Slave</h4><p>从副本需要持续跟踪主副本进程提供的目前的系统状态，以便在需要的时候及时替换。所有的状态改变都是从主副本角色基于Paxos协议传递的。就像主副本角色那样，从副本也必须要维护系统中所有Cron任务的列表，这个列表必须在所有副本中保持一致（这就是要使用Paxos协议的原因）。</p>
+<p>当接收到某个已经执行的“启动”通知时，从副本需要更新该副本内部该任务的下次预计启动时间。这项重要的状态改变（是同步进行的）保证了所有Cron任务在整个系统中的<strong>状态是一致</strong>的。我们同时也会记录所有的未完成启动。</p>
+<p>如果主副本进程崩溃，或者由于其他某个原因不再正常工作（例如，由于网络分区问题无法联系到其他的副本），某个从副本进程将会被选举为新的主副本进程。该选举过程必须要在一分钟之内完成，这样可以避免大幅延迟或者跳过某个任务的执行。一旦一个新的主副本被选举出来，所有的未完成状态的启动过程必须被结束。这个过程可能是很复杂的，通常需要Cron系统和数据中心基础服务的共同协作才能完成。下面这一小节会详细讨论如何解决这种部分性失败情况。</p>
+<h4 id="解决部分性失败问题"><a href="#解决部分性失败问题" class="headerlink" title="解决部分性失败问题"></a>解决部分性失败问题</h4><p>正如上文所述，主副本进程和数据中心调度系统之间的单个任务启动的过程可能在多个RPC中间失败。我们的系统应该能处理这种状况。<br>前文说过，每个任务启动都具有两个Paxos同步点：</p>
+<p>● <strong>当任务启动执行之前</strong><br>● <strong>当任务启动执行之后</strong></p>
+<p>这两个同步点使我们可以界定每一次具体的启动。就算启动过程仅仅需要一个RPC，我们怎么能够知道这个RPC是否已经发出了呢？这里还包括在标记启动已经执行之后，但是启动结束通知发送之前主副本进程就崩溃了的情况。</p>
+<p>为解决部分失败的问题，有两种思路可选：</p>
+<p>● 所有需要在选举过后继续的任务，对外部系统的操作必须是幂等的（这样我们可以在选举过后重新进行该操作）。<br>● 必须能够通过查询外部系统状态来无疑义地决定某次操作是否已经成功。</p>
+<p>这两个选项中的任意一个都是很大的挑战，可能很难实现。<strong>但是实现其中的至少一个是在大型分布式系统中应对单点或多点故障并准确运行一个Cron系统的前提</strong>。如果没有正确地处理这些情况，可能会导致错过某些任务的执行，或者重复运行某些任务。</p>
+<p>在数据中心中管理逻辑性任务的大部分基础设施（例如Mesos）会为这些任务提供某种命名服务，使我们可以通过这些名字查找任务状态、停止任务，或者进行其他的维护操作。<strong>一种解决幂等性问题的方案是提前构建一致的任务名称</strong>，并且分发给所有的Cron服务副本（这样就可避免在数据中心调度器上进行任何的修改操作）。如果主副本在启动过程中崩溃，新的主副本可以通过预计算的任务名称来查询任务的状态。</p>
+<p>上文说过，我们在副本之间同步信息的时候会记录预期启动时间。同样的，我们需要将Cron服务与数据中心调度器的交互也使用预期启动时间唯一标识。例如，假设有一个高频运行的，但是运行时间很短的任务。该任务成功启动，但是在启动成功的信息同步到其他副本之前，主副本进程崩溃了。同时故障切换机制由于某种问题造成了延迟，迟到足够这个任务已经结束了。新的主副本进程查询该任务的状态，发现该任务目前处于完成状态，于是尝试再次启动该任务。如果预期启动时间被包含在任务名中，新的领头人副本就可以准确地知道这个任务其实是任务的某个特定启动，于是就避免了这种双重启动情况的发生。</p>
+<p>在实际的实现中，状态的查询由一个比较复杂的系统组成，这主要是由于底层基础设施的实现细节所决定的。然而，前面的描述适用于任何系统。取决于具体的基础设施，实现者可能要在双重启动的风险和错过启动的风险中进行抉择。</p>
+<blockquote>
+<p>说明：失败问题应该是整个系统最复杂的部分，仅依靠Cron Service自身是无法解决的，需要借助数据中心调度系统等外部能力。其中一种幂等性问题的解决方案是给每次调度唯一的id。任务执行中或结束后更新相关任务状态到外部系统，容灾切换后新的主副本在执行前先查询上次的执行结果，避免重复执行。</p>
+</blockquote>
+<h3 id="状态存储"><a href="#状态存储" class="headerlink" title="状态存储"></a>状态存储</h3><p>使用Paxos 协议来达成共识只是状态问题的一部分。Paxos 基本上是一个只能新增的日志，在每次状态变化后同步地新增。Paxos协议的这种特性意味着以下两个问题：日志需要定期压缩，以防无限增长；日志必须要存储在某个地方。</p>
+<p>为了避免Paxos日志的无限增长，可以简单地将目前的状态进行一次快照（snapshot）。这就意味着我们可以不再需要重新回放之前的所有状态改变来得到目前的状态。提供一个例子：如果我们的状态变化存储在日志中的时候是“将某个计数器加1”，那么在1000次迭代之后，可以用一个“将计数器设置为1000”来替代1000条记录。</p>
+<p>在日志丢失的情况下，我们只会丢失上次快照之后的信息。快照也是我们最重要的状态信息—如果丢失快照信息，我们就必须从零开始，因为已经丢失了全部内部状态。相比之下，丢失日志仅仅会将Cron系统重置回上次快照的时间。</p>
+<p>存储数据有两个方案：● 外部可用的分布式存储。● 在系统内部存储少量的数据。当设计该系统时，我们采取了一个综合两个选项的方案。</p>
+<p>我们将Paxos日志存储在服务副本运行的本地磁盘上。在标准情况下，我们有三个副本运行，也就是有三份日志。同时我们也将快照信息保存在本地磁盘上，然而因为这些信息很重要，会同时将它们备份到一个分布式存储上去。这样可以为三个机器同时出现问题的情况提供保护。</p>
+<p>我们并不将日志直接存储在分布式文件系统上。我们认为丢失日志，也就是丢失一小部分最近的状态改变是一个可以接受的危险。将日志保存在分布式文件系统上可能会造成很严重的性能问题—由大量的小型写操作引起。三个机器同时出现故障是很罕见的，而且如果的确同时发生故障了，我们会自动从快照中恢复。于是，我们仅仅只会丢失一小部分日志信息：这些都是自从上次快照之后产生的。而快照是根据预先配置的时间间隔自动产生的。当然，这些妥协可能根据基础设施的细节而不同，也与Cron系统本身的要求有关系。</p>
+<p>除了在本地存储的日志和快照，以及分布式文件系统上的快照备份之外，一个刚刚启动的副本可以从另外一个已经运行的副本上获得最新的快照和日志。这个能力使得启动过程可以独立于本地物理机器的任何状态。因此，将系统的某个副本重启，重新调度到另外一台物理机器上（或者由于物理机器故障原因迁移）对服务稳定性来说没有影响。</p>
+<h3 id="Running-a-Large-Cron"><a href="#Running-a-Large-Cron" class="headerlink" title="Running a Large Cron"></a>Running a Large Cron</h3><p>运维一个大型Cron系统同样有一些较小但是也很有趣的问题。传统的Cron系统规模通常很小，最多可能由几十个任务组成。但是，如果我们在一个数千台机器的数据中心上运行Cron系统，系统的用量可能会大幅增加，同时可能会造成一定的问题。</p>
+<p>一定要小心任何大型分布式系统都熟知的问题：<strong>惊群效应（thundering herd）</strong>。根据用户的配置，Cron服务可能会造成数据中心的<strong>峰值效应</strong>。当人们想要配置一个“每日任务”时，他们通常会配置该任务在午夜时运行。这个配置可能在一台机器上还可行，但是当你的任务会产生数千个MapReduce工作进程的时候就不可行了。尤其是当其他30个团队也按照同样的配置在同一个数据中心来运行每日任务呢？为了解决这个问题，我们在crontab 格式上增加了一些扩展。</p>
+<p>在普通crontab格式中，用户用分钟、小时、月中的日期（或者周内的日期），以及月份来标记某个任务应该运行的时间，或者使用“*”来标记任意值。每天在午夜时候运行会将crontab标记为“0 0 * * *”（也就是0分0时，月内的每一天，每个月，以及周内的每一天都会运行）。我们在这里增加了一个问号“?”，意味着任意一个值都可以接受，Cron系统可以根据需要自行选择一个时间。用户可以将任务分散在整个事件序列里（例如[插图]中的某个小时），因此可以将这些任务分散得更为均匀。</p>
+<p>就算引入了这个改动，Cron任务带来的系统负载仍然是非常尖锐的。如图所示的是，聚合过的Google全球Cron任务启动数量图。这个图片集中展示了Cron任务经常性的负载峰值，这是因为某些任务需要在特定时间启动—例如，由于对外部事件的某些临时依赖造成。</p>
+<p><img src="https://dl.acm.org/cms/attachment/dc388e7b-2e24-42a6-93f0-133805602d02/petoff3.png" alt="Reliable Cron across the Planet: The Number of Cron Jobs Launched Globally"></p>
+<blockquote>
+<p>说明：典型的峰值问题，根据实际情况想办法削峰即可。cron确实会存在这类问题。</p>
+</blockquote>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>A Cron service has been a fundamental feature in UNIX systems for decades. The industry move toward large distributed systems, where a data center may be the smallest unit of hardware, requires changes in large portions of the stack, and Cron is no exception. A careful look at the required properties of a Cron service and the requirements of Cron jobs drives our new design.</p>
+<p>We have discussed the new constraints and a possible design of a Cron service in a distributed system environment, based on the Google solution. The solution requires strong consistency guarantees in the distributed environment. The core of the distributed Cron implementation is therefore Paxos, a common algorithm for reaching consensus in an unreliable environment. The use of Paxos and correct analysis of new failure modes of Cron jobs in a large-scale, distributed environment allowed us to build a robust Cron service that is heavily used at Google.</p>
+<h4 id="Acknowledgments"><a href="#Acknowledgments" class="headerlink" title="Acknowledgments"></a>Acknowledgments</h4><p>Many thanks to Dermot Duffy and Gabriel Krabbe (designers of the foundation of the system described in this article), Derek Jackson, Chris Jones, Laura Nolan, Niall Murphy, and all other contributors and reviewers for their valuable input on this article.</p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ol>
+<li><p>Burrows, M. 2006. The Chubby lock service for loosely-coupled distributed systems. Proceedings of the 7th Symposium on Operating Systems Design and Implementation: 335-350. <a target="_blank" rel="noopener" href="http://research.google.com/archive/chubby-osdi06.pdf">http://research.google.com/archive/chubby-osdi06.pdf</a></p>
+</li>
+<li><p>Corbett, J. C., et al. 2012. Spanner: Google’s globally-distributed database, Proceedings of OSDI’12. Tenth Symposium on Operating System Design and Implementation. <a target="_blank" rel="noopener" href="http://research.google.com/archive/spanner-osdi2012.pdf">http://research.google.com/archive/spanner-osdi2012.pdf</a></p>
+</li>
+<li><p>Docker. <a target="_blank" rel="noopener" href="https://www.docker.com/">https://www.docker.com/</a></p>
+</li>
+<li><p>Junqueira, F. P., Reed, B. C., Serafini, M. 2011. Zab: High-performance broadcast for primary-backup systems. Dependable Systems &amp; Networks (DSN), 2011 IEEE&#x2F;IFIP 41st International Conference: 245-256. <a target="_blank" rel="noopener" href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=5958223&tag=1">http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber&#x3D;5958223&amp;tag&#x3D;1</a></p>
+</li>
+<li><p>Lamport, L. 2001. Paxos made simple. ACM SIGACT News 32 (4): 18-25, <a target="_blank" rel="noopener" href="http://research.microsoft.com/en-us/um/people/lamport/pubs/pubs.html#paxos-simple">http://research.microsoft.com/en-us/um/people/lamport/pubs/pubs.html#paxos-simple</a></p>
+</li>
+<li><p>Lamport, L. 2006. Fast Paxos. Distributed Computing 19 (2): 79-103, <a target="_blank" rel="noopener" href="http://research.microsoft.com/pubs/64624/tr-2005-112.pdf">http://research.microsoft.com/pubs/64624/tr-2005-112.pdf</a></p>
+</li>
+<li><p>Ongaro, D., Ousterhout, J. 2014. In search of an understandable consensus algorithm (extended version). <a target="_blank" rel="noopener" href="https://ramcloud.stanford.edu/raft.pdf">https://ramcloud.stanford.edu/raft.pdf</a></p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/">https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><a class="post-meta__tags" href="/tags/cron/">cron</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/04/Application-Tracking/" title="Application Tracking"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Application Tracking</div></div></a></div><div class="next-post pull-right"><a href="/2021/10/04/libuv-source/" title="libuv-source"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">libuv-source</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/12/26/Introduction-to-memberlist/" title="Introduction-to-memberlist"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-12-26</div><div class="title">Introduction-to-memberlist</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Reliable-Cron-across-the-Planet%E2%80%A6or-How-I-stopped-worrying-and-learned-to-love-time"><span class="toc-number">1.</span> <span class="toc-text">Reliable Cron across the Planet…or How I stopped worrying and learned to love time</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">可靠性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cron%E4%BB%BB%E5%8A%A1%E5%92%8C%E5%B9%82%E7%AD%89%E6%80%A7"><span class="toc-number">1.1.1.</span> <span class="toc-text">Cron任务和幂等性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E8%A7%84%E6%A8%A1Cron%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.</span> <span class="toc-text">大规模Cron系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E6%89%A9%E5%B1%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">基础设施扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E9%9C%80%E6%B1%82%E7%9A%84%E6%89%A9%E5%B1%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">对需求的扩展</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#google-Cron%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">google Cron系统的构建过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%9F%E8%B8%AACron%E4%BB%BB%E5%8A%A1%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">跟踪Cron任务的状态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Use-of-Paxos"><span class="toc-number">1.4.</span> <span class="toc-text">The Use of Paxos</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%89%AF%E6%9C%AC%E8%A7%92%E8%89%B2"><span class="toc-number">1.4.1.</span> <span class="toc-text">主从副本角色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Master"><span class="toc-number">1.4.2.</span> <span class="toc-text">The Master</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Slave"><span class="toc-number">1.4.3.</span> <span class="toc-text">The Slave</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%83%A8%E5%88%86%E6%80%A7%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.4.</span> <span class="toc-text">解决部分性失败问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8"><span class="toc-number">1.5.</span> <span class="toc-text">状态存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Running-a-Large-Cron"><span class="toc-number">1.6.</span> <span class="toc-text">Running a Large Cron</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-number">1.7.</span> <span class="toc-text">Summary</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Acknowledgments"><span class="toc-number">1.7.1.</span> <span class="toc-text">Acknowledgments</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#References"><span class="toc-number">1.7.2.</span> <span class="toc-text">References</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

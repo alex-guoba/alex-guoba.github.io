@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Archive Service Governance | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="业务服务治理背景挑战故障频发上半年新老系统突发N次故障，部分已经影响用户体验。  故障1：xx服务故障，原因为系统设计不合理，导致晚高峰流量突破系统瓶颈，而相关服务缺少过载保护措施。幸好主流程有对应的稳定性措施，未造成大规模影响。 故障2：xx服务故障，原因未开发同学误操作接入层现网配置，且相关变更未同步到团队其他人，另外接入层问题相对隐晦，定位耗时比较长。影响部分用户体验。 故障3：xx服务重构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Archive Service Governance">
+<meta property="og:url" content="https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="业务服务治理背景挑战故障频发上半年新老系统突发N次故障，部分已经影响用户体验。  故障1：xx服务故障，原因为系统设计不合理，导致晚高峰流量突破系统瓶颈，而相关服务缺少过载保护措施。幸好主流程有对应的稳定性措施，未造成大规模影响。 故障2：xx服务故障，原因未开发同学误操作接入层现网配置，且相关变更未同步到团队其他人，另外接入层问题相对隐晦，定位耗时比较长。影响部分用户体验。 故障3：xx服务重构">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2023-11-13T10:54:27.000Z">
+<meta property="article:modified_time" content="2023-11-13T11:06:50.100Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="Governance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Archive Service Governance',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-13 19:06:50'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Archive Service Governance</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-11-13T11:06:50.100Z" title="Updated 2023-11-13 19:06:50">2023-11-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Archive Service Governance"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="业务服务治理"><a href="#业务服务治理" class="headerlink" title="业务服务治理"></a>业务服务治理</h1><h2 id="背景挑战"><a href="#背景挑战" class="headerlink" title="背景挑战"></a>背景挑战</h2><h3 id="故障频发"><a href="#故障频发" class="headerlink" title="故障频发"></a>故障频发</h3><p>上半年新老系统突发N次故障，部分已经影响用户体验。</p>
+<ul>
+<li>故障1：xx服务故障，原因为系统设计不合理，导致晚高峰流量突破系统瓶颈，而相关服务缺少过载保护措施。幸好主流程有对应的稳定性措施，未造成大规模影响。</li>
+<li>故障2：xx服务故障，原因未开发同学误操作接入层现网配置，且相关变更未同步到团队其他人，另外接入层问题相对隐晦，定位耗时比较长。影响部分用户体验。</li>
+<li>故障3：xx服务重构，因老系统交接N手，新接手同学未考虑到老版本的特殊需求，上线后问题一直未大规模暴露。直到某节假日现网问题集中反馈才暴露。</li>
+</ul>
+<h3 id="研发效率、质量差"><a href="#研发效率、质量差" class="headerlink" title="研发效率、质量差"></a>研发效率、质量差</h3><p>几个典型问题：</p>
+<ul>
+<li>开发、测试环境冲突，缺少系统集成测试环境：因为业务的复杂性，大部分业务都需要依赖平台相关服务，而平台业务却很少考虑业务的诉求，导致环境各异，开发、测试冲突时有发生。</li>
+<li>版本兼容性：业务的特殊性，终端还有N年前的版本在线上，这些都需要后台兼容。后台祖传的服务太多，交接过多手后不清楚哪些特性还在使用，哪些已经废弃。不敢重构。</li>
+<li>系统容灾能力考虑不足：容灾措施评估不足，或者年久失修，没有真正经历过故障的考验。当故障发生时发现跟预估的效果差别较大。</li>
+</ul>
+<p>22年左右，团队正好跟随公司节奏，进行服务的上云以及新技术栈的改造工作，改造过程中出现过几次小的故障，于是和团队一起花了近1年左右的时间，对后台团队的服务进行了针对性的治理，解决研发、运营过程中的各种问题。</p>
+<h2 id="目标及原则"><a href="#目标及原则" class="headerlink" title="目标及原则"></a>目标及原则</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>何为服务治理，感觉业界也没有标准的定义，但是就团队当时的状态而言，问题已经很明确了，就是提升整体的服务质量，核心服务质量能够到达4个9，以及整体效率的提升。</p>
+<p>一句话目标：对微服务生命周期的各阶段（设计——开发——构建——测试——部署——维护）进行针对性的治理，提升服务稳定性及容灾能力，降低维护成本。</p>
+<h3 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h3><ul>
+<li><p>避免重复造轮子。借用平台能力或参与中台共建，降本增效，人力有限的背景下最大化产出</p>
+<p>  当前团队属于业务性团队，人力配比上主要还是支撑业务，几乎不可能有单独的时间留给团队进行技术栈的升级改造工作，而且从长期维护角度看，使用中台或者参与共建是最好的选择（当时没有提到均摊中台成本一说）。</p>
+</li>
+<li><p>团队全员参与：避免成为少数几个人的项目，让团队意识到项目的意义更为重要。骨干同学负责各项技术能力的对比预研以及方案评审，在部分项目上实验后再团队整体宣讲、推广，同时最小化接入成本，避免过滤侵占其他人时间。</p>
+</li>
+</ul>
+<h2 id="措施"><a href="#措施" class="headerlink" title="措施"></a>措施</h2><p>按研发流程分阶段来描述各阶段进行的措施，每一块都可以拓展开来细分为一个课题，本文仅介绍团队当时实施的主要措施。</p>
+<h3 id="研发阶段"><a href="#研发阶段" class="headerlink" title="研发阶段"></a>研发阶段</h3><h4 id="研发规范建设"><a href="#研发规范建设" class="headerlink" title="研发规范建设"></a>研发规范建设</h4><p>研发规范、工具建设，统一公共库、框架、中间件、脚手架等研发涉及的模块，降低维护沟通成本，使研发只需要关注业务逻辑本身，提升研发效能。包括：</p>
+<ul>
+<li><strong>仓库标准</strong>：仓库目录、分支、CR等命名相关规范。在切到git之前就已有了，但是后面随着业务的发展，部分已经没有遵守。<ul>
+<li>评估手段：有仓库扫码工具，定期扫描业务代码库，对规范异常直接告警。</li>
+</ul>
+</li>
+<li><strong>组件规范</strong>：统一团队技术栈，降低维护成本。<ul>
+<li>开发基础：统一框架、服务发现、配置系统、可观测组件、基础能力。</li>
+<li>稳定性：标准化兜底及熔断能力，避免业务自定义实现或者缺失</li>
+<li>中间件：MQ、Redis、Mysql等相关平台及使用流程</li>
+<li>公共库：业务公共库，包括产线渠道获取、域名隐藏、IP库等基础能力</li>
+<li>评估手段：除团队宣讲外，主要靠leader审批把关。</li>
+</ul>
+</li>
+</ul>
+<h4 id="辅助工具"><a href="#辅助工具" class="headerlink" title="辅助工具"></a>辅助工具</h4><ul>
+<li><strong>脚手架</strong>：复用平台脚手架的能力，自动化生产仓库、CI&#x2F;CD流水线能力，统一流水线模板。</li>
+<li><strong>CR：</strong>有效的CR，避免流于形式。单侧覆盖率、规范检查等基础指标由流水线保障，CR主要关注业务逻辑合理性。<ul>
+<li>评估手段：团队有CR考核指标，人均评论数、分数大于xxx。</li>
+<li>CR方式上结合集体评审以及线下评审两种方式。会有相关robot提醒CR任务以及CR指标进展。</li>
+</ul>
+</li>
+</ul>
+<h4 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a><strong>系统设计</strong></h4><p>架构优化及基础能力补齐，避免部分服务因设计不合理导致后续的维护困难。主要考虑两个问题点：可扩展性以及稳定性措施的完备性。</p>
+<ul>
+<li>通用容灾容错能力补齐：存量服务补齐通用的容灾容错能力，提升系统健壮性。<ul>
+<li>兜底：除业务自身容错外，接入层建设统一的兜底能力。如果请求下游失败时，或下游返回错误码时，用缓存的数据代替下游回包进行响应。<ul>
+<li>目的：利用平台能力，轻量、标准化的兜底方案去保障后台各微服务的可用性。</li>
+<li>方法：接入层能为面向外网的 HTTP 服务提供缓存&#x2F;兜底能力，可以灵活指定请求包中部分值作为 cache key，缓存&#x2F;兜底数据的回包作为 value。</li>
+</ul>
+</li>
+<li>业务模块过载保护与熔断：使用公司runtime接入。对系统的出入口做好稳定性保护。</li>
+</ul>
+</li>
+<li>业务逻辑的降级策略：保障非核心路径失败时不影响主流程，需要在各微服务中做好容错。</li>
+<li>基础组件的兜底能力：包括配置系统等业务常用等公共组件的失败时，能够不影响线上业务。需要考虑标准化的容错措施。</li>
+<li>评估手段：团队定期（双周四下午）具体设计方案评审，包括老系统架构review、新系统建设方案评审。给出方案评审模板，稳定性措施必须有体现。</li>
+</ul>
+<h3 id="测试阶段"><a href="#测试阶段" class="headerlink" title="测试阶段"></a>测试阶段</h3><h4 id="开发自测"><a href="#开发自测" class="headerlink" title="开发自测"></a>开发自测</h4><p>后台主要以开发自测为主，基本没有专职的测试人力投入。所以质量保障措施就必须要非常严格。</p>
+<ul>
+<li>单测：核心逻辑必须要单测。<ul>
+<li>评估手段：流水线会卡增量代码的测试覆盖率，至少30%。</li>
+</ul>
+</li>
+<li>流量重放测试：对老服务重构必须进行现网流量测试。netflix之前也有过类似的介绍，使用logreplay等工具抓取现网流程在新系统重放，然后比较结果的一致性来保障新系统的兼容性。<ul>
+<li>评估手段：leader卡发布流程。</li>
+</ul>
+</li>
+<li>全链路压测：<ul>
+<li>目的：①使用公司压测平台，对系统负载极限以及瓶颈做到心中有底，这样在重点项目保障时能够做好精确的扩容预估。②模拟故障，校验各种频控、兜底措施是否完善，以及终端表现是否与预期一致。</li>
+<li>方式：未避免影响线上环境，几个重点措施<ul>
+<li>在测试环境或者金丝雀环境压测，与现网流量隔离。压测各个服务进保留一台容器即可。</li>
+<li>上下游通知或者mock，避免对上下游造成冲击。</li>
+<li>后台需要校验结构数据的准确性，但终端也要评估兜底时的用户体验，此过程最好卷入相关产品团队。后续在重大项目保障期间也会作为标准的降级措施提前宣讲&amp;准备。</li>
+<li>容灾演习：系统重构，重大保障活动前，建议对核心功能做一遍压测，确保相关功能仍然完整可用。</li>
+</ul>
+</li>
+<li>评估手段：重保前的必须流程。</li>
+</ul>
+</li>
+</ul>
+<h4 id="测试团队"><a href="#测试团队" class="headerlink" title="测试团队"></a>测试团队</h4><ul>
+<li>环境治理：解决环境冲突问题，使用金丝雀能力支持多套环境灵活定制。<ol>
+<li>建设集成测试环境，用于集成测试、线上验证和灰度发布；</li>
+<li>建设特性环境，用于特性开发；</li>
+<li>建设预发布环境，用于发布前测试；</li>
+<li>建设测试环境， 用于基线稳定测试环境。</li>
+</ol>
+</li>
+</ul>
+<h3 id="部署阶段"><a href="#部署阶段" class="headerlink" title="部署阶段"></a>部署阶段</h3><p>各流程的变更应具备审批、通知通知等基础能力。</p>
+<p>审批：审批的目的是为了保障相关变更能及时通知到团队以及发布时间的合理性等。另特定时间段发布需要上升。</p>
+<p>通知：统一的发布通知大小群。通知团队内外部相关模块的变更及影响。会集成到发布流水线。</p>
+<p>另外各模块的变更也会有特殊的地方，如；</p>
+<ul>
+<li>接入层：接入层的变更要做好细致的权限控制，接入层故障发生时后台服务可能无法感知，所以需要缩小权限范围，同时有特定的发布流程。</li>
+<li>微服务部署规范：使用表转化的CD流水线，自动通知、审批等流程。</li>
+<li>配置变更：配置变更也属于发布的一部分，要求各系统必须具备审批、通知能力。</li>
+<li>评估手段：建设业务变更日志系统，可用于查询、通知相关变更记录，第一时间发现问题。</li>
+</ul>
+<h3 id="运营阶段"><a href="#运营阶段" class="headerlink" title="运营阶段"></a>运营阶段</h3><ul>
+<li>扩容：容量保障（半）自动化<ul>
+<li>动态扩缩容：这个是基础，利用平台的动态调度能力能够根据负载实时扩缩容。团队也有自行实现巡检脚本，针对业务的特殊性优化。比如业务周末流量高峰过后会大跌，需做好及时缩容等。</li>
+<li>突发容量管理：接入公司SRE系统，解决计划内突发业务场景的容量管理系统。通过建立<strong>全链路服务容量</strong>和<strong>业务指标</strong>之间的联系，基于<strong>计划性</strong>的活动事件给出的<strong>预估指标</strong>进行<strong>提前扩容</strong>，实现业务服务容量全流程管理，从而解决热点事件（如春晚）带来的洪峰流量对业务系统的冲击，帮助业务提高对自身容量掌控的深度和广度，在保障业务容量充足的情况下，提高资源利用率。</li>
+</ul>
+</li>
+<li>可观测：快速发现、定位问题<ul>
+<li>维度<ul>
+<li>Logging<ul>
+<li>客户端：本地日志，随用户异常反馈时上传</li>
+<li>服务端：流水日志，受限于成本，仅保留核心系统日志或者采样上报。</li>
+</ul>
+</li>
+<li>Tracing<ul>
+<li>接入公司链路追踪系统，核心链路+采样&#x2F;白名单上报。</li>
+</ul>
+</li>
+<li>Metrics<ul>
+<li>Infra：基础设施，依赖容器平台等各平台的监控</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>层级<ul>
+<li>终端：从终端监控服务质量<ul>
+<li>客户端cgi质量上报：客户端采样，上报cgi访问质量、cdn访问质量。采样默认比例1:10。服务端接收流水，上报到统计的Prometheus平台并告警。优势能覆盖所有现网接口&amp;产线，且能快速定位产线、渠道等。不足：无现网流量时不能发现问题。</li>
+<li>拨测：从运营商&amp;地区的角度来观察厂商到后台的服务质量。使用腾讯云的云拨测平台，配置核心接口告警策略。考虑到成本问题，仅配置核心接口以及重点地区+运营商。优势是不受终端网络质量（如开机场景下的cgi质量较差）、性能等影响，也可以覆盖香港、东南亚等小众场景。缺点：有一定的成本（配置、运营成本）</li>
+<li>web：hippy、web等接入云APM监控（现在为腾讯云RUM），监控接口质量、首屏时长等指标。</li>
+</ul>
+</li>
+<li>接入层<ul>
+<li>公司接入层：公司接入层已有监控，优势是服务端最前端的监控，不受后台微服务的影响。不足是只能监控http相关指标，包括qps、状态码、延迟、rs状态等，无法兼顾业务错误码。</li>
+<li>业务自有接入层：能够自定义一些业务的监控措施。比如具体的cgi以及业务错误码（依赖公共公共header）</li>
+<li>后台统一接入层access(路由、统一鉴权、兜底、频控)：统一接入层，具备服务路由、鉴权以及统一的兜底、频控机制。</li>
+</ul>
+</li>
+<li>后台微服务：rpc框架自带<ul>
+<li>主被调、容器负载</li>
+<li>业务自定义监控</li>
+</ul>
+</li>
+<li>综合指标监控<ul>
+<li>用户反馈：用户反馈接入反馈平台，自动分析&amp;告警。</li>
+<li>核心服务看板：借助公司Prometheus平台建设数据看板，对核心场景搭建核心场景的全链路的看板。</li>
+<li>SLI平台：将业务服务质量数据接入SRE平台，以更加科学的方法来评定后台对外服务的长期质量情况。目前前后台已接入约100各服务&#x2F;场景。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="问题处理-amp-故障复盘"><a href="#问题处理-amp-故障复盘" class="headerlink" title="问题处理&amp;故障复盘"></a>问题处理&amp;故障复盘</h2><ul>
+<li>问题处理手册&amp;工具建设<ul>
+<li>项目维护文档、问题定位工具建设</li>
+</ul>
+</li>
+<li>复盘<ul>
+<li>复盘流程标准化：包括<ul>
+<li>文档整理：影响评估、详细原因分析、改进措施预案（长期、短期）</li>
+<li>复盘评审机制：外部评委、开发、leader、总监以及相关团队。</li>
+<li>改进措施跟进，定期push&amp;同步。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>服务治理没有标准的解决方案，需要针对业务特定，结合所处的大环境，对风险点提出针对性的改进措施后逐步推进，最终达成团队服务质量、研发质量提升的目标。过程中涉及的措施比较多，上面列到的措施我们基本都引入了，但是也很难保障所有风险都已经消除或者100%落地。相关措施也很难说哪个优先级更高，但是有几个点个人觉得重要性比较高。</p>
+<ol>
+<li>做好压测能力或混沌功能的建设。这个是校验系统稳定性措施是否完整的唯一且有效手段。个人感觉在落地上可以交互进行，避免负责人评估自己系统系统时出现盲目乐观的情况。</li>
+<li>监控：监控指标的重要程度就不提了。主要提醒的是后台同学通常仅关注自己的服务本身，缺乏全局的监控思维。这里需要负责人有全局监控视角，将监控覆盖到从终端到底层各层可能出现的意外情况。避免一叶障目不见泰山的情况。</li>
+<li>架构评审：推动过程中发现评审不仅能完善系统能力，同时也是一个技术交流的过程。这种机会对新人来说非常有帮助，同时也使得团队能够达成各种标准的统一。</li>
+</ol>
+<p>涉及公司的组件较多，敏感原因这里就不列了，各团队要求无法统一，而且基本也都有开源的平替方案。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/">https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Governance/">Governance</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Doploy outline without docker</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/10/Sentinel-Code-Analyze/" title="Sentinel Code Analyze"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Sentinel Code Analyze</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/12/04/Application-Tracking/" title="Application Tracking"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-04</div><div class="title">Application Tracking</div></div></a></div><div><a href="/2022/01/07/Open-Tracing/" title="Open Tracing"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-07</div><div class="title">Open Tracing</div></div></a></div><div><a href="/2023/11/10/Sentinel-Code-Analyze/" title="Sentinel Code Analyze"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">Sentinel Code Analyze</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">业务服务治理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E6%8C%91%E6%88%98"><span class="toc-number">1.1.</span> <span class="toc-text">背景挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E9%A2%91%E5%8F%91"><span class="toc-number">1.1.1.</span> <span class="toc-text">故障频发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%94%E5%8F%91%E6%95%88%E7%8E%87%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%AE"><span class="toc-number">1.1.2.</span> <span class="toc-text">研发效率、质量差</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E5%8F%8A%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.</span> <span class="toc-text">目标及原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.2.</span> <span class="toc-text">原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%AA%E6%96%BD"><span class="toc-number">1.3.</span> <span class="toc-text">措施</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%94%E5%8F%91%E9%98%B6%E6%AE%B5"><span class="toc-number">1.3.1.</span> <span class="toc-text">研发阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A0%94%E5%8F%91%E8%A7%84%E8%8C%83%E5%BB%BA%E8%AE%BE"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">研发规范建设</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">辅助工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">系统设计</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%98%B6%E6%AE%B5"><span class="toc-number">1.3.2.</span> <span class="toc-text">测试阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E8%87%AA%E6%B5%8B"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">开发自测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%9B%A2%E9%98%9F"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">测试团队</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E9%98%B6%E6%AE%B5"><span class="toc-number">1.3.3.</span> <span class="toc-text">部署阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%90%A5%E9%98%B6%E6%AE%B5"><span class="toc-number">1.3.4.</span> <span class="toc-text">运营阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86-amp-%E6%95%85%E9%9A%9C%E5%A4%8D%E7%9B%98"><span class="toc-number">1.4.</span> <span class="toc-text">问题处理&amp;故障复盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

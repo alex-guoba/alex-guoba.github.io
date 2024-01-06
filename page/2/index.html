@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="个人技术博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utopian">
+<meta property="og:url" content="https://www.goroutine.cn/page/2/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="个人技术博客">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:author" content="Alex guo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Utopian',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-01-06 22:36:21'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background: transparent"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Utopian</h1><div id="site_social_icons"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/18/Introduct-to-go-clean-template/" title="Introduct to go-clean-template">Introduct to go-clean-template</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-09-18T15:35:08.677Z" title="Created 2023-09-18 23:35:08">2023-09-18</time></span></div><div class="content">简介go-clean-template是一个golang的微服务模板，按照Robert Martin《代码整洁之道》的各原则来实现。业务方可以使用该模板来扩展构建自己的微服务。
+提供的能力项包括：
+
+按照DIP、ISP等原则来组织框架层、业务逻辑层以及数据层等代码实现。
+配置文件解析，包括端口号、日志、PG等RabbitMQ配置。
+集成gin框架，提供了几个HTTP接口demo实现。
+集成了RabbitMQ RPC，提供了1个接口的demo实现。
+集成了日志、Swagger、K8s probe、Prometheus上报等能力。
+
+本项目主要是作为模板来演示如何构建可扩展、易于维护的微服务，因此在实现上比较简单，业务方可以根据实际需求进一步改造扩充。
+
+
+工程架构
+启动方式
+  README中给出了docker的构建方式,也可以将相关代码copy出来之后自行go build构建。
+  注意服务依赖RabbitMQ、PostgreSQL，启动前需要搭建对应的容器或者实例。
+
+目录结构
+
+cmd: cmd处理逻辑。
+config：配置解析
+docker-compose.yml： Image构 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/05/Tencent-COS-Image-Service/" title="使用腾讯云cos+cdn搭建图片服务器">使用腾讯云cos+cdn搭建图片服务器</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-05T13:20:28.000Z" title="Created 2022-03-05 21:20:28">2022-03-05</time></span></div><div class="content">背景之前在网上找了不少存储图片的地儿，貌似都不是很靠谱。也研究了一下腾讯云，似乎也没有提供直接可用的图片存储服务。看网上的经验有人使用腾讯云cos+cdn直接搭建了一个个人的图片存储服务，感觉流程也挺简单，于是研究后操作了一番，发现也有不少弯路，于是记录一番。
+
+
+cos基础对象存储COS为腾讯云提供的云存储服务，可以简单的理解为云硬盘，可以通过页面、接口上传文件到特定的目录(实为bucket)。具体流程就不介绍了，参考官方文档。
+创建bucket之后，每个bucket会有一个独立的访问域名，可以通过http域名直接访问文件。注意需要先将存储桶访问权限改为”公有读私有写“。
+这样一个简单的文件上传、下载服务器就搭建好了。可以直接在文件列表中上传、下载文件以及管理工作。
+优化上传通过页面上传肯定不是一个好的方案，上传每次都要通过腾讯云页面操作，成本太高。
+Mac下有个很方便的工具uPic，可以方便的上传到cos。可以直接从git release下载，应用市场也提供了收费版本。uPic支持多种图床用作存储服务，包括腾讯云cos。我用的git免费版本，cos图床配置大致如下：
+
+注意点：
+
+ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/02/seckill-md/" title="秒杀系统核心设计">秒杀系统核心设计</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-02T15:12:44.000Z" title="Created 2022-03-02 23:12:44">2022-03-02</time></span></div><div class="content">最近阅读量大量关于秒杀系统的介绍文章，包括一些视频讲解，大部分文章都太冗长，没有触及核心设计点，本文主要总结下后台架构的核心设计要点，不讨论架构优化中的常规页面CDN化、隔离部署、数据sharding、缓存优化等常规手段。
+背景秒杀系统场景举例：
+
+抢购：如双十一，下单量高峰能达到50w+ qps，注意是下单成功，同时参与抢购的人的那就更多一个数量级了。
+红包：直播间红包、微信红包，本质上都是类似的场景，微信红包的处理方案是提前对红包进行个数拆分，会简化扣除库存逻辑，但是本质上跟抢购类似。
+
+此类系统有几个典型特点：
+
+qps高，tps低：即读多写少，大量的请求（包括非正常请求：如频繁重试、黑产请求等）但是只有少量能成交。
+库存需要精确：涉及金额，不允许超卖
+固定时间：活动时间通常通常很短
+
+其中超卖问题为核心需求点，基于此衍生出如何抗住并发量、用户体验优化等解决方案。
+
+
+简单方案先考虑一个简单的实现方案，然后基于此方案的问题进行优化。
+存储模型以DB为例，考虑拆分如下几个表：
+
+秒杀活动信息表： 用于新建秒杀活动，包括活动信息、时间段、秒杀商品等
+商品表：存储商品详细信息
+库存表s ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/10/Microservices-in-Action/" title="Microservices in Action">Microservices in Action</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-10T12:24:33.000Z" title="Created 2022-01-10 20:24:33">2022-01-10</time></span></div><div class="content">《微服务实战》读书笔记
+
+
+微服务的定义三大关键特性
+每个微服务只负责一个功能 
+每个微服务都有自己的数据存储 &#x2F;&#x2F; 低耦合，只能通过接口访问对方数据
+微服务自己负责编排和协作 &#x2F;&#x2F; 高内聚？
+
+两个基本特性
+可独立部署 &#x2F;&#x2F; 非庞大的单体应用
+
+可替代
+
+
+微服务架构原则
+自治性：松耦合，可独立部署 
+
+可恢复性：故障隔离，模块故障仅影响微服务自身。 &#x2F;&#x2F; 是不是叫“隔离”更加合适
+
+透明性：每个微服务有完整的日志、监控以及基础设施数据
+
+自动化：保障系统频繁部署和运维的正确性，通过引入流水线or云函数
+
+一致性：微服务需要考虑向后兼容，确保不需要强迫其他团队升级或者破坏服务之间的复杂交互。
+
+
+为何选择微服务
+技术差异性：允许根据服务的特性选择不同的技术栈 
+
+系统复杂度会逐步增加：不断缩短的交付周期 
+
+降低重复和风险：灵活性、部署风险
+
+
+微服务的设计、运维挑战
+划定微服务范围需要领域知识：如何划分某个服务的职责需要对领域有充分的理解。
+
+良好的契约设计 &#x2F;&#x2F; 多团队设计，需要服 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/01/07/Open-Tracing/" title="Open Tracing">Open Tracing</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-07T09:45:03.000Z" title="Created 2022-01-07 17:45:03">2022-01-07</time></span></div><div class="content">最近在阅读微服务相关书籍时，提到了微服务相关的监控措施，其中分布式追踪就属于其中不可或缺的一部分，恰好之前也有计划在团队内引入，所以就花了两天时间稍微深入了解了一下相关概念和实现。动手实验了一遍jaeger提供All-In-One+HotROD示例，也大致了解了其基本原理和实现思路。时间关系就没有去学习jaeger之类的系统源码了，深入了解其存储方案之类的细节了，感觉必要性不大。
+
+
+为什么需要Tracing微服务在部署上线后，需要有一套完善的监控体系来监控服务的质量。可观察性就是更关注的是从系统自身出发，去展现系统的运行状况，为开发运营人员提供故障排查、维护及优化的相关信息。
+可观察性目前主要包含以下三大支柱：
+
+日志（Logging）：Logging 主要记录一些离散的事件，应用往往通过将定义好格式的日志信息输出到文件，然后用日志收集程序收集起来用于分析和聚合。虽然可以用时间将所有日志点事件串联起来，但是却很难展示完整的调用关系路径；
+度量（Metrics）：Metric 往往是一些聚合的信息，相比 Logging 丧失了一些具体信息，但是占用的空间要比完整日志小的多，可以用于监控 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/12/04/Application-Tracking/" title="Application Tracking">Application Tracking</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-12-04T12:41:25.000Z" title="Created 2021-12-04 20:41:25">2021-12-04</time></span></div><div class="content">整理下目前业务已有的监控能力以及相关指标、维度。大部分开发关注的可能只是自身服务的质量，缺乏对整体链条监控的了解。业务的发展过程中，出现过太多非后端服务质量导致的异常，所以要求开发能对服务整体的监控能力有所了解。
+
+
+后台逻辑服务层后端逻辑服务，目前主要基于123+007平台。
+
+【下游】trpc主调
+
+指标：请求量、耗时、失败率（区分超时、异常）
+维度：（下游）服务-接口、ip、返回码
+
+
+【自身】trpc被调
+
+指标：请求量、耗时、失败率（区分超时、异常）
+维度：（本服务）服务名-接口、ip、返回码
+
+
+【自身】trpc属性监控
+
+指标：业务自定义指标，包括trpc框架自动上报性能指标，如goroutine数、node event loop lag等。
+维度：可按单机展开
+
+
+【自身】容器负载
+
+指标：cpu、内存、磁盘、带宽
+维度：可按单机展开
+
+
+
+总结
+
+优势：对下游监控完善，容器负载监控可以覆盖自身大部分异常
+不足：服务内部异常（如内部block导致出现服务毛刺等）依赖业务自身上报【自身异常也可以通过上游发现】
+
+业务接入层实现取决于业务团队能力，小团队一般直接用nginx ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/10/10/Reliable-Cron-across-the-Planet/" title="Reliable Cron across the Planet">Reliable Cron across the Planet</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-10-10T11:29:13.000Z" title="Created 2021-10-10 19:29:13">2021-10-10</time></span></div><div class="content">
+Written with StackEdit.
+
+Reliable Cron across the Planet…or How I stopped worrying and learned to love time Štěpán Davidovič, Kavita Guliani, Google
+原文: https://queue.acm.org/detail.cfm?id=2745840
+前段时间预研分布式任务调度系统的方案，了解到了一个比较靠谱的解决方案：dkron，看介绍其实现就是基于基于google的这篇whitepaper 《Reliable Cron across the Planet》。
+这篇文章也被收录到了书籍《SRE：google运维解密》一书中（第24章），于是将部分内容摘抄了一遍，补充了部分自己的理解，当做自己的读书笔记了。文章较长，部分个人认为不重要的内容就简单跳过了。
+本文主要介绍了google的cron调度服务的实现机制，重点对实现的难点部分做了详细介绍。详见下文。
+先对Cron系统的功能做了个简单的介绍。包括单机下crontab格式以及linux下的cr ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/10/04/libuv-source/" title="libuv-source">libuv-source</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-10-04T03:00:51.000Z" title="Created 2021-10-04 11:00:51">2021-10-04</time></span></div><div class="content">libuv源码简介习惯了思维图之类的简单整理之后，有一段时间没有认真写写东西了。前段时间为了研究下node的性能指标，特意复习了一下libuv的源码，但是一直懒得去整理，直到今天看到这段话后才决定整理一番：
+
+学习是一种行动反射，不是为了晓得些『知识』，要切己体察，代入自己要事上琢磨，落实行动，这就是知行合一。否则，读书也是一种玩物尚志。
+
+定期总结也是学习的一部分。
+
+
+简介 libuv是个异步服务的框架，整体实现及功能先看一下libuv官网的这张分层结构图。  
+
+底层根据操作系统类型，选择不同的多路复用实现。linux下基本就是epoll了。据说nodejs选择libuv而非libev作为底层实现，是因为libuv等windows的支持更为友好（IOCP）。具体没有对比详细对比过。
+uv__io_t：从底层看，上层大部分的操作都跟io有关，或者可以转换为io操作。如tcp&#x2F;udp的网络IO，tty的相应，signal的处理、pipe读写等。所以libuv封装了一层IO“基类”，工其他handler使用。
+Handler：TCP、UDP、Pipe等，定位类似libeven ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/12/26/Introduction-to-memberlist/" title="Introduction-to-memberlist">Introduction-to-memberlist</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-12-26T15:35:38.000Z" title="Created 2020-12-26 23:35:38">2020-12-26</time></span></div><div class="content">memberlist实现分析gossip简介Gossip protocol 也叫 Epidemic Protocol （流行病协议），实际上它还有很多别名，比如：“流言算法”、“疫情传播算法”等。这个协议的作用就像其名字表示的意思一样，非常容易理解，它的方式其实在我们日常生活中也很常见，比如电脑病毒的传播，森林大火，细胞扩散等等。
+Gossip的基本思想一个节点想要分享一些信息给网络中的其他的一些节点。于是，它周期性的随机选择一些节点，并把信息传递给这些节点。这些收到信息的节点接下来会做同样的事情，即把这些信息传递给其他一些随机选择的节点。一般而言，信息会周期性的传递给N个目标节点，而不只是一个。这个N被称为fan-out（扇出）。
+
+
+数据一致性问题的背景&amp;目标问题：
+
+如何在多网络中将多个节点实现并保持数据一致性。
+能够随着节点数量的增加而优雅地扩展。
+
+考量的因素：
+
+单节点信息变更后，更新传播到所有其他节点所需的时间
+传播单个更新时生成的网络流量
+
+机制在《Epidemic Algorithms for Replicated Database Maintenance》论 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2020/10/05/Vscode-Remote-Connect-failed/" title="Vscode Remote Connect failed">Vscode Remote Connect failed</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-10-05T02:23:52.000Z" title="Created 2020-10-05 10:23:52">2020-10-05</time></span></div><div class="content">Vscode Remote连接失败一台很久没有使用vscode remote操作过的机器，今天在调试个项目的时候发现之前配置怎么都连接不上了，一直timeout，也没有给出错误原因。花了些时间来定位，记录一下解决方法。
+
+
+状态vscode remote点击”Connect to Host”无响应，过一会报connect timeout
+调试方法
+确认相关配置是否正常。
+
+
+.ssh&#x2F;config中remote Host配置是否完整
+本机id_rsa.pub内容是否导入remote Host的authorized_keys文件中，否则无法免密登录成功
+
+
+正常情况下应该就可以了在shell中免密登录了。
+
+直接ssh Host发现也无法免密登录，于是登录远程主机后查看登录日志。
+
+
+sudo tail -f /var/log/secure
+
+发现错误提示：
+Authentication refused: bad ownership or modes for file &#x2F;data&#x2F;home&#x2F;XXX&#x2F;.ssh&#x2F;authorized ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BC%95%E6%93%8E/" style="font-size: 1.1em; color: #999">工作流引擎</a> <a href="/tags/Golang/" style="font-size: 1.1em; color: #999">Golang</a> <a href="/tags/COS/" style="font-size: 1.1em; color: #999">COS</a> <a href="/tags/Readingnotes/" style="font-size: 1.1em; color: #999">Readingnotes</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.2em; color: #999da3">分布式</a> <a href="/tags/%E7%A7%92%E6%9D%80/" style="font-size: 1.1em; color: #999">秒杀</a> <a href="/tags/redis/" style="font-size: 1.1em; color: #999">redis</a> <a href="/tags/Architecture/" style="font-size: 1.2em; color: #999da3">Architecture</a> <a href="/tags/libuv/" style="font-size: 1.1em; color: #999">libuv</a> <a href="/tags/Supabase/" style="font-size: 1.1em; color: #999">Supabase</a> <a href="/tags/Microservices/" style="font-size: 1.3em; color: #99a1ac">Microservices</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/gossip/" style="font-size: 1.1em; color: #999">gossip</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/%E4%BA%91%E5%87%BD%E6%95%B0/" style="font-size: 1.1em; color: #999">云函数</a> <a href="/tags/groupcache/" style="font-size: 1.1em; color: #999">groupcache</a> <a href="/tags/Outline/" style="font-size: 1.1em; color: #999">Outline</a> <a href="/tags/UUID/" style="font-size: 1.1em; color: #999">UUID</a> <a href="/tags/Governance/" style="font-size: 1.3em; color: #99a1ac">Governance</a> <a href="/tags/RWMutex/" style="font-size: 1.1em; color: #999">RWMutex</a> <a href="/tags/AUTH/" style="font-size: 1.1em; color: #999">AUTH</a> <a href="/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">远程开发</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 1.1em; color: #999">随笔</a> <a href="/tags/Notion/" style="font-size: 1.1em; color: #999">Notion</a> <a href="/tags/CMS/" style="font-size: 1.2em; color: #999da3">CMS</a> <a href="/tags/memos/" style="font-size: 1.1em; color: #999">memos</a> <a href="/tags/Authentication/" style="font-size: 1.1em; color: #999">Authentication</a> <a href="/tags/BaaS/" style="font-size: 1.4em; color: #99a5b6">BaaS</a> <a href="/tags/nginx/" style="font-size: 1.3em; color: #99a1ac">nginx</a> <a href="/tags/cron/" style="font-size: 1.1em; color: #999">cron</a> <a href="/tags/memberlist/" style="font-size: 1.1em; color: #999">memberlist</a> <a href="/tags/HTTPS/" style="font-size: 1.2em; color: #999da3">HTTPS</a> <a href="/tags/Vscode/" style="font-size: 1.1em; color: #999">Vscode</a> <a href="/tags/nocoDB/" style="font-size: 1.1em; color: #999">nocoDB</a> <a href="/tags/golang/" style="font-size: 1.5em; color: #99a9bf">golang</a> <a href="/tags/Puppeteer/" style="font-size: 1.1em; color: #999">Puppeteer</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="View More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">January 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">December 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">November 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">October 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/09/"><span class="card-archive-list-date">September 2023</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">March 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">January 2022</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">December 2021</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">39</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-01-06T14:36:20.876Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

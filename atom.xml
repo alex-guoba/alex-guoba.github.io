@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Utopian</title>
+  <icon>https://www.goroutine.cn/icon.png</icon>
+  
+  <link href="https://www.goroutine.cn/atom.xml" rel="self"/>
+  
+  <link href="https://www.goroutine.cn/"/>
+  <updated>2024-01-06T14:31:29.499Z</updated>
+  <id>https://www.goroutine.cn/</id>
+  
+  <author>
+    <name>Alex guo</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Introduct to NotionAPI</title>
+    <link href="https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/"/>
+    <id>https://www.goroutine.cn/2024/01/06/Introduct-to-NotionAPI/</id>
+    <published>2024-01-06T14:26:24.000Z</published>
+    <updated>2024-01-06T14:31:29.499Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;Notion-API-介绍&quot;&gt;&lt;a href=&quot;#Notion-API-介绍&quot; class=&quot;headerlink&quot; title=&quot;Notion API 介绍&quot;&gt;&lt;/a&gt;Notion API 介绍&lt;/h1&gt;&lt;p&gt;Notion的页面组织结构非常灵活，但是一直没有找到相关介绍，最近了解到一个使用Notion作为后台CMS的项目，浏览了一下源码和Notion API。通过API也能大致了解下官方开放的能力以及相关数据结构。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="BaaS" scheme="https://www.goroutine.cn/tags/BaaS/"/>
+    
+    <category term="Notion" scheme="https://www.goroutine.cn/tags/Notion/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Architecture of Supabase</title>
+    <link href="https://www.goroutine.cn/2023/12/28/Architecture-of-Supabase/"/>
+    <id>https://www.goroutine.cn/2023/12/28/Architecture-of-Supabase/</id>
+    <published>2023-12-28T15:05:38.000Z</published>
+    <updated>2023-12-28T15:31:53.094Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;supabase-整体架构分析&quot;&gt;&lt;a href=&quot;#supabase-整体架构分析&quot; class=&quot;headerlink&quot; title=&quot;supabase 整体架构分析&quot;&gt;&lt;/a&gt;supabase 整体架构分析&lt;/h1&gt;&lt;p&gt;Firebase是一家典型的BaaS公司，它可以帮助手机以及网页应用的开发者轻松构建App。通过Firebase的框架就可以简单地开发一个App，无需服务器以及基础设施，简单来说，它就是一整套的解决方案。&lt;br&gt;Supabase 是一个开源的 Firebase 替代方案。官方表示，其正在使用企业级开源工具构建 Firebase 的功能。Supabase 可以：&lt;br&gt;• 监听数据库的变化。&lt;br&gt;• 查询你的表，包括过滤、分页和深度嵌套关系（如GraphQL）。&lt;br&gt;• 创建、更新和删除行。&lt;br&gt;• 管理你的用户和他们的权限。&lt;br&gt;• 使用一个简单的用户界面与你的数据库进行交互&lt;/p&gt;
+&lt;p&gt;本文通过从本地部署方案大致分析其整体架构。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="BaaS" scheme="https://www.goroutine.cn/tags/BaaS/"/>
+    
+    <category term="Supabase" scheme="https://www.goroutine.cn/tags/Supabase/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduct-to-nocoDB</title>
+    <link href="https://www.goroutine.cn/2023/12/08/Introduct-to-nocoDB/"/>
+    <id>https://www.goroutine.cn/2023/12/08/Introduct-to-nocoDB/</id>
+    <published>2023-12-08T12:41:25.000Z</published>
+    <updated>2024-01-06T14:33:30.658Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;nocoDB-体验&quot;&gt;&lt;a href=&quot;#nocoDB-体验&quot; class=&quot;headerlink&quot; title=&quot;nocoDB 体验&quot;&gt;&lt;/a&gt;nocoDB 体验&lt;/h1&gt;&lt;p&gt;本地安装体验了一把&lt;a href=&quot;https://github.com/nocodb/nocodb&quot;&gt;nocoDB&lt;/a&gt;，总体感觉功能挺丰富。既适合作为headerless CMS使用，也适合作为数据展示、编辑终端，官网描述的主要特点：&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="BaaS" scheme="https://www.goroutine.cn/tags/BaaS/"/>
+    
+    <category term="CMS" scheme="https://www.goroutine.cn/tags/CMS/"/>
+    
+    <category term="nocoDB" scheme="https://www.goroutine.cn/tags/nocoDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Doploy outline without docker</title>
+    <link href="https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/"/>
+    <id>https://www.goroutine.cn/2023/12/06/Doploy-outline-without-docker/</id>
+    <published>2023-12-06T08:41:25.000Z</published>
+    <updated>2024-01-06T14:32:09.361Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;非Docker方式部署outline&quot;&gt;&lt;a href=&quot;#非Docker方式部署outline&quot; class=&quot;headerlink&quot; title=&quot;非Docker方式部署outline&quot;&gt;&lt;/a&gt;非Docker方式部署outline&lt;/h1&gt;&lt;p&gt;预研了几个可托管部署的团队wiki，看了一圈还是觉得outline比较合适。但是不太希望以docker的方式来部署，所以折腾下本地非docker方式的部署方案。记录如下。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Outline" scheme="https://www.goroutine.cn/tags/Outline/"/>
+    
+    <category term="CMS" scheme="https://www.goroutine.cn/tags/CMS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Archive Service Governance</title>
+    <link href="https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/"/>
+    <id>https://www.goroutine.cn/2023/11/13/Archive-Service-Governance/</id>
+    <published>2023-11-13T10:54:27.000Z</published>
+    <updated>2023-11-13T11:06:50.100Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;业务服务治理&quot;&gt;&lt;a href=&quot;#业务服务治理&quot; class=&quot;headerlink&quot; title=&quot;业务服务治理&quot;&gt;&lt;/a&gt;业务服务治理&lt;/h1&gt;&lt;h2 id=&quot;背景挑战&quot;&gt;&lt;a href=&quot;#背景挑战&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Governance" scheme="https://www.goroutine.cn/tags/Governance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sentinel Code Analyze</title>
+    <link href="https://www.goroutine.cn/2023/11/10/Sentinel-Code-Analyze/"/>
+    <id>https://www.goroutine.cn/2023/11/10/Sentinel-Code-Analyze/</id>
+    <published>2023-11-10T07:18:05.000Z</published>
+    <updated>2023-11-13T11:10:03.094Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;sentinel-go&quot;&gt;&lt;a href=&quot;#sentinel-go&quot; class=&quot;headerlink&quot; title=&quot;sentinel-go&quot;&gt;&lt;/a&gt;sentinel-go&lt;/h1&gt;&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;之前团队在服务治理项目过程中引入了司内稳定性相关的组件，其中也包含了流量控制、熔断降级等稳定性相关的能力，但我一直也没有时间来深挖各模块的实现细节。趁最近有空，看了下阿里开源版本的稳定性组件sentinel实现，整体感觉代码结构清晰，在并发控制、性能优化细节上也做了不少工作，于是花时间仔细阅读了下部分代码，并输出笔记一篇。&lt;/p&gt;
+&lt;p&gt;另外写文章之前发现sentinel的官方文档非常细致，包括功能使用以及原理介绍，于是直接copy了部分，并根据最新代码做了修正。最后补充了流量控制的代码分析，其他模块原理也类似，时间有限就没有逐一阅读了。&lt;/p&gt;
+&lt;p&gt;Sentinel介绍：Sentinel 是面向分布式、多语言异构化服务架构的流量治理组件，主要以流量为切入点，从流量路由、流量控制、流量整形、熔断降级、系统自适应过载保护、热点流量防护等多个维度来帮助开发者保障微服务的稳定性。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Governance" scheme="https://www.goroutine.cn/tags/Governance/"/>
+    
+    <category term="Microservices" scheme="https://www.goroutine.cn/tags/Microservices/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduct to dexide / dex</title>
+    <link href="https://www.goroutine.cn/2023/10/24/Introduct-to-dexide-dex/"/>
+    <id>https://www.goroutine.cn/2023/10/24/Introduct-to-dexide-dex/</id>
+    <published>2023-10-24T09:36:21.000Z</published>
+    <updated>2024-01-06T14:33:15.684Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;dexidp-x2F-dex-部署及使用&quot;&gt;&lt;a href=&quot;#dexidp-x2F-dex-部署及使用&quot; class=&quot;headerlink&quot; title=&quot;dexidp &amp;#x2F; dex 部署及使用&quot;&gt;&lt;/a&gt;dexidp &amp;#x2F; dex 部署及使用&lt;/h1&gt;&lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;阅读pocketbase源码时其授权流程比较感兴趣，但pocketbase代码量太大了，授权部分并不是一个独立的模块。之前也看了&lt;a href=&quot;https://github.com/ory/kratos&quot;&gt;kratos&lt;/a&gt;文档，感觉太过庞大，形态一套自己的生态体系。今天刚好看到了&lt;a href=&quot;https://github.com/dexidp/dex&quot;&gt;dex&lt;/a&gt;的介绍，预览了一下用法和代码仓库，感觉复杂度居中，而且能力不差。所以研究了一下其用法。&lt;/p&gt;
+&lt;p&gt;功能：降低app开发者实现Identifier provider对接的成本，可以通过Dex来快速实现各类provider的对接。 &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当用户通过dex进行登陆时，用户的身份信息通常存放在第三方用户管理系统中，例如LDAP。Dex作为客户端和第三方用户管理系统之间的垫片，其价值是，客户端仅仅需要理解OIDC，后端用户管理系统可以随时切换。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="BaaS" scheme="https://www.goroutine.cn/tags/BaaS/"/>
+    
+    <category term="AUTH" scheme="https://www.goroutine.cn/tags/AUTH/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduct to pocketbase</title>
+    <link href="https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/"/>
+    <id>https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/</id>
+    <published>2023-10-23T11:43:51.000Z</published>
+    <updated>2024-01-06T14:31:39.700Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;pocketbase-x2F-pocketbase-源码分析&quot;&gt;&lt;a href=&quot;#pocketbase-x2F-pocketbase-源码分析&quot; class=&quot;headerlink&quot; title=&quot;pocketbase &amp;#x2F; pocketbase 源码分析&quot;&gt;&lt;/a&gt;pocketbase &amp;#x2F; pocketbase 源码分析&lt;/h1&gt;&lt;h2 id=&quot;功能介绍&quot;&gt;&lt;a href=&quot;#功能介绍&quot; class=&quot;headerlink&quot; title=&quot;功能介绍&quot;&gt;&lt;/a&gt;功能介绍&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/pocketbase/pocketbase&quot;&gt;pocketbase&lt;/a&gt; 是一个开源的开箱即用的后端服务（库），使用它可以快速搭建一个典型的后台服务，支持简单的CRUD操作，同时也支持权限控制、关联查询、插件化等特性，包括：&lt;/p&gt;
+&lt;h3 id=&quot;CRUD基础能力&quot;&gt;&lt;a href=&quot;#CRUD基础能力&quot; class=&quot;headerlink&quot; title=&quot;CRUD基础能力&quot;&gt;&lt;/a&gt;CRUD基础能力&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;大量后台服务的要求就是基于DB的CRUD操作，比如创建一个自定义字段的表格，以及对应的增删改啥。pocketbase提供了一个管理台页面支持快速创建数据表（collection），指定字段名称及字段类型等。后台使用sqlite作为数据engine。&lt;/li&gt;
+&lt;li&gt;业务方可以通过&lt;a href=&quot;https://pocketbase.io/docs/api-records/&quot;&gt;RESTFUL&lt;/a&gt;接口（可以理解为普通用户）实现基础的CRUD操作，当然也可以直接在管理台配置（admin用户）。&lt;/li&gt;
+&lt;li&gt;权限校验：创建、更新、删除、查询等可以灵活配置规则，比如要求删除记录的用户必须与记录中的用户id保持一致、查询数据（ListRule）时当前用户必须已登录或者属于某个集合等。此功能可以实现比较精细化的权限控制，保护数据安全。&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    
+    <category term="BaaS" scheme="https://www.goroutine.cn/tags/BaaS/"/>
+    
+    <category term="golang" scheme="https://www.goroutine.cn/tags/golang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>memos code analyze</title>
+    <link href="https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/"/>
+    <id>https://www.goroutine.cn/2023/10/10/Memos-Code-Analyze/</id>
+    <published>2023-10-10T14:14:53.344Z</published>
+    <updated>2023-10-10T14:14:53.344Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/usememos/memos&quot;&gt;Memos&lt;/a&gt;是一个开源的支持自托管部署的知识库，类似flomo。作为一个go+react实现的产品，功能齐全，且活跃度一直不错，所以找了个时间阅读了一下代码。&lt;br&gt;本次仅记录后端及DB设计部分，前端部分后续有时间了再继续。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="golang" scheme="https://www.goroutine.cn/tags/golang/"/>
+    
+    <category term="memos" scheme="https://www.goroutine.cn/tags/memos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduct to temporalio</title>
+    <link href="https://www.goroutine.cn/2023/09/18/Introduct-to-temporalio/"/>
+    <id>https://www.goroutine.cn/2023/09/18/Introduct-to-temporalio/</id>
+    <published>2023-09-18T15:42:06.533Z</published>
+    <updated>2023-09-18T15:42:06.533Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;Temporalio-简介&quot;&gt;&lt;a href=&quot;#Temporalio-简介&quot; class=&quot;headerlink&quot; title=&quot;Temporalio 简介&quot;&gt;&lt;/a&gt;Temporalio 简介&lt;/h1&gt;&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;引用wiki来介绍工作流引擎的定义：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A &lt;strong&gt;workflow engine&lt;/strong&gt; manages and monitors the state of &lt;strong&gt;activities&lt;/strong&gt; in a workflow, such as the processing and approval of a loan application form, and determines which new activity to transition to according to defined processes (workflows). The actions may be anything from saving an application form in a document management system to sending a reminder e-mail to users or escalating overdue items to management. A workflow engine facilitates &lt;strong&gt;the flow of information, tasks, and events&lt;/strong&gt;. Workflow engines may also be referred to as Workflow Orchestration Engines.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/temporalio/temporal&quot;&gt;Temporal&lt;/a&gt;是一个使用golang开发分布式的工作流引擎。Temporal 是原 Cadence 联合创始人离开 Cadence 后基于其 Fork的新分支，从某种程度上来讲，Temporal 可能是 Cadence 的一个更商业化的版本，毕竟后者原先只是 Uber 内部的一个组件。在2022年初Temporal已经是估值&lt;strong&gt;15亿美元&lt;/strong&gt;的独角兽企业。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="工作流引擎" scheme="https://www.goroutine.cn/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BC%95%E6%93%8E/"/>
+    
+    <category term="Golang" scheme="https://www.goroutine.cn/tags/Golang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduct to go-clean-template</title>
+    <link href="https://www.goroutine.cn/2023/09/18/Introduct-to-go-clean-template/"/>
+    <id>https://www.goroutine.cn/2023/09/18/Introduct-to-go-clean-template/</id>
+    <published>2023-09-18T15:35:08.677Z</published>
+    <updated>2023-09-18T15:35:08.677Z</updated>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;go-clean-template是一个golang的微服务模板，按照Robert Martin《代码整洁之道》的各原则来实现。业务方可以使用该模板来扩展构建自己的微服务。&lt;/p&gt;
+&lt;p&gt;提供的能力项包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;按照DIP、ISP等原则来组织框架层、业务逻辑层以及数据层等代码实现。&lt;/li&gt;
+&lt;li&gt;配置文件解析，包括端口号、日志、PG等RabbitMQ配置。&lt;/li&gt;
+&lt;li&gt;集成gin框架，提供了几个HTTP接口demo实现。&lt;/li&gt;
+&lt;li&gt;集成了&lt;a href=&quot;https://github.com/streadway/amqp&quot;&gt;RabbitMQ RPC&lt;/a&gt;，提供了1个接口的demo实现。&lt;/li&gt;
+&lt;li&gt;集成了日志、Swagger、K8s probe、Prometheus上报等能力。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本项目主要是作为模板来演示如何构建可扩展、易于维护的微服务，因此在实现上比较简单，业务方可以根据实际需求进一步改造扩充。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="golang" scheme="https://www.goroutine.cn/tags/golang/"/>
+    
+    <category term="Microservices" scheme="https://www.goroutine.cn/tags/Microservices/"/>
+    
+    <category term="Architecture" scheme="https://www.goroutine.cn/tags/Architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用腾讯云cos+cdn搭建图片服务器</title>
+    <link href="https://www.goroutine.cn/2022/03/05/Tencent-COS-Image-Service/"/>
+    <id>https://www.goroutine.cn/2022/03/05/Tencent-COS-Image-Service/</id>
+    <published>2022-03-05T13:20:28.000Z</published>
+    <updated>2022-03-06T09:22:54.190Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;之前在网上找了不少存储图片的地儿，貌似都不是很靠谱。也研究了一下腾讯云，似乎也没有提供直接可用的图片存储服务。看网上的经验有人使用腾讯云cos+cdn直接搭建了一个个人的图片存储服务，感觉流程也挺简单，于是研究后操作了一番，发现也有不少弯路，于是记录一番。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="COS" scheme="https://www.goroutine.cn/tags/COS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>秒杀系统核心设计</title>
+    <link href="https://www.goroutine.cn/2022/03/02/seckill-md/"/>
+    <id>https://www.goroutine.cn/2022/03/02/seckill-md/</id>
+    <published>2022-03-02T15:12:44.000Z</published>
+    <updated>2023-09-18T15:33:26.790Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;最近阅读量大量关于秒杀系统的介绍文章，包括一些视频讲解，大部分文章都太冗长，没有触及核心设计点，本文主要总结下后台架构的核心设计要点，不讨论架构优化中的常规页面CDN化、隔离部署、数据sharding、缓存优化等常规手段。&lt;/p&gt;
+&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;秒杀系统场景举例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抢购：如双十一，下单量高峰能达到50w+ qps，注意是下单成功，同时参与抢购的人的那就更多一个数量级了。&lt;/li&gt;
+&lt;li&gt;红包：直播间红包、微信红包，本质上都是类似的场景，微信红包的处理方案是提前对红包进行个数拆分，会简化扣除库存逻辑，但是本质上跟抢购类似。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此类系统有几个典型特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;qps高，tps低：即读多写少，大量的请求（包括非正常请求：如频繁重试、黑产请求等）但是只有少量能成交。&lt;/li&gt;
+&lt;li&gt;库存需要精确：涉及金额，不允许超卖&lt;/li&gt;
+&lt;li&gt;固定时间：活动时间通常通常很短&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其中超卖问题为核心需求点，基于此衍生出如何抗住并发量、用户体验优化等解决方案。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Architecture" scheme="https://www.goroutine.cn/tags/Architecture/"/>
+    
+    <category term="秒杀" scheme="https://www.goroutine.cn/tags/%E7%A7%92%E6%9D%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Microservices in Action</title>
+    <link href="https://www.goroutine.cn/2022/01/10/Microservices-in-Action/"/>
+    <id>https://www.goroutine.cn/2022/01/10/Microservices-in-Action/</id>
+    <published>2022-01-10T12:24:33.000Z</published>
+    <updated>2022-02-09T03:45:52.229Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;《微服务实战》读书笔记&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Microservices" scheme="https://www.goroutine.cn/tags/Microservices/"/>
+    
+    <category term="Readingnotes" scheme="https://www.goroutine.cn/tags/Readingnotes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Open Tracing</title>
+    <link href="https://www.goroutine.cn/2022/01/07/Open-Tracing/"/>
+    <id>https://www.goroutine.cn/2022/01/07/Open-Tracing/</id>
+    <published>2022-01-07T09:45:03.000Z</published>
+    <updated>2023-11-10T07:20:30.247Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;最近在阅读微服务相关书籍时，提到了微服务相关的监控措施，其中分布式追踪就属于其中不可或缺的一部分，恰好之前也有计划在团队内引入，所以就花了两天时间稍微深入了解了一下相关概念和实现。动手实验了一遍jaeger提供All-In-One+HotROD示例，也大致了解了其基本原理和实现思路。时间关系就没有去学习jaeger之类的系统源码了，深入了解其存储方案之类的细节了，感觉必要性不大。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Governance" scheme="https://www.goroutine.cn/tags/Governance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Application Tracking</title>
+    <link href="https://www.goroutine.cn/2021/12/04/Application-Tracking/"/>
+    <id>https://www.goroutine.cn/2021/12/04/Application-Tracking/</id>
+    <published>2021-12-04T12:41:25.000Z</published>
+    <updated>2023-11-10T07:21:15.470Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;整理下目前业务已有的监控能力以及相关指标、维度。大部分开发关注的可能只是自身服务的质量，缺乏对整体链条监控的了解。业务的发展过程中，出现过太多非后端服务质量导致的异常，所以要求开发能对服务整体的监控能力有所了解。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Governance" scheme="https://www.goroutine.cn/tags/Governance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Reliable Cron across the Planet</title>
+    <link href="https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/"/>
+    <id>https://www.goroutine.cn/2021/10/10/Reliable-Cron-across-the-Planet/</id>
+    <published>2021-10-10T11:29:13.000Z</published>
+    <updated>2022-02-09T03:52:36.333Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Written with &lt;a href=&quot;https://stackedit.io/&quot;&gt;StackEdit&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;Reliable-Cron-across-the-Planet…or-How-I-stopped-worrying-and-learned-to-love-time&quot;&gt;&lt;a href=&quot;#Reliable-Cron-across-the-Planet…or-How-I-stopped-worrying-and-learned-to-love-time&quot; class=&quot;headerlink&quot; title=&quot;Reliable Cron across the Planet…or How I stopped worrying and learned to love time&quot;&gt;&lt;/a&gt;Reliable Cron across the Planet…or How I stopped worrying and learned to love time&lt;/h2&gt;&lt;p&gt; Štěpán Davidovič, Kavita Guliani, Google&lt;/p&gt;
+&lt;p&gt;原文: &lt;a href=&quot;https://queue.acm.org/detail.cfm?id=2745840&quot;&gt;https://queue.acm.org/detail.cfm?id=2745840&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;前段时间预研分布式任务调度系统的方案，了解到了一个比较靠谱的解决方案：&lt;a href=&quot;https://dkron.io/&quot;&gt;dkron&lt;/a&gt;，看介绍其实现就是基于基于google的这篇whitepaper &lt;a href=&quot;https://queue.acm.org/detail.cfm?id=2745840&quot;&gt;《Reliable Cron across the Planet》&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;这篇文章也被收录到了书籍《SRE：google运维解密》一书中（第24章），于是将部分内容摘抄了一遍，补充了部分自己的理解，当做自己的读书笔记了。文章较长，部分个人认为不重要的内容就简单跳过了。&lt;/p&gt;
+&lt;p&gt;本文主要介绍了google的cron调度服务的实现机制，重点对实现的难点部分做了详细介绍。详见下文。&lt;/p&gt;
+&lt;p&gt;先对Cron系统的功能做了个简单的介绍。包括单机下crontab格式以及linux下的crond守护进程。此处略。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="分布式" scheme="https://www.goroutine.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+    <category term="cron" scheme="https://www.goroutine.cn/tags/cron/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>libuv-source</title>
+    <link href="https://www.goroutine.cn/2021/10/04/libuv-source/"/>
+    <id>https://www.goroutine.cn/2021/10/04/libuv-source/</id>
+    <published>2021-10-04T03:00:51.000Z</published>
+    <updated>2022-02-09T12:11:33.562Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;libuv源码简介&quot;&gt;&lt;a href=&quot;#libuv源码简介&quot; class=&quot;headerlink&quot; title=&quot;libuv源码简介&quot;&gt;&lt;/a&gt;libuv源码简介&lt;/h1&gt;&lt;p&gt;习惯了思维图之类的简单整理之后，有一段时间没有认真写写东西了。前段时间为了研究下node的性能指标，特意复习了一下libuv的源码，但是一直懒得去整理，直到今天看到这段话后才决定整理一番：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;学习是一种行动反射，不是为了晓得些『知识』，要切己体察，代入自己要事上琢磨，落实行动，这就是知行合一。否则，读书也是一种玩物尚志。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;定期总结也是学习的一部分。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="libuv" scheme="https://www.goroutine.cn/tags/libuv/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Introduction-to-memberlist</title>
+    <link href="https://www.goroutine.cn/2020/12/26/Introduction-to-memberlist/"/>
+    <id>https://www.goroutine.cn/2020/12/26/Introduction-to-memberlist/</id>
+    <published>2020-12-26T15:35:38.000Z</published>
+    <updated>2023-11-10T07:20:46.481Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;memberlist实现分析&quot;&gt;&lt;a href=&quot;#memberlist实现分析&quot; class=&quot;headerlink&quot; title=&quot;memberlist实现分析&quot;&gt;&lt;/a&gt;memberlist实现分析&lt;/h1&gt;&lt;h2 id=&quot;gossip简介&quot;&gt;&lt;a href=&quot;#gossip简介&quot; class=&quot;headerlink&quot; title=&quot;gossip简介&quot;&gt;&lt;/a&gt;gossip简介&lt;/h2&gt;&lt;p&gt;Gossip protocol 也叫 Epidemic Protocol （流行病协议），实际上它还有很多别名，比如：“流言算法”、“疫情传播算法”等。这个协议的作用就像其名字表示的意思一样，非常容易理解，它的方式其实在我们日常生活中也很常见，比如电脑病毒的传播，森林大火，细胞扩散等等。&lt;/p&gt;
+&lt;p&gt;Gossip的基本思想一个节点想要分享一些信息给网络中的其他的一些节点。于是，它&lt;strong&gt;周期性&lt;/strong&gt;的&lt;strong&gt;随机&lt;/strong&gt;选择一些节点，并把信息传递给这些节点。这些收到信息的节点接下来会做同样的事情，即把这些信息传递给其他一些随机选择的节点。一般而言，信息会周期性的传递给N个目标节点，而不只是一个。这个N被称为&lt;strong&gt;fan-out&lt;/strong&gt;（扇出）。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="memberlist" scheme="https://www.goroutine.cn/tags/memberlist/"/>
+    
+    <category term="gossip" scheme="https://www.goroutine.cn/tags/gossip/"/>
+    
+    <category term="分布式" scheme="https://www.goroutine.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vscode Remote Connect failed</title>
+    <link href="https://www.goroutine.cn/2020/10/05/Vscode-Remote-Connect-failed/"/>
+    <id>https://www.goroutine.cn/2020/10/05/Vscode-Remote-Connect-failed/</id>
+    <published>2020-10-05T02:23:52.000Z</published>
+    <updated>2023-09-18T15:44:51.696Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;Vscode-Remote连接失败&quot;&gt;&lt;a href=&quot;#Vscode-Remote连接失败&quot; class=&quot;headerlink&quot; title=&quot;Vscode Remote连接失败&quot;&gt;&lt;/a&gt;Vscode Remote连接失败&lt;/h1&gt;&lt;p&gt;一台很久没有使用vscode remote操作过的机器，今天在调试个项目的时候发现之前配置怎么都连接不上了，一直timeout，也没有给出错误原因。花了些时间来定位，记录一下解决方法。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Vscode" scheme="https://www.goroutine.cn/tags/Vscode/"/>
+    
+    <category term="远程开发" scheme="https://www.goroutine.cn/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
+  
+</feed>

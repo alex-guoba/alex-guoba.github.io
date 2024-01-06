@@ -1,0 +1,720 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Introduct to pocketbase | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="pocketbase &#x2F; pocketbase 源码分析功能介绍pocketbase 是一个开源的开箱即用的后端服务（库），使用它可以快速搭建一个典型的后台服务，支持简单的CRUD操作，同时也支持权限控制、关联查询、插件化等特性，包括： CRUD基础能力 大量后台服务的要求就是基于DB的CRUD操作，比如创建一个自定义字段的表格，以及对应的增删改啥。pocketbase提供了一个管理台页">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduct to pocketbase">
+<meta property="og:url" content="https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="pocketbase &#x2F; pocketbase 源码分析功能介绍pocketbase 是一个开源的开箱即用的后端服务（库），使用它可以快速搭建一个典型的后台服务，支持简单的CRUD操作，同时也支持权限控制、关联查询、插件化等特性，包括： CRUD基础能力 大量后台服务的要求就是基于DB的CRUD操作，比如创建一个自定义字段的表格，以及对应的增删改啥。pocketbase提供了一个管理台页">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2023-10-23T11:43:51.000Z">
+<meta property="article:modified_time" content="2024-01-06T14:31:39.700Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="BaaS">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Introduct to pocketbase',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-06 22:31:39'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Introduct to pocketbase</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-10-23T11:43:51.000Z" title="Created 2023-10-23 19:43:51">2023-10-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-06T14:31:39.700Z" title="Updated 2024-01-06 22:31:39">2024-01-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Introduct to pocketbase"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="pocketbase-x2F-pocketbase-源码分析"><a href="#pocketbase-x2F-pocketbase-源码分析" class="headerlink" title="pocketbase &#x2F; pocketbase 源码分析"></a>pocketbase &#x2F; pocketbase 源码分析</h1><h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p><a target="_blank" rel="noopener" href="https://github.com/pocketbase/pocketbase">pocketbase</a> 是一个开源的开箱即用的后端服务（库），使用它可以快速搭建一个典型的后台服务，支持简单的CRUD操作，同时也支持权限控制、关联查询、插件化等特性，包括：</p>
+<h3 id="CRUD基础能力"><a href="#CRUD基础能力" class="headerlink" title="CRUD基础能力"></a>CRUD基础能力</h3><ul>
+<li>大量后台服务的要求就是基于DB的CRUD操作，比如创建一个自定义字段的表格，以及对应的增删改啥。pocketbase提供了一个管理台页面支持快速创建数据表（collection），指定字段名称及字段类型等。后台使用sqlite作为数据engine。</li>
+<li>业务方可以通过<a target="_blank" rel="noopener" href="https://pocketbase.io/docs/api-records/">RESTFUL</a>接口（可以理解为普通用户）实现基础的CRUD操作，当然也可以直接在管理台配置（admin用户）。</li>
+<li>权限校验：创建、更新、删除、查询等可以灵活配置规则，比如要求删除记录的用户必须与记录中的用户id保持一致、查询数据（ListRule）时当前用户必须已登录或者属于某个集合等。此功能可以实现比较精细化的权限控制，保护数据安全。</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h3><ul>
+<li>除数据表外，还支持用户表的创建。具有同一批用户权限的用户可以存储在同一个用户表中，同一个表中的用户具有类似的权限以及认证方式。</li>
+<li>支持通过名称&#x2F;mail+密码方式认证：用于获取api访问的token。需要admin用户先配置好用户信息。</li>
+<li>支持oauth方式认证：提供了各种auth-providers，业务方可以基于pocketbase快速封装实现第三方授权。注意pocketbase没有提供统一的client_id、client_secret等，需要业务方自行申请。</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>提供了十一类<a target="_blank" rel="noopener" href="https://pocketbase.io/docs/go-event-hooks/">hook</a>，供业务方灵活干预提供了入口。比如对auth、CRUD操作，在实际执行前后都可以针对结果进行干预。</li>
+<li>支持数据备份&amp;恢复</li>
+<li>支持日志持久化</li>
+<li>web管理台等等</li>
+</ul>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="migrate命令"><a href="#migrate命令" class="headerlink" title="migrate命令"></a>migrate命令</h3><pre><code>PocketBase自带内置数据库和数据迁移工具，使您能够版本控制数据库结构，以编程方式创建集合，初始化默认设置以及/或运行任何只需要执行一次的操作。
+</code></pre>
+<h3 id="bootstrap"><a href="#bootstrap" class="headerlink" title="bootstrap"></a>bootstrap</h3><p>引导阶段，bootstrap完成之后才会进入subcommand的逻辑，比如web server启动。</p>
+<ul>
+<li><strong>执行hook</strong> ：onBeforeBootstrap *hook.Hook[*BootstrapEvent]</li>
+<li>引导操作执行，包括db、日志db连接初始化、数据目录创建等。<ul>
+<li>DB相关的触发器，在createDaoWithHooks中初始化，执行DB相关操作时执行</li>
+<li>存在两个db链接，一个用于并发，一个用于非并发</li>
+<li>日志与数据使用不同的数据，也会占用两个链接。</li>
+</ul>
+</li>
+<li><strong>执行hook</strong> ：onAfterBootstrap  *hook.Hook[*BootstrapEvent]</li>
+</ul>
+<h3 id="api-server启动"><a href="#api-server启动" class="headerlink" title="api server启动"></a>api server启动</h3><ul>
+<li>migration操作：包括数据、日志表创建、写入初始记录</li>
+<li>加载app setting：之前的配置会在 <code>_params</code> 中存储一份，加载合并当前默认配置（不直接使用db配置是基于可能有新增配置考虑）。setting中的内容主要包括两类：<ul>
+<li>meta配置：包括<ul>
+<li>Application（name、url）</li>
+<li>Mail settings（邮箱地址、邮件模板）</li>
+<li>Files storage（S3或本地文件）</li>
+<li>备份配置（s3配置、调度周期等），数据备份都考虑到功能里了，不得不说功能很齐全。</li>
+</ul>
+</li>
+<li>鉴权配置：<ul>
+<li>AuthProvider：OAuth2相关的providers配置，各类第三方配置略有差异</li>
+<li>Token options：各类token的有效时长</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>InitApi：<strong>http server初始化，创建<a target="_blank" rel="noopener" href="https://github.com/labstack/echo">echo server</a>实例，注册system、app路由以及中间件</strong><ul>
+<li>替换了echo的解析解析器JSONSerializer，使用<a target="_blank" rel="noopener" href="https://github.com/goccy/go-json">go-json</a>做了一层封装。应该是嫌默认的json效率问题，感觉过度设计了。系统瓶颈应该不在echo server的json解析吧。</li>
+<li>路由基础配置：定制url解析策略等</li>
+<li>加载Pre中间件：LoadAuthContext，<strong>JWT鉴权逻辑处理</strong><ul>
+<li>解析header中的Authorization，判断用户身份</li>
+<li>admin：校验token是否过期，根据id查找admin对应记录。有效则写入context供后续API使用。key：admin， value：models.Admin记录</li>
+<li><a target="_blank" rel="noopener" href="https://pocketbase.io/docs/go-records/#fetch-auth-records">authRecord</a>：对auth collection类型的表的鉴权方式。有效则写入context后后续API使用，key：authRecord，value：models.Record(collectionid对应的auth表)记录。<strong>根据collectionid、recordid查找到的对应auth表中的记录</strong>。</li>
+</ul>
+</li>
+<li>加载中间件：middleware中的Recover、Secure，处理异常、安全类问题。</li>
+<li>自定义异常处理函数echo.HTTPErrorHandler<ul>
+<li><strong>执行hook</strong> ：onBeforeApiError  *hook.Hook[*ApiErrorEvent]。可以指定错误返回格式及内容。</li>
+<li>返回标准错误格式：code、apiError。如果在之前的hook中已经返回过了则跳过。</li>
+<li><strong>执行hook</strong> ：OnAfterApiError() *hook.Hook[*ApiErrorEvent]。可用于记录错误日志等。</li>
+</ul>
+</li>
+<li>添加静态资源UI路由：ui&#x2F;dist 目录</li>
+<li>API路由分组，统一增加RequestInfo处理？</li>
+<li>API下增加子分组路由，包括settings、admins、collections、“&#x2F;collections&#x2F;:collection”、auth相关、files、realtime、logs、health、backups。分析API功能时详细介绍</li>
+</ul>
+</li>
+<li>启用cors中间件</li>
+<li>域名处理，包括证书解析（如果有）</li>
+<li><strong>执行hook</strong> ：onBeforeServe     *hook.Hook[*ServeEvent]</li>
+<li>注册hook：注册http.shutdown到onTerminate，退出时http需要gracefully shutdown。</li>
+<li>调用httpserver.ListenAndServe()，分别启动http和https server（如果有）。</li>
+</ul>
+<h3 id="功能API"><a href="#功能API" class="headerlink" title="功能API"></a>功能API</h3><h4 id="settings-group："><a href="#settings-group：" class="headerlink" title="/settings group："></a><a target="_blank" rel="noopener" href="https://pocketbase.io/docs/api-records/"><code>/settings</code></a> group：</h4><ul>
+<li>group中间件：ActivityLogger（记录日志表 <code>requests</code> ）、RequireAdminAuth（检查context是否存在鉴权key——admin）</li>
+<li><strong>GET(“”, api.list)</strong> ：将setting中配置<strong>脱敏</strong>后给出（仅页面展示使用），并<strong>执行hook</strong> ：OnSettingsListRequest</li>
+<li><strong>PATCH(“”, api.set)</strong> ：设置setting并更新到DB <code>_params</code> 持久化。执行 <strong>update相关的hooks</strong> ：OnSettingsBeforeUpdateRequest、OnSettingsAfterUpdateRequest</li>
+<li><strong>POST(“&#x2F;test&#x2F;s3”, api.testS3)</strong> ：验证setting中s3相关配置（file storage、backups）可用性。</li>
+<li><strong>POST(“&#x2F;test&#x2F;email”, api.testEmail)</strong> ：验证setting中邮箱可用性。并指向相关hooks</li>
+<li><strong>POST(“&#x2F;apple&#x2F;generate-client-secret”, api.generateAppleClientSecret)</strong> ：验证apple授权相关参数可用性（clientId、teamId、keyId、privateKey、duration）</li>
+</ul>
+<h4 id="admins-group"><a href="#admins-group" class="headerlink" title="/admins group"></a><code>/admins</code> group</h4><ul>
+<li>group中间件：ActivityLogger（记录日志表 <code>requests</code> ），只有部分接口需要Admin鉴权（JWT token）</li>
+<li><strong>POST(“&#x2F;auth-with-password”, api.authWithPassword)</strong> ：管理员登录。检查 <code>_admins</code> 是否存在匹配的记录，并执行相关hooks：OnAdminXXXAuthWithPasswordRequest。<ul>
+<li>返回：admin JWT Token、脱敏admin身份信息</li>
+</ul>
+</li>
+<li><strong>POST(“&#x2F;request-password-reset”, api.requestPasswordReset)</strong> ：请求admin密码重置。发送相关邮件给到admin用户确认。并执行相关hooks：OnAdminXXXRequestPasswordResetRequest<ul>
+<li>安全措施：此处无token鉴权，但是会有发送频控，避免恶意请求影响；url中带有token信息，避免伪造</li>
+<li>URL组成：host + <code>/_/#/confirm-password-reset/</code> + JWT token，token中包含 id、type、email以以及生成token信息（setting.AdminPasswordResetToken）</li>
+<li>更新 lastResetSentAt ，目的是？</li>
+<li>发送邮件使用的系统工具sendmail</li>
+</ul>
+</li>
+<li><strong>POST(“&#x2F;confirm-password-reset”, api.confirmPasswordReset)</strong> ：对应上面的改密执行，应该是用户收到页面后打开页面、输入新密码会发起调用。</li>
+<li><strong>POST(“&#x2F;auth-refresh”, api.authRefresh, <em>RequireAdminAuth</em>())</strong> ：admin JWT token票据刷新，验证老票据返回新票据跟登录返回结构一致。</li>
+<li><strong>GET(“”, api.list, <em>RequireAdminAuth</em>())</strong> ：拉取列表</li>
+<li><strong>POST(“”, api.create, RequireAdminAuthOnlyIfAny(app))</strong> ：创建admin账号。首次创建不需要admin token</li>
+<li><strong>GET(“&#x2F;:id”, api.view, <em>RequireAdminAuth</em>())</strong> ：根据id查询admin model信息</li>
+<li><strong>PATCH(“&#x2F;:id”, api.update, <em>RequireAdminAuth</em>())</strong> ：UI改密码请求</li>
+<li><strong>DELETE(“&#x2F;:id”, api.delete, <em>RequireAdminAuth</em>())</strong> ：删除admin，只有一个admin账号时不允许删除</li>
+</ul>
+<h4 id="collections-group"><a href="#collections-group" class="headerlink" title="/collections group"></a><code>/collections</code> group</h4><ul>
+<li>group中间件：ActivityLogger（记录日志表 <code>requests</code> ）、RequireAdminAuth（检查context是否存在鉴权key——admin）</li>
+<li><strong>GET(“”, api.list)</strong> ：根据查询条件筛选<code>_collections</code> 表，返回对应记录。仅限于基础字段：”id”, “created”, “updated”, “name”, “system”, “type”</li>
+<li><strong>POST(“”, api.create)</strong> ：写入 <code>_collections</code> 表，同时创建对应的<strong>collection记录表</strong>以及索引。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建blog collection对应的sql操作：</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `_collections` (`createRule`, `created`, `deleteRule`, `id`, `indexes`, `listRule`,</span><br><span class="line">    `name`, `options`, `schema`, `<span class="keyword">system</span>`, `type`, `updateRule`, `updated`, `viewRule`) <span class="keyword">VALUES</span> </span><br><span class="line">(<span class="string">&#x27;@request.auth.id != &quot;&quot; &amp;&amp; @request.auth.id = author.id  &amp;&amp; content != &quot;&quot;&#x27;</span>, <span class="string">&#x27;2023-10-23 03:23:41.925Z&#x27;</span>, </span><br><span class="line"><span class="string">&#x27;@request.auth.id = author.id&#x27;</span>, <span class="string">&#x27;jpwc2dgtpo6vkzn&#x27;</span>, <span class="string">&#x27;[]&#x27;</span>, <span class="operator">&lt;</span>nil<span class="operator">&gt;</span>, <span class="string">&#x27;blog&#x27;</span>, <span class="string">&#x27;&#123;&#125;&#x27;</span>, </span><br><span class="line"><span class="string">&#x27;[&#123;&quot;system&quot;:false,&quot;id&quot;:&quot;46c15g7j&quot;,&quot;name&quot;:&quot;content&quot;,&quot;type&quot;:&quot;text&quot;,&quot;required&quot;:false,&quot;presentable&quot;:false,&quot;unique&quot;:false,&quot;options&quot;:&#123;&quot;min&quot;:null,&quot;max&quot;:null,&quot;pattern&quot;:&quot;&quot;&#125;&#125;,&#123;&quot;system&quot;:false,&quot;id&quot;:&quot;nmjc7pn8&quot;,&quot;name&quot;:&quot;visited&quot;,&quot;type&quot;:&quot;number&quot;,&quot;required&quot;:false,&quot;presentable&quot;:false,&quot;unique&quot;:false,&quot;options&quot;:&#123;&quot;min&quot;:null,&quot;max&quot;:null,&quot;noDecimal&quot;:false&#125;&#125;,&#123;&quot;system&quot;:false,&quot;id&quot;:&quot;28qca65i&quot;,&quot;name&quot;:&quot;author&quot;,&quot;type&quot;:&quot;relation&quot;,&quot;required&quot;:false,&quot;presentable&quot;:false,&quot;unique&quot;:false,&quot;options&quot;:&#123;&quot;collectionId&quot;:&quot;_pb_users_auth_&quot;,&quot;cascadeDelete&quot;:false,&quot;minSelect&quot;:null,&quot;maxSelect&quot;:1,&quot;displayFields&quot;:null&#125;&#125;]&#x27;</span>,</span><br><span class="line">    <span class="literal">false</span>, <span class="string">&#x27;base&#x27;</span>, <span class="string">&#x27;@request.auth.id = author.id&#x27;</span>, <span class="string">&#x27;2023-10-23 03:23:41.925Z&#x27;</span>, <span class="operator">&lt;</span>nil<span class="operator">&gt;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `blog` (`author` TEXT <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>, `content` TEXT <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>, </span><br><span class="line">`created` TEXT <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%Y-%m-%d %H:%M:%fZ&#x27;</span>)) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, </span><br><span class="line">`id` TEXT <span class="keyword">PRIMARY</span> KEY <span class="keyword">DEFAULT</span> (<span class="string">&#x27;r&#x27;</span><span class="operator">||</span><span class="built_in">lower</span>(hex(randomblob(<span class="number">7</span>)))) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">`updated` TEXT <span class="keyword">DEFAULT</span> (strftime(<span class="string">&#x27;%Y-%m-%d %H:%M:%fZ&#x27;</span>)) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, </span><br><span class="line">`visited` <span class="type">NUMERIC</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>GET(“&#x2F;:collection”, api.view)</strong> ：返回collection记录详情，包括各collection的schema、rule等信息。export collection时使用。</li>
+<li><strong>PATCH(“&#x2F;:collection”, api.update)</strong> ：更新，与create逻辑基本一致。</li>
+<li><strong>DELETE(“&#x2F;:collection”, api.delete)</strong> ：删除。system表、与其他存在relation field关系时不能删除（relation field在collection.schema中有关联id）。</li>
+<li><strong>PUT(“&#x2F;import”, api.bulkImport)</strong> ：import collection</li>
+</ul>
+<h4 id="collections-collection"><a href="#collections-collection" class="headerlink" title="/collections/:collection"></a><code>/collections/:collection</code></h4><p>CRUD action, collection相关的CRUD操作</p>
+<ul>
+<li>group中间件：ActivityLogger（记录日志表 <code>requests</code> ）、LoadCollectionContext（校验collection有效并写入context供子路由处理）</li>
+<li><strong>GET(“&#x2F;records”, api.list, LoadCollectionContext(app))</strong>: 按输入sql filter拉取collection数据。<ul>
+<li>校验输入规则合法性：部分filter规则仅root可用。admins are allowed to query everything</li>
+<li>如果ListRule为空，只允许<strong>admin</strong>用户list</li>
+<li>如果ListRule非空，根据ListRule执行过滤、查询逻辑。现网可以设置需要登录即可访问：@request.auth.id !&#x3D; “”</li>
+<li>规则验证的实现细节没有细看。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 设置ListRule为需要验证登录态（@request.auth.id != &quot;&quot; ）后使用**TypeAuthRecord类型的票据访问：**</span></span><br><span class="line"><span class="comment">// curl -H &quot;Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE2OTkyNTMyNzksImlkIjoiaDM1MDg5c3V1emE2M3F2IiwidHlwZSI6ImF1dGhSZWNvcmQifQ.YPPHpcqgC1FQ7Dg02JJiWyLOxYddLmX4VcVnCYpYjgc&quot; &quot;http://9.134.79.104:8080/api/collections/jpwc2dgtpo6vkzn/records&quot;</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;page&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;perPage&quot;</span><span class="punctuation">:</span> <span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;totalItems&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;totalPages&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;items&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;author&quot;</span><span class="punctuation">:</span> <span class="string">&quot;h35089suuza63qv&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;collectionId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jpwc2dgtpo6vkzn&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;collectionName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;blog&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;content preparing&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-10-23 03:30:12.380Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;kb4bz73f1oolzs3&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;updated&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-10-23 03:30:12.380Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;visited&quot;</span><span class="punctuation">:</span> <span class="number">10</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>GET(“&#x2F;records&#x2F;:id”, api.view, LoadCollectionContext(app))</strong> :</li>
+<li><strong>POST(“&#x2F;records”, api.create, LoadCollectionContext(app, models.CollectionTypeBase, models.CollectionTypeAuth))</strong>: insert<ul>
+<li>生成requestInfo，用于规则校验</li>
+<li>如果CreateRule为空，只允许admin用户写入</li>
+<li>非admin用户，校验CreateRule规则<ul>
+<li>解析request数据，用于规则匹配时的数据提取</li>
+<li>根据CreateRule构造expr，使用了<a target="_blank" rel="noopener" href="http://github.com/ganigeorgiev/fexpr">github.com&#x2F;ganigeorgiev&#x2F;fexpr</a>生成AST</li>
+<li>规则验证：实现太绕，没细看。初步看是使用了基于dbx的封装来构造filter后实现。实现有点复杂，感觉可以使用 <a target="_blank" rel="noopener" href="https://github.com/antonmedv/expr">expr</a> 之类比较通用成熟的方案扩展。</li>
+</ul>
+</li>
+<li>插入数据以及相关触发器逻辑</li>
+</ul>
+</li>
+</ul>
+<h4 id="collections-collection-auth-record-action"><a href="#collections-collection-auth-record-action" class="headerlink" title="/collections/:collection auth record action"></a><code>/collections/:collection</code> auth record action</h4><p>collection相关的鉴权操作，所以此处的collection<strong>仅针对type为Auth的collection</strong>，其他type会被拦截 。</p>
+<ul>
+<li>功能：auth类型的collection是用来记录API访问用户以及认证后的票据（类型为TypeAuthRecord）分发的。每个collection表下的用户认证方式可以按需指定，支持三类：<ul>
+<li>usernamePassword、emailPassword：根据用户名称&#x2F;email + 密码的方式验证</li>
+<li>authProviders：Auth providers下全部已开启的认证方式。</li>
+</ul>
+</li>
+<li>关于<strong>TypeAuthRecord</strong>票据组成：认证通过会下发票据信息，票据由几个核心字段加密而成：<strong>auth表信息 + 用户（记录）信息 + 系统设置（系统秘钥、生效时长）</strong></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// NewRecordAuthToken generates and returns a new auth record authentication token.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewRecordAuthToken</span><span class="params">(app core.App, record *models.Record)</span></span> (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> !record.Collection().IsAuth() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, errors.New(<span class="string">&quot;The record is not from an auth collection.&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> security.NewJWT(</span><br><span class="line">        jwt.MapClaims&#123;</span><br><span class="line">            <span class="string">&quot;id&quot;</span>:           record.Id, <span class="comment">// auth表中对应记录id（及用户信息的id）</span></span><br><span class="line">            <span class="string">&quot;type&quot;</span>:         TypeAuthRecord, <span class="comment">// 票据类型</span></span><br><span class="line">            <span class="string">&quot;collectionId&quot;</span>: record.Collection().Id, <span class="comment">// auth表id</span></span><br><span class="line">        &#125;,</span><br><span class="line">        (record.TokenKey() + app.Settings().RecordAuthToken.Secret), <span class="comment">// 秘钥由两部分构成：用户秘钥+系统秘钥</span></span><br><span class="line">        app.Settings().RecordAuthToken.Duration, <span class="comment">// 票据时长</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>group中间件：ActivityLogger（记录日志表 <code>requests</code> ）、LoadCollectionContext（校验collection有效并写入context供子路由处理）</li>
+<li><strong>GET(“&#x2F;auth-methods”, api.authMethods)</strong> ：下发collection支持的auth方式以及配置。oauth provider会下发oauth认证的跳转地址（基于<a target="_blank" rel="noopener" href="http://golang.org/x/oauth2">golang.org&#x2F;x&#x2F;oauth2</a> 实现）</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;usernamePassword&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;emailPassword&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;authProviders&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;github&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;state&quot;</span><span class="punctuation">:</span> <span class="string">&quot;u5dEfS7wMgAnE3bX0LqYbVgrpreRNa&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;codeVerifier&quot;</span><span class="punctuation">:</span> <span class="string">&quot;BRTh0BmOy4kt1ChR1iuq0yZJVoxxFYNGjywfSThmHQ6&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;codeChallenge&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MtlPH_gmXT1rh-wxPO8LTuMqsqgsHJiYZRJj06XC9ck&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;codeChallengeMethod&quot;</span><span class="punctuation">:</span> <span class="string">&quot;S256&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;authUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://github.com/login/oauth/authorize?client_id=xxx\u0026code_challenge=MtlPH_gmXT1rh-wxPO8LTuMqsqgsHJiYZRJj06XC9ck\u0026code_challenge_method=S256\u0026response_type=code\u0026scope=read%3Auser+user%3Aemail\u0026state=u5dEfS7wMgAnE3bX0LqYbVgrpreRNa\u0026redirect_uri=&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>POST(“&#x2F;auth-refresh”, api.authRefresh, RequireSameContextRecordAuth())</strong> ：票据刷新，即使用当前票据中的<strong>TypeAuthRecord</strong>信息重新生成一份新的票据。</p>
+<ul>
+<li>ps：会校验票据中的auth collection与当前url中collection是否一致。保持权限一致。</li>
+</ul>
+</li>
+<li><p><strong>POST(“&#x2F;auth-with-oauth2”, api.authWithOAuth2)</strong> ：oauth授权，使用第三方code换取pocketbase的token。</p>
+<ul>
+<li><strong>oauth流程</strong></li>
+</ul>
+<p>  <img src="https://cos.goroutine.cn/uPic/20231024-dGX8Au-zL5rVF.png" alt="oauth"></p>
+<ol>
+<li>应用页面需要提供一个第三方登录页面，供用户选择需要的第三方登录方式以及对应的授权地址。 <strong><code>auth-methods</code></strong> 接口会下发已经开启了的第三方认证方式以及跳转地址，页面仅需要UI展示即可。实现可以参考<a target="_blank" rel="noopener" href="https://pocketbase.io/docs/authentication#oauth2-integration">官方文档</a></li>
+<li>用户点击某第三方授权，会跳转到对应的第三方认证服务器授权页面。同时链接中会携带授权同意的redirect_url</li>
+<li>用户点击同意，授权成功，第三方认证服务器302重定向到应用服务器的redirect_url页面，同时会携带第三方授权的code，供服务器换取票据（校验合法性）</li>
+<li>应用页面实现第三方redirect_url页面，调用authWithOauth2接口将code换取为pocketbase的票据，然后继续完成其他业务逻辑（比如拉取数据、跳转其他页面等）。</li>
+<li>authWithOauth2接口中会完成将第三方认证服务器的code换取access_token、拉取用户信息等逻辑</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// fetch token</span></span><br><span class="line">token, err := provider.FetchToken(</span><br><span class="line">    form.Code,</span><br><span class="line">    oauth2.SetAuthURLParam(<span class="string">&quot;code_verifier&quot;</span>, form.CodeVerifier),</span><br><span class="line">)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// fetch external auth user</span></span><br><span class="line">authUser, err := provider.FetchAuthUser(token)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>POST(“&#x2F;auth-with-password”, api.authWithPassword)</strong> ：校验collection中的用户identify（可以为username或者email之一）以及pwd，通过则下发用户信息以及类型为<strong>TypeAuthRecord</strong>的JWT token，用于后续的record访问。</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;record&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;avatar&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;collectionId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;_pb_users_auth_&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;collectionName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;users&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-10-23 03:04:51.408Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;emailVisibility&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;h35089suuza63qv&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;anonyName&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;updated&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-10-23 06:06:03.434Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;username&quot;</span><span class="punctuation">:</span> <span class="string">&quot;anony&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;verified&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE2OTkyNTA3NjcsImlkIjoiaDM1MDg5c3V1emE2M3F2IiwidHlwZSI6ImF1dGhSZWNvcmQifQ.hu30XhgOEpl8XH40YWAlkBLoCEwJ8_AdOhh_bZm7Rd8&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>只分析了核心的几类API的核心接口，其他API功能比较多，就不一一分析了。</p>
+<h2 id="DB结构"><a href="#DB结构" class="headerlink" title="DB结构"></a>DB结构</h2><p>分为数据DB和日志DB两个数据库。</p>
+<h3 id="数据DB"><a href="#数据DB" class="headerlink" title="数据DB"></a>数据DB</h3><h4 id="migrations"><a href="#migrations" class="headerlink" title="_migrations"></a><code>_migrations</code></h4><p>迁移记录表</p>
+<ul>
+<li>一些前置的建表、数据初始化操作执行完毕之后会写入migration记录（包括文件名、执行时间），避免<strong>重复</strong>执行。</li>
+<li>其他表都是通过migration操作建立的。启动时migration&#x2F;目录以及log子目录下的go代码都会被执行一遍，里面包含了各个表的初始化（up）、销毁（down）操作相关的sql。每份文件中都有一个init操作，将对应up&#x2F;down注册到AppMigrations list中。等待runMigrations()统一调度顺序执行。</li>
+<li>runMigrations()的具体执行时机为api.Serve中，即为http server启动前。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file</td>
+<td>VARCHAR(255)</td>
+<td>脚本名，1640988000_init.go</td>
+</tr>
+<tr>
+<td>applied</td>
+<td>INTEGER</td>
+<td>执行时间</td>
+</tr>
+</tbody></table>
+<h4 id="admins"><a href="#admins" class="headerlink" title="_admins"></a><code>_admins</code></h4><p>存储system_setting中的管理员记录，允许多条。</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>TEXT</td>
+<td>唯一id</td>
+</tr>
+<tr>
+<td>avatar</td>
+<td>INTEGER</td>
+<td>0</td>
+</tr>
+<tr>
+<td>email</td>
+<td>TEXT</td>
+<td><a href="mailto:&#x61;&#x64;&#109;&#105;&#110;&#64;&#x78;&#x78;&#x78;&#46;&#99;&#x6f;&#109;">&#x61;&#x64;&#109;&#105;&#110;&#64;&#x78;&#x78;&#x78;&#46;&#99;&#x6f;&#109;</a></td>
+</tr>
+<tr>
+<td>tokenKey</td>
+<td>TEXT</td>
+<td>xB5k2B9VNhcszD4KWfsZ</td>
+</tr>
+<tr>
+<td>passwordHash</td>
+<td>TEXT</td>
+<td>xB5k2B9VNhcszD4KWfsZ</td>
+</tr>
+<tr>
+<td>lastResetSentAt</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="collections"><a href="#collections" class="headerlink" title="_collections"></a><code>_collections</code></h4><p>collection描述表，每个collection都会有一条记录以及对应的表</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>TEXT</td>
+<td>唯一id。 6b934vm328xcfbb</td>
+</tr>
+<tr>
+<td>system</td>
+<td>BOOLEAN</td>
+<td>0。 system 表不允许修改name等字段</td>
+</tr>
+<tr>
+<td>type</td>
+<td>TEXT</td>
+<td>auth、base</td>
+</tr>
+<tr>
+<td>name</td>
+<td>TEXT</td>
+<td>对应的db name</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>JSON</td>
+<td>字段数据，不包括系统字段。[{“system”:false,”id”:”users_name”,”name”:”name”,”type”:”text”,”required”:false,”presentable”:false,”unique”:false,”options”:{“min”:null,”max”:null,”pattern”:””}},{“system”:false,”id”:”users_avatar”,”name”:”avatar”,”type”:”file”,”required”:false,”presentable”:false,”unique”:false,”options”:{“maxSelect”:1,”maxSize”:5242880,”mimeTypes”:[“image&#x2F;jpeg”,”image&#x2F;png”,”image&#x2F;svg+xml”,”image&#x2F;gif”,”image&#x2F;webp”],”thumbs”:null,”protected”:false}}]</td>
+</tr>
+<tr>
+<td>indexes</td>
+<td>JSON</td>
+<td>索引</td>
+</tr>
+<tr>
+<td>listRule</td>
+<td>TEXT</td>
+<td>list规则</td>
+</tr>
+<tr>
+<td>viewRule</td>
+<td>TEXT</td>
+<td>view规则</td>
+</tr>
+<tr>
+<td>createRule</td>
+<td>TEXT</td>
+<td>create规则，@request.auth.id !&#x3D; “” &amp;&amp; @request.auth.id &#x3D; <a target="_blank" rel="noopener" href="http://er.id/">http://er.id/</a> &amp;&amp; text !&#x3D; “”</td>
+</tr>
+<tr>
+<td>updateRule</td>
+<td>TEXT</td>
+<td>update规则，@request.auth.id &#x3D; <a target="_blank" rel="noopener" href="http://er.id/">http://er.id/</a></td>
+</tr>
+<tr>
+<td>deleteRule</td>
+<td>TEXT</td>
+<td>delete规则，@request.auth.id &#x3D; <a target="_blank" rel="noopener" href="http://er.id/">http://er.id/</a></td>
+</tr>
+<tr>
+<td>options</td>
+<td>JSON</td>
+<td>属性字段，{“allowEmailAuth”:true,”allowOAuth2Auth”:true,”allowUsernameAuth”:true,”exceptEmailDomains”:null,”manageRule”:null,”minPasswordLength”:8,”onlyEmailDomains”:null,”requireEmail”:false}</td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="params"><a href="#params" class="headerlink" title="_params"></a><code>_params</code></h4><ul>
+<li>key: settings：value为存储json序列化后的setting对象（各种鉴权相关的秘钥）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>TEXT</td>
+<td>唯一id</td>
+</tr>
+<tr>
+<td>key</td>
+<td>TEXT</td>
+<td>like ‘settings’</td>
+</tr>
+<tr>
+<td>value</td>
+<td>JSON</td>
+<td>like ‘{“meta”:{“appName”:”Acme”,”appUrl”:”<a target="_blank" rel="noopener" href="http://localhost:8090%22,%22hideControls%22%3Afalse,%22senderName%22%3A%22Support%22,%22senderAddress%22%3A%22support@example.com/%22,%22verificationTemplate%22:%7B%22body%22:%22/u003cp/u003eHello,/u003c/p/u003e/n/u003cp/u003eThank">http://localhost:8090%22,%22hideControls%22%3Afalse,%22senderName%22%3A%22Support%22,%22senderAddress%22%3A%22support@example.com/&quot;,&quot;verificationTemplate&quot;:{&quot;body&quot;:&quot;\u003cp\u003eHello,\u003c/p\u003e\n\u003cp\u003eThank</a> you for joining us at {APP_NAME}.\u003c&#x2F;p\u003e\n\u003cp\u003eClick on the button below to verify your email address.\u003c&#x2F;p\u003e\n\u003cp\u003e\n \u003ca class&#x3D;&quot;btn&quot; href&#x3D;&quot;{’ xxxxxxx</td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="externalAuths"><a href="#externalAuths" class="headerlink" title="_externalAuths"></a><code>_externalAuths</code></h4><table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>collectionId</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>recordId</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>provider</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>providerId</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+</tr>
+</tbody></table>
+<p>每个collection都会新建一个表。以用户表 <code>user</code> 为例：</p>
+<h4 id="user"><a href="#user" class="headerlink" title="user"></a><code>user</code></h4><p>默认系统用户表（user collection），migration初始化时默认创建</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>avatar</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>email</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>emailVisibility</td>
+<td>BOOLEAN</td>
+</tr>
+<tr>
+<td>id</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>lastResetSentAt</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>lastVerificationSentAt</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>name</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>passwordHash</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>tokenKey</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>username</td>
+<td>TEXT</td>
+</tr>
+<tr>
+<td>verified</td>
+<td>BOOLEAN</td>
+</tr>
+</tbody></table>
+<h3 id="日志DB"><a href="#日志DB" class="headerlink" title="日志DB"></a>日志DB</h3><ul>
+<li>也有对应的migration表，与数据DB中的表格式一致。以记录对应的初始化操作。用于记录日志目录（migration&#x2F;log）下的脚本文件执行时间。</li>
+</ul>
+<h4 id="requests"><a href="#requests" class="headerlink" title="_requests"></a><code>_requests</code></h4><p>访问日志</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>TEXT</td>
+<td>xedcw4qe8v3qitr</td>
+</tr>
+<tr>
+<td>url</td>
+<td>TEXT</td>
+<td>&#x2F;api&#x2F;collections&#x2F;pb_users_auth&#x2F;records?page&#x3D;1&amp;perPage&#x3D;1&amp;filter&#x3D;&amp;fields&#x3D;id</td>
+</tr>
+<tr>
+<td>method</td>
+<td>TEXT</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>status</td>
+<td>INTEGER</td>
+<td>200</td>
+</tr>
+<tr>
+<td>auth</td>
+<td>TEXT</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>remoteIp</td>
+<td>TEXT</td>
+<td>127.0.0.1</td>
+</tr>
+<tr>
+<td>referer</td>
+<td>TEXT</td>
+<td><a target="_blank" rel="noopener" href="http://127.0.0.1:8090/_/">http://127.0.0.1:8090/_/</a></td>
+</tr>
+<tr>
+<td>userAgent</td>
+<td>TEXT</td>
+<td>Mozilla&#x2F;5.0</td>
+</tr>
+<tr>
+<td>meta</td>
+<td>JSON</td>
+<td>{}</td>
+</tr>
+<tr>
+<td>created</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>updated</td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td>userIp</td>
+<td>TEXT</td>
+<td>127.0.0.1</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>代码功能完善，各种hooks等能灵活扩展。DB结构、数据也可以灵活变更，另外还有许多功能比如js支持、邮件、定时任务等等，代码量相当大，就没有一一细看了。</li>
+<li>安全性考虑很完善。DB存储（如_admin）不存储原始秘钥、API返回脱敏处理、cors支持等考虑比较完善。</li>
+<li>文档细致，相关API都有详细的介绍，也有js lib来支持API调用，降低了上手难度。</li>
+</ul>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
+<li>功能太大而全了，作者想什么功能都加上。感觉不如把一些核心需求解决好，比如支持其他db来横向拓展、优化性能等。</li>
+<li>作者应该是前端初审，风格上类似上很多js类似的写法，比如使用大量的callback来处理调用链。简单调用链就顺序执行就好了，代码阅读起来不用太绕。</li>
+<li>一些lib的选择上有优化的空间。比如<a href="github.com/go-ozzo/ozzo-validation">validator</a>，很老且不好用，应该使用其他更简化的方案代理，比如<a target="_blank" rel="noopener" href="https://github.com/go-playground/validator">https://github.com/go-playground/validator</a></li>
+</ul>
+<p>总之作为一款开箱即用的后台服务，还是可以满足很多场景的，考虑扩展性等个人不会考虑来当做现网的正式服务来使用，但是如果定位是用来快速搭建产品demo、实现开发的数据mock感觉还是挺合适的。毕竟不用写代码就能实现简单的CRUD还是非常方便的。另外对oauth授权的处理也有一定的参考价值，感觉可以进一步提取作为独立的lib来使用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/">https://www.goroutine.cn/2023/10/23/Introduct-to-pocketbase/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/BaaS/">BaaS</a><a class="post-meta__tags" href="/tags/golang/">golang</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/24/Introduct-to-dexide-dex/" title="Introduct to dexide / dex"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Introduct to dexide / dex</div></div></a></div><div class="next-post pull-right"><a href="/2023/10/10/Memos-Code-Analyze/" title="memos code analyze"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">memos code analyze</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Architecture of Supabase</div></div></a></div><div><a href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-06</div><div class="title">Introduct to NotionAPI</div></div></a></div><div><a href="/2023/10/24/Introduct-to-dexide-dex/" title="Introduct to dexide &#x2F; dex"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">Introduct to dexide &#x2F; dex</div></div></a></div><div><a href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-08</div><div class="title">Introduct-to-nocoDB</div></div></a></div><div><a href="/2020/06/14/Functional-options-for-friendly-APIs/" title="Functional options for friendly APIs"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-14</div><div class="title">Functional options for friendly APIs</div></div></a></div><div><a href="/2023/09/18/Introduct-to-go-clean-template/" title="Introduct to go-clean-template"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-18</div><div class="title">Introduct to go-clean-template</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pocketbase-x2F-pocketbase-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">pocketbase &#x2F; pocketbase 源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">功能介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD%E5%9F%BA%E7%A1%80%E8%83%BD%E5%8A%9B"><span class="toc-number">1.1.1.</span> <span class="toc-text">CRUD基础能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">用户管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">1.1.3.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#migrate%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.1.</span> <span class="toc-text">migrate命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bootstrap"><span class="toc-number">1.2.2.</span> <span class="toc-text">bootstrap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#api-server%E5%90%AF%E5%8A%A8"><span class="toc-number">1.2.3.</span> <span class="toc-text">api server启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BDAPI"><span class="toc-number">1.2.4.</span> <span class="toc-text">功能API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#settings-group%EF%BC%9A"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">&#x2F;settings group：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#admins-group"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">&#x2F;admins group</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collections-group"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">&#x2F;collections group</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collections-collection"><span class="toc-number">1.2.4.4.</span> <span class="toc-text">&#x2F;collections&#x2F;:collection</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collections-collection-auth-record-action"><span class="toc-number">1.2.4.5.</span> <span class="toc-text">&#x2F;collections&#x2F;:collection auth record action</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DB%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.</span> <span class="toc-text">DB结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AEDB"><span class="toc-number">1.3.1.</span> <span class="toc-text">数据DB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#migrations"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">_migrations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#admins"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">_admins</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collections"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">_collections</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#params"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">_params</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#externalAuths"><span class="toc-number">1.3.1.5.</span> <span class="toc-text">_externalAuths</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#user"><span class="toc-number">1.3.1.6.</span> <span class="toc-text">user</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97DB"><span class="toc-number">1.3.2.</span> <span class="toc-text">日志DB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#requests"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">_requests</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">1.4.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">1.4.2.</span> <span class="toc-text">不足</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>秒杀系统核心设计 | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近阅读量大量关于秒杀系统的介绍文章，包括一些视频讲解，大部分文章都太冗长，没有触及核心设计点，本文主要总结下后台架构的核心设计要点，不讨论架构优化中的常规页面CDN化、隔离部署、数据sharding、缓存优化等常规手段。 背景秒杀系统场景举例：  抢购：如双十一，下单量高峰能达到50w+ qps，注意是下单成功，同时参与抢购的人的那就更多一个数量级了。 红包：直播间红包、微信红包，本质上都是类似">
+<meta property="og:type" content="article">
+<meta property="og:title" content="秒杀系统核心设计">
+<meta property="og:url" content="https://www.goroutine.cn/2022/03/02/seckill-md/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="最近阅读量大量关于秒杀系统的介绍文章，包括一些视频讲解，大部分文章都太冗长，没有触及核心设计点，本文主要总结下后台架构的核心设计要点，不讨论架构优化中的常规页面CDN化、隔离部署、数据sharding、缓存优化等常规手段。 背景秒杀系统场景举例：  抢购：如双十一，下单量高峰能达到50w+ qps，注意是下单成功，同时参与抢购的人的那就更多一个数量级了。 红包：直播间红包、微信红包，本质上都是类似">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2022-03-02T15:12:44.000Z">
+<meta property="article:modified_time" content="2023-09-18T15:33:26.790Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="秒杀">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2022/03/02/seckill-md/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '秒杀系统核心设计',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-18 23:33:26'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">秒杀系统核心设计</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-03-02T15:12:44.000Z" title="Created 2022-03-02 23:12:44">2022-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-18T15:33:26.790Z" title="Updated 2023-09-18 23:33:26">2023-09-18</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="秒杀系统核心设计"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>最近阅读量大量关于秒杀系统的介绍文章，包括一些视频讲解，大部分文章都太冗长，没有触及核心设计点，本文主要总结下后台架构的核心设计要点，不讨论架构优化中的常规页面CDN化、隔离部署、数据sharding、缓存优化等常规手段。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>秒杀系统场景举例：</p>
+<ul>
+<li>抢购：如双十一，下单量高峰能达到50w+ qps，注意是下单成功，同时参与抢购的人的那就更多一个数量级了。</li>
+<li>红包：直播间红包、微信红包，本质上都是类似的场景，微信红包的处理方案是提前对红包进行个数拆分，会简化扣除库存逻辑，但是本质上跟抢购类似。</li>
+</ul>
+<p>此类系统有几个典型特点：</p>
+<ul>
+<li>qps高，tps低：即读多写少，大量的请求（包括非正常请求：如频繁重试、黑产请求等）但是只有少量能成交。</li>
+<li>库存需要精确：涉及金额，不允许超卖</li>
+<li>固定时间：活动时间通常通常很短</li>
+</ul>
+<p>其中超卖问题为核心需求点，基于此衍生出如何抗住并发量、用户体验优化等解决方案。</p>
+<span id="more"></span>
+
+<h2 id="简单方案"><a href="#简单方案" class="headerlink" title="简单方案"></a>简单方案</h2><p>先考虑一个简单的实现方案，然后基于此方案的问题进行优化。</p>
+<h3 id="存储模型"><a href="#存储模型" class="headerlink" title="存储模型"></a>存储模型</h3><p>以DB为例，考虑拆分如下几个表：</p>
+<ul>
+<li>秒杀活动信息表： 用于新建秒杀活动，包括活动信息、时间段、秒杀商品等</li>
+<li>商品表：存储商品详细信息</li>
+<li>库存表stock：活动id、活动库存数量。</li>
+</ul>
+<p>其中前两个表的信息为静态信息表，基本无变更。库存表stock会随着秒杀过程会频繁更新，直至库存数量耗尽等。</p>
+<h3 id="前端要点"><a href="#前端要点" class="headerlink" title="前端要点"></a>前端要点</h3><p>以web为例，描述前端&#x2F;终端的设计要点：</p>
+<ul>
+<li><p>资源静态化</p>
+</li>
+<li><p>倒计时</p>
+<p>非活动时间不允许参与，需要考虑本地时间不精确，需要定期从服务端获取倒计时信息。服务端也需要考虑采用TPN等方案保障各个机器时间的一致性。</p>
+</li>
+<li><p>页面拦截</p>
+<p>避免用户频繁发起重复请求，比如提交、库存耗尽时置灰等手段。减少对后端的冲击。</p>
+</li>
+</ul>
+<h3 id="后端流程"><a href="#后端流程" class="headerlink" title="后端流程"></a>后端流程</h3><p>后端接收到秒杀请求后的大致处理流程：</p>
+<ul>
+<li>资格校验：包括uid、ip频控等手段，保障抢购公平性的同时也减少后续流量压力，对异常请求进行拦截。</li>
+<li><strong>扣减库存</strong> ：此过程为重IO逻辑</li>
+<li>下单逻辑：包括订单表等相关的一系列一致性操作，此过程的逻辑也很重。</li>
+<li>返回订单号，给到前端执行(取消)支付相关流程。</li>
+</ul>
+<h3 id="扣减库存"><a href="#扣减库存" class="headerlink" title="扣减库存"></a>扣减库存</h3><p>为避免超卖，扣减库存通常有两种解决方案：</p>
+<ol>
+<li>mysql锁：mysql并发update问题有两种解决方案<ul>
+<li>方案一：依赖db操作的原子性，如”update stock set count &#x3D; count-1 where product_id&#x3D;xxx and count &gt; 0”</li>
+<li>方案二：业务自行上锁，如”begin; select * from stock where product_id &#x3D; xxx; update xxxx; commit”。</li>
+</ul>
+</li>
+<li>redis + lua：lua解法网上较多，此处就不粘贴了。</li>
+</ol>
+<p>这里简单的方案基本就是如上所述，以mysql&#x2F;redis的性能，支撑个几千的峰值qps并发也没啥问题，核心重点是要考虑好并发可能带来的超卖问题，同时也要保障抢购的公平性。</p>
+<p>当然进一步的优化方案也可以基于数据sharding的思路，将库存拆分到多个redis&#x2F;mysql实例中，以提升系统整体吞吐量。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>从上面的后端流程来看，扣减库存、下单逻辑都是相对较重的IO逻辑，很大可能会成为系统的瓶颈。</p>
+<p>以mysql为例，假定扣减update的耗时为1ms（<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/68813">数据参考</a>），那每秒支撑的TPS大概在1000左右，超过此数据量时会出现几个问题：</p>
+<ul>
+<li>页面502：因为已经到达db极限，接入&#x2F;逻辑层大概率超时了。</li>
+<li>体验问题：假设以排队等方案解决了后端超载的问题，但是大部分用户其实是抢购不到的，但是页面也只能一直轮询（或者长链接等待超时），体验感较差。</li>
+<li>风险高：下单逻辑通常会比较复杂，需要保证数据不丢失等，也是一个重IO的逻辑，放在同步流程中非常危险。</li>
+</ul>
+<p>整体看同步处理大量的请求是一个不好的解决方案，需要针对性优化。</p>
+<h2 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h2><p>基于前面的问题，优化思路有两点：</p>
+<ul>
+<li>及早返回，降低资源占用</li>
+<li>同步改异步，提升稳定性，降低风险</li>
+</ul>
+<p>将整体流程拆分为2段（不包括支付流程）, 对抢到秒杀资格的用户和被拦截的用户区分处理：</p>
+<ul>
+<li><p>抢购</p>
+<p>负责资格校验、库存校验等逻辑，此过程逻辑较轻，且未只读操作。</p>
+<p>此过程同步处理，除了对异常用户的校验外，引入总库存作为拦截手段，对超过库存总量的请求不再处理，及时返回已售罄信息给到前端，避免无意义等待和重试。</p>
+<p>获得抢购资格的用户只有少量，大部分用户无法获得抢购资格，请求会被及时拦截，减少了服务端资源的消耗，也解决了这部分用户的体验问题。</p>
+<p>对于活动抢购资格的用户返回给前端，页面进入轮询查询获取订单信息阶段。这部分用户数量约等于库存数量，并发影响可控。</p>
+</li>
+<li><p>下单</p>
+<p>负责实际扣减库存、写订单表等重IO逻辑。</p>
+<p>获得抢购资格的用户，写入mq供下单逻辑消费处理，此处可以根据存储层的压力，动态调整实际消费者实例数量，影响可控。获得抢购资格的用户也是需要轮询等待，但是仅影响这部分用户的体验。</p>
+<p>下单处理完后写入完整订单存储、缓存等，供页面查询及支付使用。</p>
+</li>
+</ul>
+<h3 id="问题：如何保障库存拦截校验精确性"><a href="#问题：如何保障库存拦截校验精确性" class="headerlink" title="问题：如何保障库存拦截校验精确性"></a>问题：如何保障库存拦截校验精确性</h3><p>抢购过程如何获得剩余库存的准确性是个问题，但是此处并不需要保障做到精确。因为进入下单流程的用户也不一定能真实的走完下单流程，比如下单失败、活动过期、重复下单等都需要有对应的解决方案。下单失败给到终端做好重试(抢购)或者提示(重复下单)即可。</p>
+<p>所以抢购时可以根据库存做一个大致的判断，比如总量的两倍作为库存的整体数据限额，或者频控组件定期同步真实库存数据作为本地拦截标准等。</p>
+<h3 id="问题：少卖"><a href="#问题：少卖" class="headerlink" title="问题：少卖"></a>问题：少卖</h3><p>如果下单有大量的失败（比如重复下单、下单失败），或者用户放弃支付导致的库存回退，可能会导致抢购过程已经拦截了，而实际库存没有耗尽。考虑两种解决方案：</p>
+<ul>
+<li>方案一：前面已经提到了，可以在拦截库存时给予一定的buffer，比如按两倍库存来拦。</li>
+<li>方案二：放弃支付，可能在一段时间库存耗尽后又会冒出剩余库存的问题，这里可以引入库存同步机制通知到抢购模块。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0202681394780120567?fid=0101592429757310384">解密秒杀系统架构，不是所有的系统都能做秒杀！</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/GuoqingLee/distributed-seckill">关于秒杀系统的更多思考</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2022/03/02/seckill-md/">https://www.goroutine.cn/2022/03/02/seckill-md/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Architecture/">Architecture</a><a class="post-meta__tags" href="/tags/%E7%A7%92%E6%9D%80/">秒杀</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/05/Tencent-COS-Image-Service/" title="使用腾讯云cos+cdn搭建图片服务器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">使用腾讯云cos+cdn搭建图片服务器</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/10/Microservices-in-Action/" title="Microservices in Action"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Microservices in Action</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/09/18/Introduct-to-go-clean-template/" title="Introduct to go-clean-template"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-18</div><div class="title">Introduct to go-clean-template</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">简单方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">存储模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E8%A6%81%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">前端要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E6%B5%81%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text">后端流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A3%E5%87%8F%E5%BA%93%E5%AD%98"><span class="toc-number">2.4.</span> <span class="toc-text">扣减库存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="toc-number">4.</span> <span class="toc-text">优化思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E5%BA%93%E5%AD%98%E6%8B%A6%E6%88%AA%E6%A0%A1%E9%AA%8C%E7%B2%BE%E7%A1%AE%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">问题：如何保障库存拦截校验精确性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E5%B0%91%E5%8D%96"><span class="toc-number">4.2.</span> <span class="toc-text">问题：少卖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/13/Archive-Service-Governance/" title="Archive Service Governance">Archive Service Governance</a><time datetime="2023-11-13T10:54:27.000Z" title="Created 2023-11-13 18:54:27">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
