@@ -6,7 +6,7 @@
   <link href="https://www.goroutine.cn/atom.xml" rel="self"/>
   
   <link href="https://www.goroutine.cn/"/>
-  <updated>2024-01-06T14:31:29.499Z</updated>
+  <updated>2024-03-25T15:24:34.235Z</updated>
   <id>https://www.goroutine.cn/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Cache In Next.js</title>
+    <link href="https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/"/>
+    <id>https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/</id>
+    <published>2024-03-25T15:22:06.000Z</published>
+    <updated>2024-03-25T15:24:34.235Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;next-js的缓存机制&quot;&gt;&lt;a href=&quot;#next-js的缓存机制&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Next.js" scheme="https://www.goroutine.cn/tags/Next-js/"/>
+    
+  </entry>
   
   <entry>
     <title>Introduct to NotionAPI</title>
@@ -426,25 +449,6 @@
     <category term="gossip" scheme="https://www.goroutine.cn/tags/gossip/"/>
     
     <category term="分布式" scheme="https://www.goroutine.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vscode Remote Connect failed</title>
-    <link href="https://www.goroutine.cn/2020/10/05/Vscode-Remote-Connect-failed/"/>
-    <id>https://www.goroutine.cn/2020/10/05/Vscode-Remote-Connect-failed/</id>
-    <published>2020-10-05T02:23:52.000Z</published>
-    <updated>2023-09-18T15:44:51.696Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;Vscode-Remote连接失败&quot;&gt;&lt;a href=&quot;#Vscode-Remote连接失败&quot; class=&quot;headerlink&quot; title=&quot;Vscode Remote连接失败&quot;&gt;&lt;/a&gt;Vscode Remote连接失败&lt;/h1&gt;&lt;p&gt;一台很久没有使用vscode remote操作过的机器，今天在调试个项目的时候发现之前配置怎么都连接不上了，一直timeout，也没有给出错误原因。花了些时间来定位，记录一下解决方法。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Vscode" scheme="https://www.goroutine.cn/tags/Vscode/"/>
-    
-    <category term="远程开发" scheme="https://www.goroutine.cn/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   

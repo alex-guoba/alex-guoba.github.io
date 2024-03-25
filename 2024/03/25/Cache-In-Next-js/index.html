@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Cache In Next.js | Utopian</title><meta name="author" content="Alex guo"><meta name="copyright" content="Alex guo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="next.js的缓存机制前段时间在使用next.js搭建个人博客的时候遇到了一些性能上的问题，最早的实现使用prisma+postgres自己实现了数据缓存。后来发现在部署到生产环境以后效果并不理想，因为云端缓存跟本地的环境还是有差距，无法保障next后台和pg的时延，此外就是缓存过期时从notion取数据会有明显的卡顿，也没有找到xian后来看了了next的文档，发现其已经提供了不少缓存解决方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cache In Next.js">
+<meta property="og:url" content="https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/index.html">
+<meta property="og:site_name" content="Utopian">
+<meta property="og:description" content="next.js的缓存机制前段时间在使用next.js搭建个人博客的时候遇到了一些性能上的问题，最早的实现使用prisma+postgres自己实现了数据缓存。后来发现在部署到生产环境以后效果并不理想，因为云端缓存跟本地的环境还是有差距，无法保障next后台和pg的时延，此外就是缓存过期时从notion取数据会有明显的卡顿，也没有找到xian后来看了了next的文档，发现其已经提供了不少缓存解决方案">
+<meta property="og:locale">
+<meta property="og:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png">
+<meta property="article:published_time" content="2024-03-25T15:22:06.000Z">
+<meta property="article:modified_time" content="2024-03-25T15:24:34.235Z">
+<meta property="article:author" content="Alex guo">
+<meta property="article:tag" content="Next.js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Cache In Next.js',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-25 23:24:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transparency.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Utopian" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Utopian"><span class="site-name">Utopian</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Cache In Next.js</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-25T15:22:06.000Z" title="Created 2024-03-25 23:22:06">2024-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-03-25T15:24:34.235Z" title="Updated 2024-03-25 23:24:34">2024-03-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Cache In Next.js"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="next-js的缓存机制"><a href="#next-js的缓存机制" class="headerlink" title="next.js的缓存机制"></a>next.js的缓存机制</h1><p>前段时间在使用next.js搭建个人博客的时候遇到了一些性能上的问题，最早的实现使用prisma+postgres自己实现了数据缓存。后来发现在部署到生产环境以后效果并不理想，因为云端缓存跟本地的环境还是有差距，无法保障next后台和pg的时延，此外就是缓存过期时从notion取数据会有明显的卡顿，也没有找到xian后来看了了next的文档，发现其已经提供了不少缓存解决方案，降低对后台数据源的实时依赖。虽然有了一些内存上的上涨以及透明度上的隐患，但是相对自己去实现可能会更加合适。</p>
+<p>本文重点介绍next.js的几种缓存机制。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>next.js的缓存机制实现比较复杂，可以分为多层，重点包括：</p>
+<ul>
+<li><p>Router-Cache: 客户端（浏览器）上的缓存，主要目的是通过预拉取、缓存RSCP等减少客户端等待耗时。</p>
+</li>
+<li><p>Full Route Cache：服务端的渲染结果缓存，目的是减少静态路由的重复渲染。对于页面无变化的场景适用</p>
+</li>
+<li><p>React-Cache &#x2F; Request-Memorization：对同一次（页面渲染）请求时多次拉取同一数据源的缓存，既能减少同一次渲染对某个数据源的多次拉取，也能避免代码上组件之间通过props传递共享数据的繁琐。</p>
+</li>
+<li><p>Data-Cache：类似后台的共享内存或者缓存中间件（redis等），主要用于缓存用户无关的数据。比如网站文章数量、内容以及访问数等，供多次请求间的数据共享。</p>
+</li>
+<li><p>数据源：db或者cms等业务逻辑后台。这一层已经不属于缓存了。</p>
+<p>  <img src="https://cos.goroutine.cn/uPic/20240323-T3GSHk-wHzx2z.png" alt="https://cos.goroutine.cn/uPic/20240323-T3GSHk-wHzx2z.png"></p>
+</li>
+</ul>
+<h1 id="Request-memorization"><a href="#Request-memorization" class="headerlink" title="Request memorization"></a>Request memorization</h1><p><img src="https://nextjs.org/_next/image?url=/docs/light/deduplicated-fetch-requests.png&w=3840&q=75&dpl=dpl_AVw36CMViTQfGuptcJMdcYHdLcfR" alt="request memorization what"></p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;force-cache&#x27; is the default, and can be omitted</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;https://...&#x27;</span>, &#123; <span class="attr">cache</span>: <span class="string">&#x27;force-cache&#x27;</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>目的</strong></p>
+<ol>
+<li>同一次server request多个组件、页面等统一数据源的复用，避免一次渲染对数据源的重复请求，也达到了同一次请求的数据快照的目的。</li>
+<li>避免多个component之间的共享props数据传递。</li>
+</ol>
+<p>next.js默认会将fetch的结果缓存到内存（In-memory），供同一请求内的数据共享。</p>
+<p><strong>流程&amp;原理</strong></p>
+<p><img src="https://nextjs.org/_next/image?url=/docs/light/request-memoization.png&w=3840&q=75&dpl=dpl_AVw36CMViTQfGuptcJMdcYHdLcfR" alt="request-memorization-how"></p>
+<ul>
+<li>Request memorization 是React的一个特性，而不是Next.js的特性。虽然Next.js可能会包含这个特性，但它是React核心库的一部分。</li>
+<li>只适用于<code>fetch</code>请求中的GET方法。不适用post</li>
+<li>只适用于React组件树。这意味着，只有在React组件树中的某些部分发起的<code>fetch</code>请求才会被memorization缓存。<ul>
+<li>在<code>generateMetadata</code>、<code>generateStaticParams</code>、<code>Layouts</code>、<code>Pages</code>以及其他服务端组件中发起的<code>fetch</code>请求都会被memorization缓存。</li>
+<li>路由处理器（Route Handlers）中的<code>fetch</code>请求不会被记忆化，因为它们不是React组件树的一部分。</li>
+</ul>
+</li>
+<li>对于不适合使用<code>fetch</code>的情况（例如，某些数据库客户端、内容管理系统（CMS）客户端或GraphQL客户端），你可以使用React的cache函数来记忆化函数。</li>
+</ul>
+<p><strong>有效时长以及更新（revalidation）:</strong></p>
+<ul>
+<li>仅在单次请求期间有效，组件数渲染完毕对应的memorization缓存就会被free掉。相当于对一个server request提供一份数据的快照。</li>
+<li>由于仅单次请求有效，通常不涉及数据更新机制。</li>
+</ul>
+<p><strong>如何取消（禁用机制）：</strong></p>
+<ul>
+<li>如果开发者想要管理单个请求（例如，取消某个正在进行的请求），可以使用<code>AbortController</code>的<code>signal</code>属性。<code>AbortController</code>提供了一种取消<code>fetch</code>请求的方法，通过传递<code>signal</code>属性给<code>fetch</code>函数，可以在需要时取消请求。</li>
+<li>需要注意的是，使用<code>AbortController</code>并不会让请求不参与记忆化。它仅仅是用来取消正在进行的请求。即使你取消了某个请求，如果该请求是GET请求，它仍然会被记忆化。记忆化和取消请求是两个独立的功能</li>
+</ul>
+<p><strong>总结：</strong></p>
+<ol>
+<li>Request-memorization的机制跟react-cache类似，仅用于处理同一个请求时共享数据的场景。</li>
+<li>在使用fetch()函数GET方式时默认生效。</li>
+</ol>
+<h1 id="react-cache"><a href="#react-cache" class="headerlink" title="react-cache"></a>react-cache</h1><p>准确的说<a target="_blank" rel="noopener" href="https://react.dev/reference/react/cache">react-cache</a>属于React的特性，只不过在next中也可以使用。下面是一些注意的点。</p>
+<ol>
+<li>reac-cache仅在服务端组件可以使用。且仅在服务器组件内（直接或者间接都可以）调用时才会生效。在组件外部调用时不会生效。比如：</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;cache&#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getUser = <span class="title function_">cache</span>(<span class="keyword">async</span> (userId) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> db.<span class="property">user</span>.<span class="title function_">query</span>(userId);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 🚩 Wrong: Calling memoized function outside of component will not memoize.</span></span><br><span class="line"><span class="title function_">getUser</span>(<span class="string">&#x27;demo-id&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">DemoProfile</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// ✅ Good: `getUser` will memoize.</span></span><br><span class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="title function_">getUser</span>(<span class="string">&#x27;demo-id&#x27;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Profile</span> <span class="attr">user</span>=<span class="string">&#123;user&#125;</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>cachedFn</code>还会缓存错误。如果<code>fn</code>函数对于某些参数抛出了错误，这个错误会被缓存起来。当使用相同的参数再次调用<code>cachedFn</code>时，相同的错误会被重新抛出。这意味着错误不会被忽视，而是会被记住并在相同的情况下再次触发。</li>
+<li>React会为每个服务请求（server request）使所有已缓存的函数失效。这意味着，当服务器处理一个新的请求（即使来自同一个终端用户）时，它不会使用之前的缓存结果，而是会重新计算这些函数的结果。</li>
+<li>cache可以用作服务端的数据预拉取。比如进入页面时先调用async的（不用await结果）cacheFn，服务端就会进入预拉取阶段。后面页面再次调用时就可以直接拿到缓存结果，从而起到加速的效果。</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> getUser = <span class="title function_">cache</span>(<span class="keyword">async</span> (id) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> db.<span class="property">user</span>.<span class="title function_">query</span>(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">Profile</span>(<span class="params">&#123;id&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="title function_">getUser</span>(id);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;user.profilePic&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;user.name&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Page</span>(<span class="params">&#123;id&#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// ✅ Good: start fetching the user data</span></span><br><span class="line">  <span class="title function_">getUser</span>(id);</span><br><span class="line">  <span class="comment">// ... some computational work</span></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Profile</span> <span class="attr">id</span>=<span class="string">&#123;id&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>注意：cache对函数的参数也有限制。如果参数类型是object等复杂类型，需要确保传入的是同一个引用，因为react-cache内部仅做shallow equality对比，猜测是出于性能以及安全性的考虑。</li>
+</ol>
+<aside>
+🌐 If your arguments are not [primitives](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) (ex. objects, functions, arrays), ensure you’re passing the same object reference.
+
+<p>When calling a memoized function, React will look up the input arguments to see if a result is already cached. React will use shallow equality of the arguments to determine if there is a cache hit.</p>
+</aside>
+
+<p><strong>总结：</strong></p>
+<p>react cache与上面Next的request memorization功能基本一样，是对next下fetch的补充。也仅适合在处理同一个请求的的重复数据源拉取场景，比如generateMetadata和Page渲染使用了同一份统数据（比如需要查询db共享数据）。而业务逻辑上极少有需要取两次同一份数据的场景，有也可以通过代码规避。当然相对通过组件间props透传共享数据还是更加方便多了。</p>
+<h1 id="data-cache"><a href="#data-cache" class="headerlink" title="data-cache"></a>data-cache</h1><p>为了做到多个server request之间共享数据，Next.js 提供了一个内置的数据缓存(<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#data-cache">data cache</a>)，可以在传入的<strong>服务器请求</strong>和<strong>部署</strong>中持久化数据。之所以能做到这一点，是因为 Next.js 扩展了本地 <code>fetch</code> API，以允许服务器上的每个请求设置自己的持久缓存语义。</p>
+<p>默认情况下，使用 <code>fetch</code> 请求的数据请求也会<strong>被data-cache缓存</strong>。可以通过fetch参数中的<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#fetch-optionscache">cache</a>和<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#fetch-optionsnextrevalidate">next.revalidate</a>控制其行为。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Opt out of caching</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">`https://...`</span>, &#123; <span class="attr">cache</span>: <span class="string">&#x27;no-store&#x27;</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Revalidate at most after 1 hour</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">`https://...`</span>, &#123; <span class="attr">next</span>: &#123; <span class="attr">revalidate</span>: <span class="number">3600</span> &#125; &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>流程及原理：</strong></p>
+<p><img src="https://nextjs.org/_next/image?url=/docs/light/data-cache.png&w=3840&q=75&dpl=dpl_AVw36CMViTQfGuptcJMdcYHdLcfR" alt="data-cache-how"></p>
+<ul>
+<li>在渲染过程中首次调用 <code>fetch</code> 请求时，Next.js 会检查data cache是否有缓存响应（前提是request memorization缓存miss了）</li>
+<li>如果data-cache命中缓存，会立即返回并写入到<strong>request memorization</strong>。</li>
+<li>如果data-cache未命中，则会向后端数据源发出请求，并将返回结果存储在data cache 和 request memorization中。data cache的数据是为了供后续其他server request来复用。</li>
+<li>对于指定了不缓存的数据（如fetch设置<code>&#123; cache: &#39;no-store&#39; &#125;</code>参数），会跳过data-cache的读写，总是从数据源获取数据，并加入request memorization。</li>
+<li>无论data cache是否缓存，request-memorization都会为本次请求缓存数据，避免同一客户端请求多次访问同一数据源。</li>
+</ul>
+<aside>
+🌐 **数据缓存与请求记忆化的区别**
+
+<p>虽然这两种缓存机制都能通过重复使用缓存数据来提高性能，但数据缓存(data cache)是跨传入请求和部署的持久性缓存，而记忆化(memoriztion)则只在单次请求的生命周期内有效。</p>
+</aside>
+
+<p><strong>有效时长</strong></p>
+<p>部署环境默认永久有效，除非指定opt-out、revalidation机制。</p>
+<p><strong>缓存失效机制（revalidation）</strong></p>
+<ul>
+<li>基于时间（被动）</li>
+</ul>
+<p>要按时间间隔重新验证数据，可以使用 <code>fetch</code> 的 <code>next.revalidate</code> 选项来设置资源的缓存时间（以秒为单位）。即超过指定的时长之后，会重新从数据源获取，并重新写入data cache和memorization。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Revalidate at most every hour</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;https://...&#x27;</span>, &#123; <span class="attr">next</span>: &#123; <span class="attr">revalidate</span>: <span class="number">3600</span> &#125; &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>注意：当data cache数据过期后，为了不阻塞请求，本次会优先返回过期的数据。然后异步执行更新机制。这样下次就可以使用到更新后的数据。类似<a target="_blank" rel="noopener" href="https://web.dev/case-studies/ads-case-study-stale-while-revalidate?hl=zh-cn">stale-while-revalidate</a>（<strong>性能考虑的优化，但是对请求量少且数据时效性有较高要求的场景可能会是个问题</strong>）</p>
+<ul>
+<li>按需触发（主动）</li>
+</ul>
+<p>数据可按路径（<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#revalidatepath">revalidatePath</a>）或缓存标签（<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#fetch-optionsnexttags-and-revalidatetag">revalidateTag</a>）执行revalidation。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Cache data with a tag</span></span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">`https://...`</span>, &#123; <span class="attr">next</span>: &#123; <span class="attr">tags</span>: [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>] &#125; &#125;)</span><br><span class="line"><span class="comment">// Revalidate entries with a specific tag</span></span><br><span class="line"><span class="title function_">revalidateTag</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// By path</span></span><br><span class="line"><span class="title function_">revalidatePath</span>(<span class="string">&#x27;/&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>与基于时间的模式不同，执行revalidation之后数据会立即过期，当下一次访问时需要先从数据源获取数据，没有旧数据兜底。</p>
+<p><strong>按需触发存在两个场景</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/routing/route-handlers">root-handler</a>：比如提供webhook给到数据源，当数据源变更时主动通知变更。</li>
+<li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations">Server action</a>：用户操作触发</li>
+</ol>
+<p><strong>如何取消（禁用机制）：</strong></p>
+<p>有两种方法可以禁用data-cache：</p>
+<ul>
+<li>对于单个请求，可以在fetch时指定 <code>no-store</code> 参数</li>
+<li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#segment-config-options">路由段配置选项</a>，禁用某个route下的所有data-cache，使用一下方法之一都可以禁用data-cache</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Opt out of caching for all data requests in the route segment</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> dynamic = <span class="string">&#x27;force-dynamic&#x27;</span></span><br><span class="line"><span class="comment">// Or </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> revalidate = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<aside>
+🌐 **Vercel Data Cache**
+
+<p>If your Next.js application is deployed to Vercel, we recommend reading the <a target="_blank" rel="noopener" href="https://vercel.com/docs/infrastructure/data-cache">Vercel Data Cache</a> documentation for a better understanding of Vercel specific features.</p>
+</aside>
+
+<p>总结：</p>
+<ol>
+<li>data-cache是request memorization的扩展，可以做到在不同请求间共享数据。</li>
+<li>data-cache通常对使用方是透明的，只要是通过fetch() 函数GET方式获取数据时默认生效。如果对数据有实时性的要求需要主动禁用或者设置revalidation更新。</li>
+<li>不清楚data-cache的实现机制是怎样的，第一印象应该是内存。但是在文档中有提到使用文件，另外在官方的example中也有给出使用redis扩展的列子。所以这块具体的实现机制也不太确定，而且估计本地部署next和vercel平台上也会有差异。</li>
+</ol>
+<blockquote>
+<p>In Next.js, the <a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating">default cache handler</a> for the Pages and App Router uses the filesystem cache. This requires no configuration, however, you can customize the cache handler by using the <code>cacheHandler</code> field in <code>next.config.js</code>.</p>
+</blockquote>
+<p><strong>unstable_cache</strong></p>
+<p>对于未使用fetch()或者使用了HTTP POST的场景（比如通过sdk访问第三方数据、查询db结果等），可以使用nextjs提供的 <code>unstable_cache</code> 来访问来存取data cache。使用方式与react-cache类似，另外也提供了tag、revalidate等更新机制。详见<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/api-reference/functions/unstable_cache">文档</a>。另 <code>unstable_cache</code> 还处于实验室阶段，后续可能存在变更的可能。</p>
+<h1 id="Full-Route-Cache"><a href="#Full-Route-Cache" class="headerlink" title="Full Route Cache"></a>Full Route Cache</h1><p>除了数据的缓存外，页面的渲染结果也可以被缓存。某些page在build阶段就会生成并被Full Route Cache缓存，前提是该页面不包含任何动态数据（无外部数据依赖或者仅依赖 <code>fetch</code> ）。动态数据是指在运行时可能改变的数据，如用户输入、数据库查询结果等。页面的HTML和RSCP会被缓存，避免重新执行渲染操作。只有当重新部署应用程序或手动使该页面依赖的数据缓存失效时，这些缓存的内容才会被更新。</p>
+<blockquote>
+<p>你可能认为，因为我们正在进行一个 fetch 请求，所以我们拥有动态数据。但实际上，这个 fetch 请求被 Next.js 在数据缓存（Data Cache）中缓存了，因此这个页面实际上是被视为静态的。动态数据是指每次请求页面时都会变化的数据，例如dynamic URL 、cookies、请求头、search param等。</p>
+</blockquote>
+<p>流程&amp;原理：</p>
+<p><img src="https://nextjs.org/_next/image?url=/docs/light/full-route-cache.png&w=3840&q=75&dpl=dpl_AVw36CMViTQfGuptcJMdcYHdLcfR" alt="full-route-cache"></p>
+<p>对于符合条件的路由（静态路由），rendering的结果（RSCP、HTML）会被写入Full Route Cache。下次的访问就不会重新执行渲染了。</p>
+<p><strong>有效时长：</strong></p>
+<p>部署环境默认永久有效，除非指定revalidation机制。</p>
+<p><strong>更新机制（revalidation）</strong></p>
+<p>有两种机制可以revalidate Full Route Cache：</p>
+<ol>
+<li>Revalidate Data Cache；对Data cache的数据执行更新操作，会使得对应的rooter cache更新。</li>
+<li>重新部署</li>
+</ol>
+<aside>
+🌐  **Redeploying**: Unlike the Data Cache, which persists across deployments, the Full Route Cache is cleared on new deployments. —— next.js的data cache重新部署也不会失效？难道不是在内存中？
+
+</aside>
+
+<p><strong>如何取消（禁用机制）：</strong></p>
+<p>可以通过以下方法要求每次访问都重新执行渲染：</p>
+<ul>
+<li>引入动态函数：即存在fetch+HTTP以外的数据依赖</li>
+<li><a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#segment-config-options">路由段配置选项</a>：与data-cache方法一样，禁用某个route下的所有data-cache时，也会对full route cache生效。</li>
+</ul>
+<h1 id="Router-cache"><a href="#Router-cache" class="headerlink" title="Router-cache"></a>Router-cache</h1><p>Next.js 具有一个内存中的客户端缓存，称为“路由器缓存”（<a target="_blank" rel="noopener" href="https://nextjs.org/docs/app/building-your-application/caching#router-cache">Router Cache</a>）。这个缓存用于存储 React 服务器组件的负载（React Server Component Payload），这些负载会根据不同的路由段进行分割，并在用户的会话期间保持存储状态。</p>
+<p><strong>原理</strong></p>
+<p><img src="https://nextjs.org/_next/image?url=/docs/light/router-cache.png&w=3840&q=75" alt="router-cache"></p>
+<ol>
+<li>当用户在应用中导航到不同的页面或路由时，Next.js会缓存这些已访问的**路由段(route segment)**。这意味着当用户决定返回到之前访问过的页面时，这些页面可以迅速地从缓存中加载，而不是重新生成。</li>
+<li>Next.js还会根据用户在视口（viewport）中的<code>&lt;Link&gt;</code>组件来预测用户可能会导航到的路由，并<a target="_blank" rel="noopener" href="https://nextjs.org/docs/pages/api-reference/components/link#prefetch">预先加载</a>这些路由。这确保了当用户决定导航到这些页面时，这些页面已经准备好了，从而实现了快速导航。——预加载这些比较常见的优化手段，next都集成在框架内了。但是这里也有考虑对服务端的无效流量。</li>
+</ol>
+<p>总之，在传统的Web应用中，当用户导航到新的页面时，整个页面通常都会重新加载。但在Next.js中，由于路由缓存和预取，这种全页重载被避免了，从而为用户提供了更流畅的体验。</p>
+<p>路由器缓存（Router Cache）和全路由缓存（Full Route Cache）之间的主要区别：</p>
+<ol>
+<li><strong>存储位置</strong>：<ul>
+<li><strong>路由器缓存（Router Cache）</strong>：这种缓存暂时在用户的浏览器会话期间存储React服务器组件的负载。它是内存中的客户端缓存，这意味着数据存储在用户的浏览器内存中，而不是在服务器上。</li>
+<li><strong>全路由缓存（Full Route Cache）</strong>：这种缓存持久地在服务器上存储React服务器组件的负载和HTML，跨越多个用户请求。这意味着数据存储在服务器端的持久存储中，而不是在用户的浏览器内存中。</li>
+</ul>
+</li>
+<li><strong>缓存内容</strong>：<ul>
+<li><strong>路由器缓存</strong>：它存储的是React服务器组件的负载，这些负载是根据不同的路由段分割的。</li>
+<li><strong>全路由缓存</strong>：它不仅存储React服务器组件的负载，还存储HTML内容。</li>
+</ul>
+</li>
+<li><strong>缓存策略</strong>：<ul>
+<li><strong>路由器缓存</strong>：它适用于静态渲染和动态渲染的路由。这意味着无论路由是如何渲染的（静态或动态），路由器缓存都会存储相关的负载。</li>
+<li><strong>全路由缓存</strong>：它只适用于静态渲染的路由。这意味着它不会缓存动态渲染的路由的负载或HTML。</li>
+</ul>
+</li>
+<li><strong>缓存生命周期</strong>：<ul>
+<li><strong>路由器缓存</strong>：它的生命周期与用户的会话绑定。一旦用户的会话结束，缓存的数据就会被清除。</li>
+<li><strong>全路由缓存</strong>：它的生命周期跨越多个用户请求，并且会持续存在，直到被显式地清除或由于某种原因（如服务器重启）而失效。</li>
+</ul>
+</li>
+</ol>
+<p><strong>生效时长：</strong></p>
+<p>路由器缓存的持续时间由两个因素决定：</p>
+<ul>
+<li><strong>会话</strong>：缓存在浏览过程中持续存在。不过，它会在页面刷新时被清除。</li>
+<li><strong>自动失效期</strong>：单个路由段的缓存会在特定时间后自动失效。持续时间取决于路径是静态渲染还是动态渲染：<ul>
+<li><strong>动态渲染</strong>：30 秒</li>
+<li><strong>静态渲染</strong>：5 分钟</li>
+</ul>
+</li>
+</ul>
+<p><strong>缓存失效（revalidation）</strong></p>
+<p>有两种方法可以使路由器缓存失效：</p>
+<ul>
+<li>在<strong>服务器操作</strong>中：<ul>
+<li>使用（<code>revalidatePath</code>）按路径或（<code>revalidateTag</code>）按缓存标签按需失效数据</li>
+<li>使用 <code>cookies.set</code> 或 <code>cookies.delete</code> 可使路由器缓存失效，以防止使用 cookies 的路由（例如：身份验证）变得过时</li>
+</ul>
+</li>
+<li>调用 <code>router.refresh</code> 会使路由器缓存失效，并就当前路由向服务器发出新请求</li>
+</ul>
+<p><strong>缓存退出</strong></p>
+<ol>
+<li>退出路由缓存</li>
+</ol>
+<p>你不能选择完全退出路由缓存，因为Next.js设计这个缓存机制是为了提高性能和导航体验。但是，你可以通过调用一些方法来使缓存失效（invalidate the cache）：</p>
+<ul>
+<li><code>router.refresh()</code>: 这个方法会清除当前路由的缓存，并向服务器发送一个新的请求来获取最新的数据。</li>
+<li><code>revalidatePath()</code>: 这个方法允许你指定一个路径，并清除该路径对应的缓存。</li>
+<li><code>revalidateTag()</code>: 类似于<code>revalidatePath()</code>，但它是基于标签（tag）来清除缓存的，允许你清除一组相关路由的缓存。</li>
+</ul>
+<ol>
+<li>退出预取</li>
+</ol>
+<p>你可以通过设置<code>&lt;Link&gt;</code>组件的<code>prefetch</code>属性为<code>false</code>来退出预取功能。这样做将阻止Next.js预加载该链接对应的页面。</p>
+<p>然而，即使你禁用了预取，Next.js仍然会临时存储已访问的路由段，以便在30秒内实现嵌套段（如标签栏）之间的即时导航，以及前后导航。这意味着，即使你退出了预取功能，已访问的路由仍然会被缓存，以便快速回退或前进。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn">Alex guo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/">https://www.goroutine.cn/2024/03/25/Cache-In-Next-js/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Next-js/">Next.js</a></div><div class="post_share"><div class="social-share" data-image="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Introduct to NotionAPI</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cos.goroutine.cn/uPic/20231110-HERXa8-cyZzFk.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Alex guo</div><div class="author-info__description">个人技术博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/alex-guoba"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="fa fa-rss"></i></a><a class="social-icon" href="https://github.com/alex-guoba" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#next-js%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">next.js的缓存机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Request-memorization"><span class="toc-number">3.</span> <span class="toc-text">Request memorization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#react-cache"><span class="toc-number">4.</span> <span class="toc-text">react-cache</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#data-cache"><span class="toc-number">5.</span> <span class="toc-text">data-cache</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Full-Route-Cache"><span class="toc-number">6.</span> <span class="toc-text">Full Route Cache</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Router-cache"><span class="toc-number">7.</span> <span class="toc-text">Router-cache</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/25/Cache-In-Next-js/" title="Cache In Next.js">Cache In Next.js</a><time datetime="2024-03-25T15:22:06.000Z" title="Created 2024-03-25 23:22:06">2024-03-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/01/06/Introduct-to-NotionAPI/" title="Introduct to NotionAPI">Introduct to NotionAPI</a><time datetime="2024-01-06T14:26:24.000Z" title="Created 2024-01-06 22:26:24">2024-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Architecture-of-Supabase/" title="Architecture of Supabase">Architecture of Supabase</a><time datetime="2023-12-28T15:05:38.000Z" title="Created 2023-12-28 23:05:38">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/08/Introduct-to-nocoDB/" title="Introduct-to-nocoDB">Introduct-to-nocoDB</a><time datetime="2023-12-08T12:41:25.000Z" title="Created 2023-12-08 20:41:25">2023-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/06/Doploy-outline-without-docker/" title="Doploy outline without docker">Doploy outline without docker</a><time datetime="2023-12-06T08:41:25.000Z" title="Created 2023-12-06 16:41:25">2023-12-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Alex guo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
